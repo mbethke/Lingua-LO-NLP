@@ -21,7 +21,7 @@ isa_ok($o, 'Lingua::LO::Transform::Syllables');
 for my $text (sort keys %tests) {
     $o = Lingua::LO::Transform::Syllables->new(text => $text);
     my $syl = [ $o->get_syllables ];
-    use Data::Dumper; print Dumper($syl);
+    #use Data::Dumper; print Dumper($syl);
     is_deeply($syl, $tests{$text}, "`$text' split correctly");
 }
 done_testing;

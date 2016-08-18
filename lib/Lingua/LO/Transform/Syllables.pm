@@ -10,7 +10,8 @@ use Class::Accessor::Fast 'antlers';
 has text => (is => 'ro');
 
 my $syllable_re = _make_regexp();
-print $syllable_re;
+#print $syllable_re;
+#
 sub new {
     my $class = shift;
     my %opts = @_;
