@@ -54,6 +54,8 @@ sub _make_regexp {
     my $x7_1 = 'ະ';
     my $x7_2 = 'າ';
     my $x7_3 = '\N{U+0eb3}';    # am
+    # Is this necessary? Seems not.
+    # my $x7_3 = '(?: \N{U+0ecd}\N{U+0eb2} | \N{U+0eb3})';    # sala am: niggahita + a or composed form
     my $x7 = "[${x7_1}${x7_2}${x7_3}";
 
     my $x8_3t8 = '[ຍດນມຢບ]';

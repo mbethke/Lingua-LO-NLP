@@ -13,6 +13,9 @@ my %tests = (
     ຜູ້ເຂົ້າ        => [ qw/ ຜູ້ ເຂົ້າ /],
     ""          => [],
     ກວ່າດອກ໐໑໒໓  => [ qw/ ກວ່າ ດອກ ໐໑໒໓ /],
+    ຄຳດີ         => [ qw/ ຄຳ ດີ /],   # composed sala am
+    ຄໍາດີ         => [ qw/ ຄໍາ ດີ /],   # decomposed sala am
+    ຄໍາູດີ         => [ qw/ ດີ /],      # malformed first syllable "khamu" dropped
 );
 
 my $o = Lingua::LO::Transform::Syllables->new(text => 'ສະບາຍດີ');
