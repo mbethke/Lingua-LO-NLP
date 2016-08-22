@@ -9,6 +9,9 @@ WriteMakefile(
     PREREQ_PM    => {
         version => 0.77,
         Carp    => 0,
+        charnames => 0,
+        'Unicode::Normalize' => 0,
+        'Class::Accessor::Fast' => 0,
     },
     TEST_REQUIRES => {
         'Test::More' => 0,
