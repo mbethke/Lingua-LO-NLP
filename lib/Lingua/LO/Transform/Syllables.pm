@@ -5,6 +5,7 @@ use 5.012000;
 use utf8;
 use feature 'unicode_strings';
 use version 0.77; our $VERSION = version->declare('v0.0.1');
+use charnames qw/ :full lao /;
 use Class::Accessor::Fast 'antlers';
 
 has text => (is => 'ro');
@@ -33,18 +34,18 @@ sub _make_regexp {
 
     my $x = '[ກຂຄງຈສຊຍດຕຖທນບປຜຝພຟມຢຣລວຫອຮໜໝ]';
 
-    my $x2 = "[\N{U+0ebc}ຣວລ]";   # first is combining semivowel lo
+    my $x2 = "[\N{LAO SEMIVOWEL SIGN LO}ຣວລ]";
 
-    my $x3 = "[\N{U+0eb8}\x{0eb9}]";  # u and uu
+    my $x3 = "[\N{LAO VOWEL SIGN U}\N{LAO VOWEL SIGN UU}]";
 
-    my $x4_12 = "[\N{U+0eb4}\N{U+0eb5}]";   # i and ii
-    my $x4_34 = "[\N{U+0eb6}\N{U+0eb7}]";   # y and yy
-    my $x4_5  = "\N{U+0ecd}";   # niggahita
-    my $x4_6  = "\N{U+0eb1}";   # mai kan
-    my $x4_7  = "\N{U+0ebb}";   # mai kon
-    my $x4_1t4 = "[\N{U+0eb4}\N{U+0eb5}\N{U+0eb6}\N{U+0eb7}]";  # i, ii, y, yy
+    my $x4_12 = "[\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}]";
+    my $x4_34 = "[\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}]";
+    my $x4_5  = "\N{LAO NIGGAHITA}";
+    my $x4_6  = "\N{LAO VOWEL SIGN MAI KAN}";
+    my $x4_7  = "\N{LAO VOWEL SIGN MAI KON}";
+    my $x4_1t4 = "[\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}]";
 
-    my $x5 = "[\N{U+0ec8}\N{U+0ec9}\N{U+0eca}\N{U+0ecb}]";  # mai ek, tho, ti, catawa
+    my $x5 = "[\N{LAO TONE MAI EK}\N{LAO TONE MAI THO}\N{LAO TONE MAI TI}\N{LAO TONE MAI CATAWA}]";
 
     my $x6_1 = 'ວ';
     my $x6_2 = 'ອ';
@@ -53,9 +54,9 @@ sub _make_regexp {
 
     my $x7_1 = 'ະ';
     my $x7_2 = 'າ';
-    my $x7_3 = '\N{U+0eb3}';    # am
+    my $x7_3 = "\N{LAO VOWEL SIGN AM}";
     # Is this necessary? Seems not.
-    # my $x7_3 = '(?: \N{U+0ecd}\N{U+0eb2} | \N{U+0eb3})';    # sala am: niggahita + a or composed form
+    # my $x7_3 = '(?: \N{LAO NIGGAHITA}\N{LAO VOWEL SIGN AA} | \N{LAO VOWEL SIGN AM})';
     my $x7 = "[${x7_1}${x7_2}${x7_3}";
 
     my $x8_3t8 = '[ຍດນມຢບ]';
@@ -64,7 +65,7 @@ sub _make_regexp {
     my $x9 = '[ຈສຊພຟລ]';
 
     my $x10_12= '[ຯໆ]';
-    my $x10_3 = "\N{U+0ecc}";   # cancellation mark
+    my $x10_3 = "\N{LAO CANCELLATION MARK}";
 
     my $x9_a_10_3 = "(?: $x9 $x10_3)";
 
