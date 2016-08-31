@@ -33,8 +33,7 @@ sub get_fragments {
     my $self = shift;
     my $t = $self->text;
     my @matches;
-
-    while($t =~ /\G($syl_re | .+?(?=$syl_re|$) )/oxgcs) {
+    while($t =~ /\G($complete_syl_re | .+?(?=$complete_syl_re|$) )/oxgcs) {
         my $match = $1;
         push @matches, { text => $match, is_lao => scalar($match =~ /^$syl_re/) };
     }
