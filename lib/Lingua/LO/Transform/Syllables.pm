@@ -12,8 +12,8 @@ use Class::Accessor::Fast 'antlers';
 
 has text => (is => 'ro');
 
-my $syllable_re = _make_regexp();
-#print $syllable_re;
+my ($syl_re, $complete_syl_re) = _make_regexp();
+#print $syl_re;
 #
 sub new {
     my $class = shift;
@@ -26,8 +26,21 @@ sub new {
 }
 
 sub get_syllables {
-    return shift->text =~ m/$syllable_re/og;
+    return shift->text =~ m/($complete_syl_re)/og;
 }
+
+sub get_fragments {
+    my $self = shift;
+    my $t = $self->text;
+    my @matches;
+
+    while($t =~ /\G($syl_re | .+?(?=$syl_re|$) )/oxgcs) {
+        my $match = $1;
+        push @matches, { text => $match, is_lao => scalar($match =~ /^$syl_re/) };
+    }
+    return @matches
+}
+
 
 sub _make_regexp {
     my $x0_1 = 'ເ';
@@ -126,6 +139,6 @@ sub _make_regexp {
     $re4  | $re5  | $re6  | $re7  | $re8  | $re9  | $re10 |
     $re11 | $re12 | $re13 | $re14 | $re_num+) ";
 
-    return qr/ ($syl) (?=$syl|\P{Lao}|\s+|$) /x;
+    return qr/ $syl /x, qr/ $syl (?=$syl|\P{Lao}|\s+|$) /x;
 }
 
