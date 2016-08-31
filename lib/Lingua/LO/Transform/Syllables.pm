@@ -13,8 +13,7 @@ use Class::Accessor::Fast 'antlers';
 has text => (is => 'ro');
 
 my ($syl_re, $complete_syl_re) = _make_regexp();
-#print $syl_re;
-#
+
 sub new {
     my $class = shift;
     my %opts = @_;
@@ -88,24 +87,24 @@ sub _make_regexp {
     my $x9_a_10_3 = "(?: $x9 $x10_3)";
 
     my $re1_all = "$x0_1 $x1? $x $x2?";
-    my $re1_1 = "$re1_all $x5? $x8? $x9_a_10_3?";
-    my $re1_2 = "$re1_all $x4_12 $x5? $x8? $x9_a_10_3?";
-    my $re1_3 = "$re1_all $x4_34 $x5? $x6_2 $x8? $x9_a_10_3?";
-    my $re1_4 = "$re1_all $x7_2 $x7_1";
-    my $re1_5 = "$re1_all $x4_6 $x5? $x7_2";
-    my $re1_6 = "$re1_all $x4_7 $x5? $x8  $x9_a_10_3?";
-    my $re1_8 = "$re1_all $x4_7? $x5? $x6_3";
+    my $re1_1 = "$x5? $x8? $x9_a_10_3?";
+    my $re1_2 = "$x4_12 $x5? $x8? $x9_a_10_3?";
+    my $re1_3 = "$x4_34 $x5? $x6_2 $x8? $x9_a_10_3?";
+    my $re1_4 = "$x7_2 $x7_1";
+    my $re1_5 = "$x4_6 $x5? $x7_2";
+    my $re1_6 = "$x4_7 $x5? $x8  $x9_a_10_3?";
+    my $re1_8 = "$x4_7? $x5? $x6_3";
     # bug in the original paper: 1.7 == 1.6
 
     my $re2_all = "$x0_2 $x1? $x $x2?";
-    my $re2_1 = "$re2_all $x5? $x6? $x8? $x9_a_10_3?";
-    my $re2_2 = "$re2_all $x7_1";
-    my $re2_3 = "$re2_all $x4_7 $x5? $x8 $x9_a_10_3?";
+    my $re2_1 = "$x5? $x6? $x8? $x9_a_10_3?";
+    my $re2_2 = "$x7_1";
+    my $re2_3 = "$x4_7 $x5? $x8 $x9_a_10_3?";
 
     my $re3_all = "$x0_3 $x1? $x $x2?";
-    my $re3_1 = "$re3_all $x5? $x8? $x9_a_10_3?";
-    my $re3_2 = "$re3_all $x7_1";
-    my $re3_3 = "$re3_all $x4_7 $x5? $x8_3t8?";
+    my $re3_1 = "$x5? $x8? $x9_a_10_3?";
+    my $re3_2 = "$x7_1";
+    my $re3_3 = "$x4_7 $x5? $x8_3t8?";
 
     my $re4 = "$x0_4 $x1? $x $x2? $x5? $x6_1? $x9_a_10_3?";
 
@@ -131,12 +130,15 @@ sub _make_regexp {
 
     my $re_num = "[໑໒໓໔໕໖໗໘໙໐]";
 
-    my $syl = " (?:
-    $re1_1 | $re1_2 | $re1_3 | $re1_4 | $re1_5 | $re1_6 | $re1_8 |
-    $re2_1 | $re2_2 | $re2_3 |
-    $re3_1 | $re3_2 | $re3_3 |
+    my $syl = "(?:
+    (?: $re1_all (?: $re1_1 | $re1_2 | $re1_3 | $re1_4 | $re1_5 | $re1_6 | $re1_8 ) ) |
+    (?: $re2_all (?: $re2_1 | $re2_2 | $re2_3 ) ) |
+    (?: $re3_all (?: $re3_1 | $re3_2 | $re3_3 ) ) |
     $re4  | $re5  | $re6  | $re7  | $re8  | $re9  | $re10 |
-    $re11 | $re12 | $re13 | $re14 | $re_num+) ";
+    $re11 | $re12 | $re13 | $re14 | $re_num+)";
+
+    #print "$syl\n";
+    #print "\\G($syl | .+?(?=$syl|\$) )\n";
 
     return qr/ $syl /x, qr/ $syl (?=$syl|\P{Lao}|\s+|$) /x;
 }
