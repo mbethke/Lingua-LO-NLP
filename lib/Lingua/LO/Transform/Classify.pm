@@ -82,41 +82,63 @@ my $CONSONANT_RE = join(
 );
 
 my %VOWELS = (
-    Xະ   => { long => 0 },
-    Xາ   => { long => 1 },
-    Xັ    => { long => 0 },
-    Xົ    => { long => 0 },
-    Xິ    => { long => 0 },
-    Xີ    => { long => 1 },
-    Xຶ    => { long => 0 },
-    Xື    => { long => 1 },
-    Xຸ    => { long => 0 },
-    Xູ    => { long => 1 },
-    ເXະ  => { long => 0 },
-    ເX   => { long => 1 },
-    ແXະ  => { long => 0 },
-    ແX   => { long => 1 },
-    ໂXະ  => { long => 0 },
-    ໂX   => { long => 1 },
-    ເXາະ => { long => 0 },
-    Xໍ    => { long => 1 },
-    ເXິ   => { long => 0 },
-    ເXີ   => { long => 1 },
-    ເXັຍ  => { long => 0 },
-    ເXຍ  => { long => 1 },
-    ເXຶອ  => { long => 0 },
-    ເXືອ  => { long => 1 },
-    Xົວະ  => { long => 0 },
-    Xວ   => { long => 1 },
-    Xົວ   => { long => 1 },  # TODO
-    ໄX   => { long => 1 },
-    ໃX   => { long => 1 },
-    ເXົາ  => { long => 1 },  # TODO
-    Xໍາ   => { long => 0 },  # TODO
-    ເXັ   => { long => 0 },  # TODO
-    Xອ   => { long => 1 },
+    ### Monophthongs
+    'Xະ'   => { long => 0 },  # /a/
+    'Xັ'    => { long => 0 },  # /a/
+    'Xາ'   => { long => 1 },  # /aː/
 
+    'Xິ'    => { long => 0 },  # /i/
+    'Xີ'    => { long => 1 },  # /iː/
+
+    'Xຶ'    => { long => 0 },  # /ɯ/
+    'Xື'    => { long => 1 },  # /ɯː/
+
+    'Xຸ'    => { long => 0 },  # /u/
+    'Xູ'    => { long => 1 },  # /uː/
+
+    'ເXະ'  => { long => 0 },  # /e/
+    'ເXັ'   => { long => 0 },  # /e/
+    'ເX'   => { long => 1 },  # /eː/
+
+    'ແXະ'  => { long => 0 },  # /ɛ/
+    'ແXັ'   => { long => 0 },  # /ɛ/
+    'ແX'   => { long => 1 },  # /ɛː/
+
+    'ໂXະ'  => { long => 0 },  # /o/
+    'Xົ'    => { long => 0 },  # /o/
+    'ໂX'   => { long => 1 },  # /oː/
+
+    'ເXາະ' => { long => 0 },  # /ɔ/
+    'XັອX'  => { long => 0 },  # /ɔ/
+    'Xໍ'    => { long => 1 },  # /ɔː/
+    'XອX'  => { long => 1 },  # /ɔː/
+
+    'ເXິ'   => { long => 0 },  # /ɤ/
+    'ເXີ'   => { long => 1 },  # /ɤː/
+
+    ###' Diphthongs
+    'ເXັຍ'  => { long => 0 },  # /iə/
+    'Xັຽ'   => { long => 0 },  # /iə/
+    'ເXຍ'  => { long => 1 },  # /iːə/
+    'Xຽ'   => { long => 1 },  # /iːə/
+
+    'ເXຶອ'  => { long => 0 },  # /ɯə/
+    'ເXືອ'  => { long => 1 },  # /ɯːə/
+
+    'Xົວະ'  => { long => 0 },  # /uə/
+    'XັວX'  => { long => 0 },  # /uə/
+    'Xົວ'   => { long => 1 },  # /uːə/
+    'XວX'  => { long => 1 },  # /uːə/
+
+    'ໄX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
+    'ໃX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
+    'Xາຍ'  => { long => 1 },  # /aj/ - Actually short but counts as long for rules
+    'Xັຍ'   => { long => 0 },  # /aj/
+
+    'ເXົາ'  => { long => 0 },  # /aw/
+    'Xໍາ'   => { long => 0 },  # /am/
 );
+
 my %VOWELS_NOCONS = map {
     my $v = $_;
     s/X//;
@@ -131,8 +153,8 @@ my $EXTRACT_RE = sprintf(
         '|',
         reverse
         sort { length($a) <=> length($b) }
-        map { $VOWELS{$_}{re} }
-        keys %VOWELS
+        map { $_->{re} }
+        values %VOWELS
     )
 );
 
