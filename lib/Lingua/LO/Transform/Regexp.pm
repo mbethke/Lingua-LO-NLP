@@ -97,12 +97,12 @@ sub syllable_short {
 
     my $re_num = "[໑໒໓໔໕໖໗໘໙໐]";
 
-    my $syl = "(?:
+    my $syl = "(?: (?:
     (?: $re1_all (?: $re1_1 | $re1_2 | $re1_3 | $re1_4 | $re1_5 | $re1_6 | $re1_8 ) ) |
     (?: $re2_all (?: $re2_1 | $re2_2 | $re2_3 ) ) |
     (?: $re3_all (?: $re3_1 | $re3_2 | $re3_3 ) ) |
     $re4  | $re5  | $re6  | $re7  | $re8  | $re9  | $re10 |
-    $re11 | $re12 | $re13 | $re14 | $re_num+)";
+    $re11 | $re12 | $re13 | $re14 ) $x10_12? | $re_num+)";
 
     #print "$syl\n";
     #print "\\G($syl | .+?(?=$syl|\$) )\n";
@@ -142,8 +142,6 @@ sub syllable_named {
     my $x7_1 = 'ະ';
     my $x7_2 = 'າ';
     my $x7_3 = "\N{LAO VOWEL SIGN AM}";
-    # Is this necessary? Seems not.
-    # my $x7_3 = '(?: \N{LAO NIGGAHITA}\N{LAO VOWEL SIGN AA} | \N{LAO VOWEL SIGN AM})';
     my $x7 = "[${x7_1}${x7_2}${x7_3}";
 
     my $x8_3t8 = '[ຍດນມຢບ]';
@@ -200,12 +198,12 @@ sub syllable_named {
 
     my $re_num = "[໑໒໓໔໕໖໗໘໙໐]";
 
-    my $syl = "(?:
+    my $syl = "(?: (?:
     (?: $re1_all (?: $re1_1 | $re1_2 | $re1_3 | $re1_4 | $re1_5 | $re1_6 | $re1_8 ) ) |
     (?: $re2_all (?: $re2_1 | $re2_2 | $re2_3 ) ) |
     (?: $re3_all (?: $re3_1 | $re3_2 | $re3_3 ) ) |
     $re4  | $re5  | $re6  | $re7  | $re8  | $re9  | $re10 |
-    $re11 | $re12 | $re13 | $re14 | $re_num+)";
+    $re11 | $re12 | $re13 | $re14 ) $x10_12? | $re_num+)";
 
     #print "$syl\n";
     #print "\\G($syl | .+?(?=$syl|\$) )\n";
