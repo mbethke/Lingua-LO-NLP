@@ -7,6 +7,9 @@ use feature 'unicode_strings';
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
+use Lingua::LO::Transform::Regexp;
+use Carp;
+use Data::Dumper;
 
 has syllable => (is => 'ro');
 has vowel => (is => 'ro');
@@ -163,6 +166,15 @@ sub foo { shift->vowel_length }
 sub new {
     my ($class, $syllable) = @_;
     return bless $class->SUPER::new( _classify($syllable) ), $class;
+}
+
+my $regexp = Lingua::LO::Transform::Regexp::syllable_named;
+
+sub classify {
+   my $s = shift // croak("syllable argument missing");
+   my %class = ( syllable => $s );
+   $s =~ /$regexp/ or croak "`$s' does not start with a valid syllable"; 
+   return %+;
 }
 
 sub _classify {
