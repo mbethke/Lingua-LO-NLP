@@ -173,7 +173,7 @@ my $regexp = Lingua::LO::Transform::Regexp::syllable_named;
 sub classify {
    my $s = shift // croak("syllable argument missing");
    my %class = ( syllable => $s );
-   $s =~ /$regexp/ or croak "`$s' does not start with a valid syllable"; 
+   $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
    return %+;
 }
 
