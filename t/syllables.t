@@ -24,6 +24,13 @@ my %tests = (
     ຄຳດີ         => [ qw/ ຄຳ ດີ /],   # composed sala am
     ຄໍາດີ         => [ qw/ ຄໍາ ດີ /],   # decomposed sala am
     ຄໍາູດີ         => [ qw/ ດີ /],      # malformed first syllable "khamu" dropped
+    ກັ           => [ ],
+    ກັນ          => [ qw/ ກັນ / ],
+    ກັວນ          => [ qw/ ກັວນ / ],
+    ກົ           => [ ],
+    ກົດ           => [ qw/ ກົດ / ],
+    ກັອກ         => [ ],
+    ແປຽ         => [ qw/ ແປຽ / ],
 );
 
 sub dump_unicode {
