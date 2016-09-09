@@ -27,8 +27,8 @@ my %regexp_fragments = (
     x4_12   => "[\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}]",
     x4_34   => "[\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}]",
     x4_5    => "\N{LAO NIGGAHITA}",
-    x4_6    => "\N{LAO VOWEL SIGN MAI KAN}",
-    x4_7    => "\N{LAO VOWEL SIGN MAI KON}",
+    x4_6    => "\N{LAO VOWEL SIGN MAI KON}",
+    x4_7    => "\N{LAO VOWEL SIGN MAI KAN}",
     x4_1t4  => "[\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}]",
 
     x5      => "[\N{LAO TONE MAI EK}\N{LAO TONE MAI THO}\N{LAO TONE MAI TI}\N{LAO TONE MAI CATAWA}]",
