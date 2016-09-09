@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use 5.012000;
 use utf8;
-use feature 'unicode_strings';
+use feature qw/ unicode_strings say /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
@@ -87,7 +87,7 @@ my $CONSONANT_RE = join(
 my %VOWELS = (
     ### Monophthongs
     'Xະ'   => { long => 0 },  # /a/
-    'Xັ'    => { long => 0 },  # /a/
+    'XັX'   => { long => 0 },  # /a/ with end consonant
     'Xາ'   => { long => 1 },  # /aː/
 
     'Xິ'    => { long => 0 },  # /i/
@@ -100,11 +100,11 @@ my %VOWELS = (
     'Xູ'    => { long => 1 },  # /uː/
 
     'ເXະ'  => { long => 0 },  # /e/
-    'ເXັ'   => { long => 0 },  # /e/
+    'ເXັX'  => { long => 0 },  # /e/ with end consonant
     'ເX'   => { long => 1 },  # /eː/
 
     'ແXະ'  => { long => 0 },  # /ɛ/
-    'ແXັ'   => { long => 0 },  # /ɛ/
+    'ແXັX'  => { long => 0 },  # /ɛ/ with end consonant
     'ແX'   => { long => 1 },  # /ɛː/
 
     'ໂXະ'  => { long => 0 },  # /o/
@@ -112,9 +112,9 @@ my %VOWELS = (
     'ໂX'   => { long => 1 },  # /oː/
 
     'ເXາະ' => { long => 0 },  # /ɔ/
-    'XັອX'  => { long => 0 },  # /ɔ/
+    'XັອX'  => { long => 0 },  # /ɔ/ with end consonant
     'Xໍ'    => { long => 1 },  # /ɔː/
-    'XອX'  => { long => 1 },  # /ɔː/
+    'XອX'  => { long => 1 },  # /ɔː/ with end consonant
 
     'ເXິ'   => { long => 0 },  # /ɤ/
     'ເXີ'   => { long => 1 },  # /ɤː/
@@ -131,7 +131,7 @@ my %VOWELS = (
     'Xົວະ'  => { long => 0 },  # /uə/
     'XັວX'  => { long => 0 },  # /uə/
     'Xົວ'   => { long => 1 },  # /uːə/
-    'XວX'  => { long => 1 },  # /uːə/
+    'XວX'  => { long => 1 },  # /uːə/ with end consonant
 
     'ໄX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
     'ໃX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
@@ -174,6 +174,10 @@ sub classify {
    my $s = shift // croak("syllable argument missing");
    my %class = ( syllable => $s );
    $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
+   @class{qw/ consonant end_consonant tone_mark /} = @+{qw/ consonant end_consonant tone_mark /};
+   $class{vowel} = join('', grep { defined } map { $+{"vowel$_"} } 0..3);
+   say Dumper($class{vowel});
+   $class{parse} = { %+ };              # provide raw parse too
    return %+;
 }
 
