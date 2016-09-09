@@ -83,7 +83,7 @@ my %regexp_fragments = (
 
     re9     => '$x1? $x $x2? $x4_6 $x5? (?: $x8 $x9a10_3? | $x6_1 $x7_1 )',
 
-    re10    => '$x1? $x $x2? $x4_7 $x5? $x6_1 $x8 $x9a10_3?',
+    re10    => '$x1? $x $x2? $x4_7 $x5? $x6_1? $x8 $x9a10_3?',
 
     re11    => '$x1? $x $x2? $x5? $x6 $x8 $x9a10_3?',
 
@@ -95,7 +95,6 @@ my %regexp_fragments = (
 
     re_num  => '[໑໒໓໔໕໖໗໘໙໐]',
 );
-
 # Functional names for all the x-something groups from the original paper
 my %capture_names = (
     'x'             => 'consonant',
