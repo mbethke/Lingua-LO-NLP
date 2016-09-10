@@ -144,6 +144,7 @@ sub syllable_short {
     }
 
     my $syl = _assemble_regexp(\%fragments);
+    $ENV{DEBUG} and say $syl;
     return qr/ $syl /x;
 }
 
