@@ -77,12 +77,6 @@ my %CONSONANTS = (
    ຫຼ  => { cat => 'AKSON_SUNG', end => 'END_NO' },
    ຫວ => { cat => 'AKSON_SUNG', end => 'END_NO' },
 );
-my $CONSONANT_RE = join(
-    '|',
-    reverse
-    sort { length($a) <=> length($b) }
-    keys %CONSONANTS
-);
 
 my %VOWELS = (
     ### Monophthongs
@@ -142,74 +136,37 @@ my %VOWELS = (
     'Xໍາ'   => { long => 0 },  # /am/
 );
 
-my %VOWELS_NOCONS = map {
-    my $v = $_;
-    s/X//;
-    $_ => $VOWELS{$v}
-} sort keys %VOWELS;
-
-($VOWELS{$_}{re} = $_) =~ s/X/(?:$CONSONANT_RE)$TONE_CHARCLASS?/ for sort keys %VOWELS; # add vowel regexp
-
-my $EXTRACT_RE = sprintf(
-    '((?:%s))',
-    join(
-        '|',
-        reverse
-        sort { length($a) <=> length($b) }
-        map { $_->{re} }
-        values %VOWELS
-    )
-);
-
-sub foo { shift->vowel_length }
-
 sub new {
     my ($class, $syllable) = @_;
     return bless $class->SUPER::new( _classify($syllable) ), $class;
 }
 
 my $regexp = Lingua::LO::Transform::Regexp::syllable_named;
-
-sub classify {
-   my $s = shift // croak("syllable argument missing");
-   my %class = ( syllable => $s );
-   $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
-   @class{qw/ consonant end_consonant tone_mark /} = @+{qw/ consonant end_consonant tone_mark /};
-   $class{vowel} = join('', grep { defined } map { $+{"vowel$_"} } 0..3);
-   say Dumper($class{vowel});
-   $class{parse} = { %+ };              # provide raw parse too
-   return %+;
-}
+say $regexp if $ENV{DEBUG};
 
 sub _classify {
    my $s = shift // croak("syllable argument missing");
-   my %class = ( syllable => $s );
-   #print "Matching: $EXTRACT_RE\n";
-   croak "malformed syllable $s" unless $s =~ /^$EXTRACT_RE/o;
-   #print "Matching: $CONSONANT_RE\n";
 
-   my ($c) = $s =~ /($CONSONANT_RE)/;
-   $class{consonant} = $c;
+   $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
+   my %class = ( syllable => $s, parse => { %+ } );
+   @class{qw/ consonant end_consonant tone_mark /} = @+{qw/ consonant end_consonant tone_mark /};
 
-   my ($t) = $s =~ /($TONE_CHARCLASS)/;
-   $class{tone_mark} = $t //= '';
+   my @vowels = $+{vowel0} // ();
+   push @vowels, 'X';
+   push @vowels, grep { defined } map { $+{"vowel$_"} } 1..3;
+   push @vowels, 'X' if defined $+{end_consonant};
+   $class{vowel} = join('', @vowels);
 
-   $s =~ s/$c//;
-   $s =~ s/(?:$CONSONANT_RE)$//;
-   $s =~ s/$TONE_CHARCLASS//;
-
-   $class{vowel} = $s;
-
-   my $v = $VOWELS_NOCONS{$s};
-   if($v->{long}) {
+   #say Dumper($class{vowel});
+   my $v = $VOWELS{ $class{vowel} };
+   my $cc = $CONSONANTS{ $class{consonant} }{cat};  # consonant category
+   if( $v->{long} ) {
        $class{vowel_length} = 'long';
-       $class{tone} = $TONE_MARKS{$t}{ $CONSONANTS{$c}{cat} };
+       $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
    } else {
        $class{vowel_length} = 'short';
-       $class{tone} = $CONSONANTS{$c}{cat} eq 'AKSON_TAM' ?
-       'TONE_MID_STOP' : 'TONE_HIGH_STOP';
+       $class{tone} = $cc eq 'AKSON_TAM' ? 'TONE_MID_STOP' : 'TONE_HIGH_STOP';
    }
-
    return \%class;
 }
 
