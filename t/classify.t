@@ -8,149 +8,148 @@ use Test::More;
 use Lingua::LO::Transform::Classify;
 
 my %tests = (
-#    'ກໍ' => {},
-#    'ກໍ່' => {},
-#    'ກໍ໋' => {},
-#    'ກວໍ' => {},
-#    'ກວໍ້' => {},
-#    'ກວໍ໊' => {},
-#    'ກວກ' => {},
-#    'ກວງ' => {},
-#    'ກ່ວງ' => {},
-#    'ກວ່ວຍ' => {},
-#    'ກວ້ອງ' => {},
-#    #'ກວອັບ' => {},
-#    'ກວະ' => {},
-#    'ກວ່ະ' => {},
-#    'ກວັດ' => {},
-#    #'ກວັ໋ອມ' => {},
-#    #'ກວັຽກ' => {},
-#    'ກວ໊າ' => {},
-#    'ກວຽດ' => {},
-#    'ກາ' => {},
-#    'ກ່າ' => {},
-#    'ກາຍ' => {},
-#    'ກ່າຍ' => {},
-#    'ກິ' => {},
-#    'ກິ່' => {},
-#    'ກ໋ຽວ' => {},
-#    'ເກ' => {},
-#    'ເກວວ' => {},
-#    'ເກວື໊ອນ' => {},
-#    'ເກາະ' => {},
-#    'ເກ່າະ' => {},
-#    'ເກິ່ຍ' => {},
-#    'ສວວມ' => {},
-#    'ຫງ໋ຽງ' => {},
-#    'ຫາມ' => {},
+    # Generated syllables from some list or other
+    'ກວກ' => { consonant => 'ກ', end_consonant => 'ກ', tone => 'LOW', vowel => 'XວX', vowel_length => 'long' },
+    'ກວງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'LOW', vowel => 'XວX', vowel_length => 'long' },
+    'ກວະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xະ', vowel_length => 'short' },
+    'ກວັດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'XັX', vowel_length => 'short' },
+    'ກວຽດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'XຽX', vowel_length => 'short' },
+    'ກວ່ວຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'XວX', vowel_length => 'long' },
+    'ກວ່ະ' => { consonant => 'ກ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xະ', vowel_length => 'short' },
+    'ກວ້ອງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'XອX', vowel_length => 'long' },
+    'ກວ໊າ' => { consonant => 'ກ', tone_mark => "\N{LAO TONE MAI TI}", vowel => 'Xາ', vowel_length => 'long' },
+    'ກວໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
+    'ກວໍ້' => { consonant => 'ກ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ກວໍ໊' => { consonant => 'ກ', tone_mark => "\N{LAO TONE MAI TI}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ກ່ວງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'XວX', vowel_length => 'long' },
+    'ກ່າ' => { consonant => 'ກ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xາ', vowel_length => 'long' },
+    'ກ່າຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'XາX', vowel_length => 'short' },
+    'ກໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
+    'ກໍ່' => { consonant => 'ກ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ກໍ໋' => { consonant => 'ກ', tone_mark => "\N{LAO TONE MAI CATAWA}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ສວວມ' => { consonant => 'ສ', end_consonant => 'ມ', tone => 'LOW_RISING', vowel => 'XວX', vowel_length => 'long' },
+    'ຫງ໋ຽງ' => { consonant => 'ງ', end_consonant => 'ງ', tone => 'MID_STOP', tone_mark => "\N{LAO TONE MAI CATAWA}", vowel => 'XຽX', vowel_length => 'short' },
+    'ຫາມ' => { consonant => 'ຫ', end_consonant => 'ມ', tone => 'HIGH_STOP', vowel => 'XາX', vowel_length => 'short' },
+    'ເກວວ' => { consonant => 'ກ', end_consonant => 'ວ', tone => 'HIGH_STOP', vowel => 'ເXX', vowel_length => 'short' },
+    'ເກວື໊ອນ' => { consonant => 'ກ', end_consonant => 'ນ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI TI}", vowel => 'ເXືອX', vowel_length => 'short' },
+    'ເກິ່ຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'ເXິX', vowel_length => 'short' },
 
-    'ກະ'   => { long => 0 },
-    'ກາ'   => { long => 1 },
+    # Constructed syllables with simple vowels
+    'ກະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xະ', vowel_length => 'short' },
+    'ກາ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xາ', vowel_length => 'long' },
 
-    'ກິ'    => { long => 0 },
-    'ກິ'    => { long => 1 },
+    'ກິ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xິ', vowel_length => 'short' },
+    'ກີ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xີ', vowel_length => 'long' },
 
-    'ກຶ'    => { long => 0 },
-    'ກື'    => { long => 1 },
+    'ກຶ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xຶ', vowel_length => 'short' },
+    'ກື' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xື', vowel_length => 'long' },
 
-    'ກຸ'    => { long => 0 },
-    'ກູ'    => { long => 1 },
+    'ກຸ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xຸ', vowel_length => 'short' },
+    'ກູ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xູ', vowel_length => 'long' },
 
-    'ເກະ'  => { long => 0 },
-    'ເກັ'   => { long => 0 },
-    'ເກ'   => { long => 1 },
+    'ເກະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ເXະ', vowel_length => 'short' },
+    'ເກັນ' => { consonant => 'ກ', end_consonant => 'ນ', tone => 'HIGH_STOP', vowel => 'ເXັX', vowel_length => 'short' },
+    'ເກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ເX', vowel_length => 'long' },
 
-    'ແກະ'  => { long => 0 },
-    'ແກັ'   => { long => 0 },
-    'ແກ'   => { long => 1 },
+    'ແກະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ແXະ', vowel_length => 'short' },
+    'ແກັດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'ແXັX', vowel_length => 'short' },
+    'ແກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ແX', vowel_length => 'long' },
 
-    'ໂກະ'  => { long => 0 },
-    'ໂກ'   => { long => 1 },
+    'ໂກະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ໂXະ', vowel_length => 'short' },
+    'ໂກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໂX', vowel_length => 'long' },
 
-    'ກັນ'   => { long => 0 },
-    'ກົດ'   => { long => 0 },
+    'ກັນ' => { consonant => 'ກ', end_consonant => 'ນ', tone => 'HIGH_STOP', vowel => 'XັX', vowel_length => 'short' },
+    'ກົດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'XົX', vowel_length => 'short' },
 
-    'ເກາະ' => { long => 0 },
-    'ກໍ'    => { long => 1 },
-    'ກອດ'  => { long => 1 },
+    'ເກາະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ເXາ', vowel_length => 'short' },
+    'ກໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
+    'ກອດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'XອX', vowel_length => 'long' },
 
-    'ເກິ'   => { long => 0 },
-    'ເກີ'   => { long => 1 },
+    'ເກິ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ເXິ', vowel_length => 'short' },
+    'ເກີ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ເXີ', vowel_length => 'long' },
 
     ###' Diphthongs
-    'ເກັຍ'  => { long => 0 },
-    'ເກຍ'  => { long => 1 },
+    'ເກັຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', vowel => 'ເXັX', vowel_length => 'short' },
+    'ເກຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', vowel => 'ເXX', vowel_length => 'short' },
 
-    'ເກົາ'  => { long => 0 },
+    'ເກົາ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ເXົາ', vowel_length => 'short' },
 
-    'ເກຶອ'  => { long => 0 },
-    'ເກືອ'  => { long => 1 },
+    'ເກຶອ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ເXຶອ', vowel_length => 'short' },
+    'ເກືອ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ເXືອ', vowel_length => 'long' },
 
-    #'ກັວນ'  => { long => 0 },   TODO
-    #'ກັວກ'  => { long => 0 },
-    'ກວດ'  => { long => 1 },
+    'ກວດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'XວX', vowel_length => 'long' },
+    'ກັວກ' => { consonant => 'ກ', end_consonant => 'ກ', syllable => 'ກັວກ', tone => 'HIGH_STOP', vowel => 'XັວX', vowel_length => 'short' },
 
-    'ໄກ'   => { long => 1 },
-    'ໃກ'   => { long => 1 },
-    'ກາຍ'  => { long => 1 },
-    'ກັຍ'   => { long => 0 },
+    'ໄກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໄX', vowel_length => 'long' },
+    'ໃນ' => { consonant => 'ນ', tone => 'HIGH', vowel => 'ໃX', vowel_length => 'long' },
+    'ກາຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', vowel => 'XາX', vowel_length => 'short' },
+    'ກັຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', vowel => 'XັX', vowel_length => 'short' },
 
-    'ແປຽ'  => { long => 0 },
-    'ເກົາ'  => { long => 0 },
-    'ກໍາ'   => { long => 0 },  # /am/, decomposed
-    'ກຳ'   => { long => 0 },  # /am/, composed
+    'ແປຽ' => { consonant => 'ປ', tone => 'HIGH_STOP', vowel => 'ແXຽ', vowel_length => 'short' },
+    'ກໍາ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xໍາ', vowel_length => 'short' },  # /am/, decomposed
+    'ກຳ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xຳ', vowel_length => 'short' },  # /am/, composed
 
-    'ກັນ' => [ qw/ ກັນ / ],
-    'ກັບ' => [ qw/ ກັບ / ],
-    'ກຽດ' => [ qw/ ກຽດ / ],
-    'ຂອງ' => [ qw/ ຂອງ / ],
-    'ຄວນ' => [ qw/ ຄວນ / ],
-    'ຄວາມ' => [ qw/ ຄວາມ / ],
-    'ຄິດ' => [ qw/ ຄິດ / ],
-    'ຄື' => [ qw/ ຄື / ],
-    'ຄົນ' => [ qw/ ຄົນ / ],
-    'ຕົວ' => [ qw/ ຕົວ / ],
-    'ຕໍ່' => [ qw/ ຕໍ່ / ],
-    'ທິ' => [ qw/ ທິ / ],
-    'ທຸກ' => [ qw/ ທຸກ / ],
-    'ທຸກໆ' => [ qw/ ທຸກໆ / ],
-    'ທຽມ' => [ qw/ ທຽມ / ],
-    'ນຸດ' => [ qw/ ນຸດ / ],
-    'ນ້ອງ' => [ qw/ ນ້ອງ / ],
-    'ປະ' => [ qw/ ປະ / ],
-    'ຜົນ' => [ qw/ ຜົນ / ],
-    'ພາບ' => [ qw/ ພາບ / ],
-    'ພຶດ' => [ qw/ ພຶດ / ],
-    'ມະ' => [ qw/ ມະ / ],
-    'ມັນ' => [ qw/ ມັນ / ],
-    'ມາ' => [ qw/ ມາ / ],
-    'ມີ' => [ qw/ ມີ / ],
-    'ວ່າ' => [ qw/ ວ່າ / ],
-    'ສັກ' => [ qw/ ສັກ / ],
-    'ສິດ' => [ qw/ ສິດ / ],
-    'ສີ' => [ qw/ ສີ / ],
-    'ສ່ວນ' => [ qw/ ສ່ວນ / ],
-    'ອ້າຍ' => [ qw/ ອ້າຍ / ],
-    'ເກີດ' => [ qw/ ເກີດ / ],
-    'ເທົ່າ' => [ qw/ ເທົ່າ / ],
-    'ເປັນ' => [ qw/ ເປັນ / ],
-    'ເມີ' => [ qw/ ເມີ / ],
-    'ເສຣີ' => [ qw/ ເສຣີ / ],
-    'ເຫດ' => [ qw/ ເຫດ / ],
-    'ເຫັນ' => [ qw/ ເຫັນ / ],
-    'ແຕ່' => [ qw/ ແຕ່ / ],
-    'ແລະ' => [ qw/ ແລະ / ],
-    'ໃຜ' => [ qw/ ໃຜ / ],
-
+    'ກຽດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'XຽX', vowel_length => 'short' },
+    'ຈື່ງ' => { consonant => 'ຈ', end_consonant => 'ງ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'XືX', vowel_length => 'short' },
+    'ຊັນ' => { consonant => 'ຊ', end_consonant => 'ນ', tone => 'MID_STOP', vowel => 'XັX', vowel_length => 'short' },
+    'ຊົ່ວ' => { consonant => 'ຊ', end_consonant => 'ວ', tone => 'MID_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'XົX', vowel_length => 'short' },
+    'ຍະ' => { consonant => 'ຍ', tone => 'MID_STOP', vowel => 'Xະ', vowel_length => 'short' },
+    'ດີ' => { consonant => 'ດ', tone => 'LOW', vowel => 'Xີ', vowel_length => 'long' },
+    'ດ້ວຍ' => { consonant => 'ດ', end_consonant => 'ຍ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'XວX', vowel_length => 'long' },
+    'ຕິ' => { consonant => 'ຕ', tone => 'HIGH_STOP', vowel => 'Xິ', vowel_length => 'short' },
+    'ຕົນ' => { consonant => 'ຕ', end_consonant => 'ນ', tone => 'HIGH_STOP', vowel => 'XົX', vowel_length => 'short' },
+    'ຕ້ອງ' => { consonant => 'ຕ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'XອX', vowel_length => 'long' },
+    'ຕໍ່' => { consonant => 'ຕ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ທາງ' => { consonant => 'ທ', end_consonant => 'ງ', tone => 'MID_STOP', vowel => 'XາX', vowel_length => 'short' },
+    'ທຳ' => { consonant => 'ທ', tone => 'MID_STOP', vowel => 'Xຳ', vowel_length => 'short' },
+    'ນຸດ' => { consonant => 'ນ', end_consonant => 'ດ', tone => 'MID_STOP', vowel => 'XຸX', vowel_length => 'short' },
+    'ນ້ອງ' => { consonant => 'ນ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'XອX', vowel_length => 'long' },
+    'ປະ' => { consonant => 'ປ', tone => 'HIGH_STOP', vowel => 'Xະ', vowel_length => 'short' },
+    'ປັດ' => { consonant => 'ປ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'XັX', vowel_length => 'short' },
+    'ພາບ' => { consonant => 'ພ', end_consonant => 'ບ', tone => 'MID_STOP', vowel => 'XາX', vowel_length => 'short' },
+    'ພີ່' => { consonant => 'ພ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xີ', vowel_length => 'long' },
+    'ພຶດ' => { consonant => 'ພ', end_consonant => 'ດ', tone => 'MID_STOP', vowel => 'XຶX', vowel_length => 'short' },
+    'ມະ' => { consonant => 'ມ', tone => 'MID_STOP', vowel => 'Xະ', vowel_length => 'short' },
+    'ມາ' => { consonant => 'ມ', tone => 'HIGH', vowel => 'Xາ', vowel_length => 'long' },
+    'ມີ' => { consonant => 'ມ', tone => 'HIGH', vowel => 'Xີ', vowel_length => 'long' },
+    'ສະ' => { consonant => 'ສ', tone => 'HIGH_STOP', vowel => 'Xະ', vowel_length => 'short' },
+    'ສັກ' => { consonant => 'ສ', end_consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'XັX', vowel_length => 'short' },
+    'ສຳ' => { consonant => 'ສ', tone => 'HIGH_STOP', vowel => 'Xຳ', vowel_length => 'short' },
+    'ສິດ' => { consonant => 'ສ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'XິX', vowel_length => 'short' },
+    'ຮູ້' => { consonant => 'ຮ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xູ', vowel_length => 'long' },
+    'ເກີດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'ເXີX', vowel_length => 'short' },
+    'ເສລີ' => { consonant => 'ສ', tone => 'LOW_RISING', vowel => 'ເXີ', vowel_length => 'long' },
+    'ເໝີ' => { consonant => 'ໝ', tone => 'LOW_RISING', vowel => 'ເXີ', vowel_length => 'long' },
+    'ແລະ' => { consonant => 'ລ', tone => 'MID_STOP', vowel => 'ແXະ', vowel_length => 'short' },
+    'ໂນ' => { consonant => 'ນ', tone => 'HIGH', vowel => 'ໂX', vowel_length => 'long' },
+    'ໃກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໃX', vowel_length => 'long' },
+    'ໜ້າ' => { consonant => 'ໜ', tone => 'MID_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xາ', vowel_length => 'long' },
 );
 
 isa_ok(Lingua::LO::Transform::Classify->new('ສະ'), 'Lingua::LO::Transform::Classify');
 for my $syllable (sort keys %tests) {
-    print "$syllable => " . print_struct(Lingua::LO::Transform::Classify::classify($syllable)) . "\n";
-}
-sub print_struct {
-    my %s = @_;
-    return sprintf('{ %s }', join(", ", map { "$_ => '$s{$_}'" } sort keys %s));
+    my %c = %{ Lingua::LO::Transform::Classify->new($syllable) };
+    #print "'$syllable' => " . print_struct(%c) . "\n";
+    #next;
+    delete $c{parse};
+    delete $c{$_} for grep { not defined $c{$_} } keys %c;
+    $tests{$syllable}{syllable} = $syllable;    # trivial, doesn't need to be mentioned above
+    is_deeply(\%c, $tests{$syllable}, "`$syllable' analyzed correctly")
 }
 done_testing;
+
+# Just for adding new tests
+sub print_struct {
+    my %s = @_;
+    return sprintf('{ %s },',
+        join(", ",
+            map {
+                sprintf "%s => %s", $_, ref($s{$_}) ? print_struct(%{$s{$_}}) : "'$s{$_}'"
+            }
+            grep {
+                defined $s{$_} and !/^parse$/
+            } sort keys %s
+        )
+    );
+}
 
