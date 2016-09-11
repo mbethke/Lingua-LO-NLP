@@ -4,6 +4,7 @@ use warnings;
 use 5.012000;
 use utf8;
 use feature qw/ unicode_strings say /;
+use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
@@ -20,24 +21,23 @@ has tone_mark => (is => 'ro');
 
 my %TONE_MARKS = (
     ""  => {
-        AKSON_SUNG => 'TONE_LOW_RISING',
-        AKSON_KANG => 'TONE_LOW',
-        AKSON_TAM  => 'TONE_HIGH',
+        AKSON_SUNG => 'LOW_RISING',
+        AKSON_KANG => 'LOW',
+        AKSON_TAM  => 'HIGH',
     },
-    "\x{0ec8}" => {
-        AKSON_SUNG => 'TONE_MID',
-        AKSON_KANG => 'TONE_MID',
-        AKSON_TAM  => 'TONE_MID',
+    "\N{LAO TONE MAI EK}" => {
+        AKSON_SUNG => 'MID',
+        AKSON_KANG => 'MID',
+        AKSON_TAM  => 'MID',
     },
-    "\x{0ec9}" => {
-        AKSON_SUNG => 'TONE_MID_FALLING',
-        AKSON_KANG => 'TONE_HIGH_FALLING',
-        AKSON_TAM  => 'TONE_HIGH_FALLING',
+    "\N{LAO TONE MAI THO}" => {
+        AKSON_SUNG => 'MID_FALLING',
+        AKSON_KANG => 'HIGH_FALLING',
+        AKSON_TAM  => 'HIGH_FALLING',
     },
-    "\x{0eca}" => { },  # TODO
-    "\x{0ecb}" => { }   # TODO
+    "\N{LAO TONE MAI TI}" => { },  # TODO
+    "\N{LAO TONE MAI CATAWA}" => { }   # TODO
 );
-my $TONE_CHARCLASS = '[' . join('', sort keys %TONE_MARKS) . ']';
 
 my %CONSONANTS = (
    ກ  => { cat => 'AKSON_KANG', end => 'END_NOTONE' },
@@ -165,7 +165,7 @@ sub _classify {
        $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
    } else {
        $class{vowel_length} = 'short';
-       $class{tone} = $cc eq 'AKSON_TAM' ? 'TONE_MID_STOP' : 'TONE_HIGH_STOP';
+       $class{tone} = $cc eq 'AKSON_TAM' ? 'MID_STOP' : 'HIGH_STOP';
    }
    return \%class;
 }
