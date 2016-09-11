@@ -157,13 +157,14 @@ sub syllable_named {
         }
     }
 
-    my $syl = _assemble_regexp(\%fragments);
-    return qr/ $syl /x;
+    my $syl_capture = _assemble_regexp(\%fragments);
+    my $syl_short = syllable_short();
+    return qr/ $syl_capture (?= \P{Lao} | \s+ | $ | $syl_short )/x;
 }
 
 sub syllable_full {
-    my $syl = syllable_short();
-    return qr/ $syl (?=$syl|\P{Lao}|\s+|$) /x;
+    my $syl_short = syllable_short();
+    return qr/ $syl_short (?= \P{Lao} | \s+ | $ | $syl_short ) /x;
 }
 
 sub _named_capture {
