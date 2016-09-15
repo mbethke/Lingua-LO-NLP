@@ -9,7 +9,6 @@ use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
 use Lingua::LO::Transform::Regexp;
-use Carp;
 use Data::Dumper;
 
 has syllable => (is => 'ro');
