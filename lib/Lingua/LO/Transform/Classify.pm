@@ -14,6 +14,7 @@ use Data::Dumper;
 has syllable => (is => 'ro');
 has vowel => (is => 'ro');
 has consonant => (is => 'ro');
+has end_consonant => (is => 'ro');
 has vowel_length => (is => 'ro');
 has tone => (is => 'ro');
 has tone_mark => (is => 'ro');
