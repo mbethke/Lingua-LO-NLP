@@ -12,6 +12,7 @@ use Lingua::LO::Transform::Regexp;
 use Data::Dumper;
 
 has syllable => (is => 'ro');
+has parse => (is => 'ro');
 has vowel => (is => 'ro');
 has consonant => (is => 'ro');
 has end_consonant => (is => 'ro');
