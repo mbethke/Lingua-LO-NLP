@@ -19,6 +19,7 @@ has end_consonant => (is => 'ro');
 has vowel_length => (is => 'ro');
 has tone => (is => 'ro');
 has tone_mark => (is => 'ro');
+has h => (is => 'ro');
 
 my %TONE_MARKS = (
     ""  => {
@@ -150,7 +151,7 @@ sub _classify {
 
    $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
    my %class = ( syllable => $s, parse => { %+ } );
-   @class{qw/ consonant end_consonant tone_mark /} = @+{qw/ consonant end_consonant tone_mark /};
+   @class{qw/ consonant end_consonant tone_mark h /} = @+{qw/ consonant end_consonant tone_mark h /};
 
    my @vowels = $+{vowel0} // ();
    push @vowels, 'X';
@@ -161,6 +162,13 @@ sub _classify {
    #say Dumper($class{vowel});
    my $v = $VOWELS{ $class{vowel} };
    my $cc = $CONSONANTS{ $class{consonant} }{cat};  # consonant category
+   if($class{h}) {
+       if($cc eq 'AKSON_TAM') {
+           $cc = 'AKSON_SUNG';
+       } else {
+           die "Unhandled consonant combination: $class{h}$class{consonant}";
+       }
+   }
    if( $v->{long} ) {
        $class{vowel_length} = 'long';
        $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
