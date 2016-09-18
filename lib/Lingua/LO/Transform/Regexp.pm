@@ -139,7 +139,7 @@ sub syllable_short {
         $syl_re =~ s/\$($atom)/$fragments{$1}/eg;
     }
 
-    return = qr/ $syl_re /x;
+    return qr/ $syl_re /x;
 }
 
 sub syllable_named {
