@@ -83,7 +83,7 @@ my %CONSONANTS = (
 my %VOWELS = (
     ### Monophthongs
     'Xະ'   => { long => 0 },  # /a/
-    'XັX'   => { long => 0 },  # /a/ with end consonant
+    'Xັ'    => { long => 0 },  # /a/ with end consonant
     'Xາ'   => { long => 1 },  # /aː/
 
     'Xິ'    => { long => 0 },  # /i/
@@ -96,11 +96,11 @@ my %VOWELS = (
     'Xູ'    => { long => 1 },  # /uː/
 
     'ເXະ'  => { long => 0 },  # /e/
-    'ເXັX'  => { long => 0 },  # /e/ with end consonant
+    'ເXັ'   => { long => 0 },  # /e/ with end consonant
     'ເX'   => { long => 1 },  # /eː/
 
     'ແXະ'  => { long => 0 },  # /ɛ/
-    'ແXັX'  => { long => 0 },  # /ɛ/ with end consonant
+    'ແXັ'   => { long => 0 },  # /ɛ/ with end consonant
     'ແX'   => { long => 1 },  # /ɛː/
 
     'ໂXະ'  => { long => 0 },  # /o/
@@ -108,9 +108,9 @@ my %VOWELS = (
     'ໂX'   => { long => 1 },  # /oː/
 
     'ເXາະ' => { long => 0 },  # /ɔ/
-    'XັອX'  => { long => 0 },  # /ɔ/ with end consonant
+    'Xັອ'   => { long => 0 },  # /ɔ/ with end consonant
     'Xໍ'    => { long => 1 },  # /ɔː/
-    'XອX'  => { long => 1 },  # /ɔː/ with end consonant
+    'Xອ'   => { long => 1 },  # /ɔː/ with end consonant
 
     'ເXິ'   => { long => 0 },  # /ɤ/
     'ເXີ'   => { long => 1 },  # /ɤː/
@@ -125,9 +125,9 @@ my %VOWELS = (
     'ເXືອ'  => { long => 1 },  # /ɯːə/
 
     'Xົວະ'  => { long => 0 },  # /uə/
-    'XັວX'  => { long => 0 },  # /uə/
+    'Xັວ'   => { long => 0 },  # /uə/
     'Xົວ'   => { long => 1 },  # /uːə/
-    'XວX'  => { long => 1 },  # /uːə/ with end consonant
+    'Xວ'   => { long => 1 },  # /uːə/ with end consonant
 
     'ໄX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
     'ໃX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
@@ -156,10 +156,9 @@ sub _classify {
    my @vowels = $+{vowel0} // ();
    push @vowels, 'X';
    push @vowels, grep { defined } map { $+{"vowel$_"} } 1..3;
-   push @vowels, 'X' if defined $+{end_consonant};
+   #push @vowels, 'X' if defined $+{end_consonant};
    $class{vowel} = join('', @vowels);
 
-   #say Dumper($class{vowel});
    my $v = $VOWELS{ $class{vowel} };
    my $cc = $CONSONANTS{ $class{consonant} }{cat};  # consonant category
    if($class{h}) {
@@ -176,6 +175,7 @@ sub _classify {
        $class{vowel_length} = 'short';
        $class{tone} = $cc eq 'AKSON_TAM' ? 'MID_STOP' : 'HIGH_STOP';
    }
+   #say Dumper(\%class);
    return \%class;
 }
 
