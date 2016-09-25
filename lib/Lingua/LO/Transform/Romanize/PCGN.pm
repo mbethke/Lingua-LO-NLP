@@ -93,6 +93,7 @@ my %VOWELS = (
     'XັອX'  => 'o',
     'Xໍ'    => 'o',
     'XອX'  => 'o',
+    'Xົ'    => 'o',
 
     'ເXິ'   => 'eu',
     'ເXີ'   => 'eu',
@@ -144,7 +145,7 @@ sub romanize_syllable {
 
     if(defined $endcons) {
         if(exists $CONS_VOWELS{ $endcons }) {
-            $vowel =~ s/X$/$endcons/;   # consonant can be used as a vowel
+            $vowel .= $endcons;   # consonant can be used as a vowel
             $endcons = '';
         } else {
             $endcons = _consonant($endcons, 1);
@@ -153,8 +154,6 @@ sub romanize_syllable {
         $endcons = '';  # avoid special-casing later
     }
 
-    warn "VOWEL: $vowel\n";
-    warn "ENDCONS: $endcons\n" if $endcons;
     $result .= $VOWELS{ $vowel } . $endcons;
     print Dumper($parse);
     $result .= "-$result" if defined $parse->{extra}  and $parse->{extra} eq 'ໆ';  # duplication sign
@@ -170,5 +169,4 @@ sub _consonant {
 }
 
 1;
-
 
