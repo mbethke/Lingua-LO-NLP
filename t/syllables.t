@@ -20,18 +20,19 @@ my %tests = (
     => [ "\N{LAO LETTER PHO SUNG}\N{LAO VOWEL SIGN UU}\N{LAO TONE MAI THO}" ],
     "\N{LAO LETTER PHO SUNG}\N{LAO VOWEL SIGN UU}\N{LAO TONE MAI THO}\N{ZERO WIDTH SPACE}\N{LAO VOWEL SIGN E}\N{LAO LETTER KHO SUNG}\N{LAO VOWEL SIGN I}\N{LAO TONE MAI THO}\N{LAO VOWEL SIGN AA}"
     => [ "\N{LAO LETTER PHO SUNG}\N{LAO VOWEL SIGN UU}\N{LAO TONE MAI THO}" ],
-    ກວ່າດອກ໐໑໒໓  => [ qw/ ກວ່າ ດອກ ໐໑໒໓ /],
-    ຄຳດີ         => [ qw/ ຄຳ ດີ /],   # composed sala am
-    ຄໍາດີ         => [ qw/ ຄໍາ ດີ /],   # decomposed sala am
-    ຄໍາູດີ         => [ qw/ ດີ /],      # malformed first syllable "khamu" dropped
+    ກວ່າດອກ໐໑໒໓  => [qw/ ກວ່າ ດອກ ໐໑໒໓ /],
+    ຄຳດີ         => [qw/ ຄຳ ດີ /],   # composed sala am
+    ຄໍາດີ         => [qw/ ຄໍາ ດີ /],   # decomposed sala am
+    ຄໍາູດີ         => [qw/ ດີ /],      # malformed first syllable "khamu" dropped
     ກັ           => [ ],
-    ກັນ          => [ qw/ ກັນ / ],
-    ກັວນ         => [ qw/ ກັວນ / ],
+    ກັນ          => [qw/ ກັນ / ],
+    ກັວນ         => [qw/ ກັວນ / ],
     ກົ           => [ ],
-    ກົດ          => [ qw/ ກົດ / ],
+    ກົດ          => [qw/ ກົດ / ],
     ກັອກ         => [ ],
-    ແປຽ         => [ qw/ ແປຽ / ],
+    ແປຽ         => [qw/ ແປຽ / ],
     ເກັາະ        => [ ],
+    ມື້ນີ້          => [qw/ ມື້ ນີ້ /],
     'ມະນຸດທຸກຄົນເກີດມາມີກຽດສັກສີ/ສິດທິ/ເສຣີພາບແລະຄວາມສເມີພາບເທົ່າທຽມກັນ. ທຸກໆຄົນມີເຫດຜົນແລະຄວາມຄິດຄວາມເຫັນສ່ວນຕົວຂອງໃຜຂອງມັນ/ແຕ່ວ່າມະນຸດທຸກໆຄົນຄວນປະພຶດຕໍ່ກັນຄືກັນກັບເປັນອ້າຍນ້ອງກັນ' => [ qw/ ມະ ນຸດ ທຸກ ຄົນ ເກີດ ມາ ມີ ກຽດ ສັກ ສີ ສິດ ທິ ເສຣີ ພາບ ແລະ ເມີ ພາບ ເທົ່າ ທຽມ ກັນ ທຸກໆ ຄົນ ມີ ເຫດ ຜົນ ແລະ ຄວາມ ຄິດ ຄວາມ ເຫັນ ສ່ວນ ຕົວ ຂອງ ໃຜ ຂອງ ມັນ ແຕ່ ວ່າ ມະ ນຸດ ທຸກໆ ຄົນ ຄວນ ປະ ພຶດ ຕໍ່ ກັນ ຄື ກັນ ກັບ ເປັນ ອ້າຍ ນ້ອງ ກັນ /],
 );
 
