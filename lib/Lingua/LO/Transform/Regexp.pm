@@ -98,12 +98,16 @@ my $re_num  = '[໑໒໓໔໕໖໗໘໙໐]';
 my $rex1012 = '$x10_12';
 
 my $re_basic = <<EOF;
-(?: (?:
-(?: $re1_all (?: $re1_1 | $re1_2 | $re1_3 | $re1_4 | $re1_5 | $re1_6 | $re1_8 ) ) |
-(?: $re2_all (?: $re2_1 | $re2_2 | $re2_3 ) ) |
-(?: $re3_all (?: $re3_1 | $re3_2 | $re3_3 ) ) |
-$re4  | $re5  | $re6  | $re7  | $re8  | $re9  | $re10 |
-$re11 | $re12 | $re13 | $re14 ) $rex1012? | $re_num+ )
+(?:
+  (?:
+    (?: $re1_all (?: $re1_1 | $re1_2 | $re1_3 | $re1_4 | $re1_5 | $re1_6 | $re1_8 ) ) |
+    (?: $re2_all (?: $re2_1 | $re2_2 | $re2_3 ) ) |
+    (?: $re3_all (?: $re3_1 | $re3_2 | $re3_3 ) ) |
+    $re4  | $re5  | $re6  | $re7  | $re8  | $re9  |
+    $re10 | $re11 | $re12 | $re13 | $re14
+  ) $rex1012? |
+  $re_num+
+)
 EOF
 $re_basic =~ s/\n//gs;
 $re_basic =~ s/\s+/ /g; # keep it a bit more readable. could use s/\s+//g
@@ -161,9 +165,13 @@ sub syllable_full {
 
 sub _named_capture {
     my ($fragments, $atom, $match) = @_;
-    return defined $capture_names{$atom} ?
-    sprintf( '(?<%s> %s)', $capture_names{$atom}, $fragments->{$match} ) :
-    $fragments->{$match};
+
+    return sprintf(
+        '(?<%s> %s)',
+        $capture_names{$atom}, $fragments->{$match}
+    ) if defined $capture_names{$atom};
+
+    return $fragments->{$match};
 }
 
 1;
