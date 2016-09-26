@@ -60,13 +60,14 @@ sub ຫ {
     die "unhandled ຫ";
 }
 
-my %CONS_VOWELS = map { $_ => 1 } qw/ ຍ ຽ ອ /;
+my %CONS_VOWELS = map { $_ => 1 } qw/ ຍ ຽ ອ ວ /;
 
 my %VOWELS = (
     ### Monophthongs
     'Xະ'   => 'a',
-    'XັX'   => 'a',
+    'Xັ'    => 'a',
     'Xາ'   => 'a',
+    'Xາວ'  => 'ao',
 
     'Xິ'    => 'i',
     'Xີ'    => 'i',
@@ -78,39 +79,42 @@ my %VOWELS = (
     'Xູ'    => 'ou',
 
     'ເXະ'  => 'é',
-    'ເXັX'  => 'é',
+    'ເXັ'   => 'é',
     'ເX'   => 'é',
 
     'ແXະ'  => 'è',
-    'ແXັX'  => 'è',
+    'ແXັ'   => 'è',
     'ແX'   => 'è',
+    'ແXວ'  => 'èo',
 
     'ໂXະ'  => 'ô',
     'Xົ'    => 'ô',
     'ໂX'   => 'ô',
+    'ໂXຍ'  => 'ôy', # TODO correct?
 
     'ເXາະ' => 'o',
-    'XັອX'  => 'o',
+    'Xັອ'   => 'o',
     'Xໍ'    => 'o',
-    'XອX'  => 'o',
-    'Xົ'    => 'o',
+    'Xອ'   => 'o',
 
     'ເXິ'   => 'eu',
     'ເXີ'   => 'eu',
-    'ເXື'   => 'eu', # TODO new?
+    'ເXື'   => 'eu', # TODO correct?
 
     'ເXັຍ'  => 'ia',  # /iə/
     'Xັຽ'   => 'ia',  # /iə/
     'ເXຍ'  => 'ia',  # /iːə/
     'Xຽ'   => 'ia',  # /iːə/
+    'Xຽວ'  => 'iao',
 
     'ເXຶອ'  => 'ua',
     'ເXືອ'  => 'ua',
 
     'Xົວະ'  => 'oua',
-    'XັວX'  => 'oua',
+    'Xັວ '  => 'oua',
     'Xົວ'   => 'oua',
-    'XວX'  => 'oua',
+    'Xວ'   => 'oua',
+    'Xວຍ'  => 'ouai',
 
     'ໄX'   => 'ai',
     'ໃX'   => 'ai',
@@ -118,6 +122,7 @@ my %VOWELS = (
     'Xັຍ'   => 'ay',  # /aj/
 
     'ເXົາ'  => 'ao',
+    'Xຳ'   => 'am', # composed U+0EB3
     'Xໍາ'   => 'am',
 );
 
@@ -154,8 +159,10 @@ sub romanize_syllable {
         $endcons = '';  # avoid special-casing later
     }
 
+    # TODO remove debug
+    #warn sprintf("Missing VOWELS def for `%s' in `%s' [%s] [%s]", $vowel, $c->syllable, Dumper($vowel), Dumper($parse)) unless defined $VOWELS{ $vowel };
+
     $result .= $VOWELS{ $vowel } . $endcons;
-    print Dumper($parse);
     $result .= "-$result" if defined $parse->{extra}  and $parse->{extra} eq 'ໆ';  # duplication sign
     return $result;
 }
