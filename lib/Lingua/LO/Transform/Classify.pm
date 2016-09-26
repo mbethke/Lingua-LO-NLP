@@ -74,6 +74,8 @@ my %CONSONANTS = (
    ຫວ => { cat => 'AKSON_SUNG' },
 );
 
+my %H_COMBINERS = map { $_ => 1 } qw/ ງ ຍ ວ /;
+
 my %VOWELS = (
     ### Monophthongs
     'Xະ'   => { long => 0 },  # /a/
@@ -145,7 +147,7 @@ sub _classify {
 
    $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
    my %class = ( syllable => $s, parse => { %+ } );
-   @class{qw/ consonant end_consonant tone_mark h /} = @+{qw/ consonant end_consonant tone_mark h /};
+   @class{qw/ consonant end_consonant tone_mark semivowel /} = @+{qw/ consonant end_consonant tone_mark semivowel /};
 
    my @vowels = $+{vowel0} // ();
    push @vowels, 'X';
@@ -155,11 +157,21 @@ sub _classify {
 
    my $v = $VOWELS{ $class{vowel} };
    my $cc = $CONSONANTS{ $class{consonant} }{cat};  # consonant category
-   if($class{h}) {
-       if($cc eq 'AKSON_TAM') {
+   if($+{h}) {
+       if(exists $H_COMBINERS{ $class{consonant} }) {
+           # The consonant combines with ຫ to chnage the tone class
            $cc = 'AKSON_SUNG';
        } else {
-           die "Unhandled consonant combination: $class{h}$class{consonant}";
+           # If there is a preceding vowel, it combines with the h and the
+           # consonant is actually an end consonant
+           if(defined $+{vowel0}) {
+               $class{end_consonant} = $class{consonant};
+               $class{consonant} = 'ຫ';
+               $cc = 'AKSON_SUNG'; # $CONSONANTS{'ຫ'}{cat}
+               delete $class{h};
+           } else {
+               die "Unhandled h-combination: ຫ$class{consonant}.\n".Dumper(\%+);
+           }
        }
    }
    if( $v->{long} ) {
