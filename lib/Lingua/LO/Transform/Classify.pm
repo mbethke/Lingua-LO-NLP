@@ -11,15 +11,9 @@ use Class::Accessor::Fast 'antlers';
 use Lingua::LO::Transform::Regexp;
 use Data::Dumper;
 
-has syllable => (is => 'ro');
-has parse => (is => 'ro');
-has vowel => (is => 'ro');
-has consonant => (is => 'ro');
-has end_consonant => (is => 'ro');
-has vowel_length => (is => 'ro');
-has tone => (is => 'ro');
-has tone_mark => (is => 'ro');
-has h => (is => 'ro');
+for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length tone tone_mark h semivowel /) {
+    has $attribute => (is => 'ro');
+}
 
 my %TONE_MARKS = (
     ""  => {
