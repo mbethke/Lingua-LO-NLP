@@ -7,7 +7,7 @@ use feature 'unicode_strings';
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use charnames qw/ :full lao /;
 use Carp;
-use Unicode::Normalize qw/ NFD /;
+use Unicode::Normalize qw/ NFC /;
 use Class::Accessor::Fast 'antlers';
 use Lingua::LO::Transform::Regexp;
 
@@ -21,7 +21,7 @@ sub new {
     my %opts = @_;
     croak("`text' key missing or undefined") unless defined $opts{text};
     return bless $class->SUPER::new( {
-            text => NFD($opts{text}),
+            text => NFC($opts{text}),
         }
     ), $class;
 }
