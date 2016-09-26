@@ -7,7 +7,7 @@ use open qw/ :encoding(UTF-8) :std /;
 use Test::More;
 use Lingua::LO::Transform::Romanize;
 
-my %tests = (
+my @tests = (
     'ເຄື່ອງກໍາເນີດໄຟຟ້າ' => 'khuang-kam-neut-fai-fa',
     'ສະບາຍດີ'    => 'sa-bay-di',
     'ດີໆ'        => 'di-di',
@@ -24,10 +24,12 @@ my %tests = (
 );
 
 my $r = Lingua::LO::Transform::Romanize->new(variant => 'PCGN');
+is(@tests % 2, 0) or BAIL_OUT('BUG: set up \@tests correctly!');
 isa_ok($r, 'Lingua::LO::Transform::Romanize::PCGN');
 
-for my $word (sort keys %tests) {
-    is($r->romanize($word), $tests{$word}, "$word romanized to `$tests{$word}'");
+while(my $word = shift @tests) {
+    my $romanized = shift @tests;
+    is($r->romanize($word), $romanized, "$word romanized to `$romanized'");
 }
 done_testing;
 
