@@ -16,6 +16,7 @@ my %tests = (
     'ເຄື່ອງກໍາເນີດໄຟຟ້າ' => 'khuang-kam-neut-fai-fa',
     'ມື້ນີ້'        => 'mu-ni',
     'ມື້ວານນີ້'     => 'mu-van-ni',
+    'ໃຫຍ່'       => 'nyai',
 );
 
 my $r = Lingua::LO::Transform::Romanize->new(variant => 'PCGN');
