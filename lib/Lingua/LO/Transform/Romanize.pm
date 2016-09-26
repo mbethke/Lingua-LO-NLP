@@ -18,11 +18,16 @@ sub new {
 
 sub romanize {
     my ($self, $text) = @_;
+    my $result = '';
 
-    my $splitter = Lingua::LO::Transform::Syllables->new( text => $text );
-    return join('-',
-        map { $self->romanize_syllable($_) } $splitter->get_syllables
-    );
+    my @frags = Lingua::LO::Transform::Syllables->new( text => $text )->get_fragments;
+    while(@frags) {
+        my @lao;
+        push @lao, shift @frags while @frags and $frags[0]->{is_lao};
+        $result .= join('-', map { $self->romanize_syllable( $_->{text} ) } @lao);
+        $result .= (shift @frags)->{text} while @frags and not $frags[0]->{is_lao};
+    }
+    return $result;
 }
 
 1;
