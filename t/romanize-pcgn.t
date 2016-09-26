@@ -8,15 +8,19 @@ use Test::More;
 use Lingua::LO::Transform::Romanize;
 
 my %tests = (
+    'ເຄື່ອງກໍາເນີດໄຟຟ້າ' => 'khuang-kam-neut-fai-fa',
     'ສະບາຍດີ'    => 'sa-bay-di',
     'ດີໆ'        => 'di-di',
     'ແຫນ'       => 'hèn',
     'ແໜ'        => 'nè',
-    'ຫົກສິບ'      => 'hok-sip',
-    'ເຄື່ອງກໍາເນີດໄຟຟ້າ' => 'khuang-kam-neut-fai-fa',
+    'ຫົກສິບ'      => 'hôk-sip',
     'ມື້ນີ້'        => 'mu-ni',
     'ມື້ວານນີ້'     => 'mu-van-ni',
-    'ໃຫຍ່'       => 'nyai',
+    'ໃຫຍ່'       => 'gnai',
+    'ຕົວ'        => 'toua',
+    'ຄົນ'        => 'khôn',
+    'ໃນວົງ'      => 'nai-vông',
+    'ເຫຼົາ'       => 'lao',
 );
 
 my $r = Lingua::LO::Transform::Romanize->new(variant => 'PCGN');
