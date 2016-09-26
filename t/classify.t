@@ -30,7 +30,7 @@ my %tests = (
     'ສວວມ' => { consonant => 'ສ', end_consonant => 'ມ', tone => 'LOW_RISING', vowel => 'Xວ', vowel_length => 'long' },
     # TODO 'ຫງ໋ຽງ' => { consonant => 'ງ', end_consonant => 'ງ', h => 'ຫ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI CATAWA}", vowel => 'Xຽ', vowel_length => 'long' },
     'ແໜ' => { consonant => 'ໜ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
-    'ແຫນ' => { consonant => 'ນ', h => 'ຫ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
+    'ແຫນ' => { consonant => 'ຫ', end_consonant => 'ນ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
     'ຫາມ' => { consonant => 'ຫ', end_consonant => 'ມ', tone => 'LOW_RISING', vowel => 'Xາ', vowel_length => 'long' },
     'ເກວວ' => { consonant => 'ກ', end_consonant => 'ວ', tone => 'LOW', vowel => 'ເX', vowel_length => 'long' },
     'ເກິ່ຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'ເXິ', vowel_length => 'short' },
