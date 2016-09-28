@@ -22,9 +22,9 @@ my @tests = (
     'ໃນວົງ'      => 'nai-vông',
     'ເຫຼົາ'       => 'lao',
 );
+@tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
 my $r = Lingua::LO::Transform::Romanize->new(variant => 'PCGN');
-is(@tests % 2, 0) or BAIL_OUT('BUG: set up \@tests correctly!');
 isa_ok($r, 'Lingua::LO::Transform::Romanize::PCGN');
 
 while(my $word = shift @tests) {
