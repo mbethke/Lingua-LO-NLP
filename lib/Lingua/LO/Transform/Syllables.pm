@@ -13,17 +13,16 @@ use Lingua::LO::Transform::Regexp;
 
 has text => (is => 'ro');
 
-my $syl_re = Lingua::LO::Transform::Regexp::syllable_short();
-my $complete_syl_re = Lingua::LO::Transform::Regexp::syllable_full();
+my $syl_re = Lingua::LO::Transform::Regexp::syllable_short;
+my $complete_syl_re = Lingua::LO::Transform::Regexp::syllable_full;
 
 sub new {
     my $class = shift;
     my %opts = @_;
     croak("`text' key missing or undefined") unless defined $opts{text};
-    return bless $class->SUPER::new( {
-            text => NFC($opts{text}),
-        }
-    ), $class;
+    return bless {
+        text => NFC( $opts{text} ),
+    }, $class;
 }
 
 sub get_syllables {
