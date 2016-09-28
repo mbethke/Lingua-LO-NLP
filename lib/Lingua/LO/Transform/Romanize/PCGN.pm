@@ -38,6 +38,7 @@ my %CONSONANTS = (
    ມ  => 'm',
    ຢ  => 'y',
    ລ  => 'l',
+   "\N{LAO SEMIVOWEL SIGN LO}"  => 'l',
    ວ  => [qw/ v o /],
    ຫ  => \&ຫ,
    ອ  => '',
@@ -57,7 +58,7 @@ my %CONSONANTS = (
 sub ຫ {
     my ($c, $pos) = @_;
     return 'h' unless $pos; # initial position
-    die "unhandled ຫ";
+    die "unhandled ຫ";  # TODO: can't happen?
 }
 
 my %CONS_VOWELS = map { $_ => 1 } qw/ ຍ ຽ ອ ວ /;
@@ -138,13 +139,20 @@ sub romanize_syllable {
     my $parse = $c->parse;
     my $vowel = $c->vowel;
     
-    if($c->h and $c->parse->{vowel0}) {
+    my $cons = $c->consonant;
+    my $h = $c->h;
+    my $sv = $c->semivowel;
+    if($h and $c->parse->{vowel0}) {
         # ຫ with preceding vowel
         $result = _consonant('ຫ', 0);
-        $endcons = $c->consonant;
-        die "Unhandled parse: ".Dumper($c->parse) if $c->end_consonant;
+        $endcons = $cons;
+        die "Unhandled parse (ຫ+consonant+end_consonant): " . Dumper($c->parse) if $c->end_consonant;
+    } elsif($cons eq 'ຫ' and $sv) {
+        # ຫ with semivowel. Drop the ຫ and use the semivowel as consonant
+        $result = _consonant($sv, 0);
     } else {
-        $result = _consonant($c->consonant, 0);
+        # The regular case
+        $result = _consonant($cons, 0);
         $endcons = $c->end_consonant;
     }
 
