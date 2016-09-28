@@ -136,31 +136,27 @@ my %capture_names = (
 my @sorted_x_names = ('x9a10_3', reverse sort { length $a <=> length $b } keys %capture_names);
 
 sub syllable_short {
-    my %fragments = %regexp_fragments;  # full copy as we'll be modifying it
-
     my $syl_re = $re_basic;
     for my $atom (@sorted_x_names) {
-        $syl_re =~ s/\$($atom)/$fragments{$1}/eg;
+        $syl_re =~ s/\$($atom)/$regexp_fragments{$1}/eg;
     }
 
     return qr/ $syl_re /x;
 }
 
 sub syllable_named {
-    my %fragments = %regexp_fragments;  # full copy as we'll be modifying it
-
+    my $syl_short = syllable_short();
     my $syl_capture = $re_basic;
     for my $atom (@sorted_x_names) {
-        $syl_capture =~ s/\$($atom)/_named_capture(\%fragments, $atom, $1)/eg;
+        $syl_capture =~ s/\$($atom)/_named_capture(\%regexp_fragments, $atom, $1)/eg;
     }
 
-    my $syl_short = syllable_short();
-    return qr/ $syl_capture (?= \P{Lao} | \s+ | $ | $syl_short )/x;
+    return qr/ $syl_capture (?= \P{Lao} | \s | $ | $syl_short )/x;
 }
 
 sub syllable_full {
     my $syl_short = syllable_short();
-    return qr/ $syl_short (?= \P{Lao} | \s+ | $ | $syl_short ) /x;
+    return qr/ $syl_short (?= \P{Lao} | \s | $ | $syl_short ) /x;
 }
 
 sub _named_capture {
