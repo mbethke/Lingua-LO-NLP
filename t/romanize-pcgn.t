@@ -21,6 +21,11 @@ my @tests = (
     'ຄົນ'        => 'khôn',
     'ໃນວົງ'      => 'nai-vông',
     'ເຫຼົາ'       => 'lao',
+    'ເຫງ'       => 'héng',
+    'ຫວາດ'      => 'vat',
+    'ເສລີ'       => 'sleu',
+    'ຄວາມ'      => 'khoam',
+    'ຫຼາຍ'       => 'lay',
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
