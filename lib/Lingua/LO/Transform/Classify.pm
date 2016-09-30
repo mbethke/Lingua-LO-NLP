@@ -158,21 +158,15 @@ sub _classify {
    my $v = $VOWELS{ $class{vowel} };
    my $cc = $CONSONANTS{ $class{consonant} }{cat};  # consonant category
    if($+{h}) {
-       if(exists $H_COMBINERS{ $class{consonant} }) {
-           # The consonant combines with ຫ to chnage the tone class
-           $cc = 'AKSON_SUNG';
-       } else {
-           # If there is a preceding vowel, it combines with the h and the
-           # consonant is actually an end consonant
-           if(defined $+{vowel0}) {
-               $class{end_consonant} = $class{consonant};
-               $class{consonant} = 'ຫ';
-               $cc = 'AKSON_SUNG'; # $CONSONANTS{'ຫ'}{cat}
-               delete $class{h};
-           } else {
-               die "Unhandled h-combination: ຫ$class{consonant}.\n".Dumper(\%+);
-           }
+       $cc = 'AKSON_SUNG'; # $CONSONANTS{'ຫ'}{cat}
+
+       # If there is a preceding vowel, it uses the ຫ as a consonant and the
+       # one parsed as core consonant is actually an end consonant
+       unless($H_COMBINERS{ $class{consonant} }) {
+           $class{end_consonant} = $class{consonant};
+           $class{consonant} = 'ຫ';
        }
+       delete $class{h};
    }
    if( $v->{long} ) {
        $class{vowel_length} = 'long';
