@@ -74,7 +74,7 @@ my %CONSONANTS = (
    ຫວ => { cat => 'AKSON_SUNG' },
 );
 
-my %H_COMBINERS = map { $_ => 1 } qw/ ງ ຍ ວ /;
+my %H_COMBINERS = map { $_ => 1 } qw/ ຍ ວ /;
 
 my %VOWELS = (
     ### Monophthongs
