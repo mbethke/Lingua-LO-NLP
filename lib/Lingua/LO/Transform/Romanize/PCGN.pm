@@ -142,20 +142,19 @@ sub romanize_syllable {
     my $cons = $c->consonant;
     my $h = $c->h;
     my $sv = $c->semivowel;
-    if($h and $c->parse->{vowel0}) {
-        # ຫ with preceding vowel
-        $result = _consonant('ຫ', 0);
-        $endcons = $cons;
-        die "Unhandled parse (ຫ+consonant+end_consonant): " . Dumper($c->parse) if $c->end_consonant;
-    } elsif($cons eq 'ຫ' and $sv) {
+    #print STDERR Dumper($c);
+    if($cons eq 'ຫ' and $sv) {
+        #print STDERR "h+sv\n";
         # ຫ with semivowel. Drop the ຫ and use the semivowel as consonant
         $result = _consonant($sv, 0);
     } else {
         # The regular case
+        #print STDERR "regular\n";
         $result = _consonant($cons, 0);
-        $endcons = $c->end_consonant;
+        $result .= _consonant($sv, 1) if $sv;
     }
 
+    $endcons = $c->end_consonant;
     if(defined $endcons) {
         if(exists $CONS_VOWELS{ $endcons }) {
             $vowel .= $endcons;   # consonant can be used as a vowel
@@ -168,7 +167,7 @@ sub romanize_syllable {
     }
 
     # TODO remove debug
-    #warn sprintf("Missing VOWELS def for `%s' in `%s' [%s] [%s]", $vowel, $c->syllable, Dumper($vowel), Dumper($parse)) unless defined $VOWELS{ $vowel };
+    warn sprintf("Missing VOWELS def for `%s' in `%s' [%s] [%s]", $vowel, $c->syllable, Dumper($vowel), Dumper($parse)) unless defined $VOWELS{ $vowel };
 
     $result .= $VOWELS{ $vowel } . $endcons;
     $result .= "-$result" if defined $parse->{extra}  and $parse->{extra} eq 'ໆ';  # duplication sign
