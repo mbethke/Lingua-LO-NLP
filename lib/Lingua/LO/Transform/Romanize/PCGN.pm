@@ -10,7 +10,18 @@ use Carp;
 use Lingua::LO::Transform::Classify;
 use parent 'Lingua::LO::Transform::Romanize';
 
-=encoding utf-8
+=encoding UTF-8
+
+=head1 NAME
+
+Lingua::LO::Transform::Romanize::PCGN - Romanize Lao syllables according to the PCGN standard
+
+=head1 FUNCTION
+
+This class is not supposed to be used directly. Rather use
+L<Lingua::LO::Transform::Romanize> as a factory:
+
+    my $o = Lingua::LO::Transform::Romanize->new(variant => 'PCGN');
 
 =cut
 

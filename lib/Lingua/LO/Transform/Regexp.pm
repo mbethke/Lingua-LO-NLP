@@ -7,8 +7,29 @@ use feature 'unicode_strings';
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use charnames qw/ :full lao /;
 
+=encoding UTF-8
+
+=head1 NAME
+
+Lingua::LO::Transform::Regexp - Helper module to construct regular expressions
+
+=head1 FUNCTION
+
+Provides a few functions that return regular expressions for matching and
+extracting parts from Lao syllables. Instead of hardcoding these expressions as
+strings, they are constructed from ragments at runtime, trading maintainability
+for a small one-time initialization cost.
+
+You will probably not want to use this module on its own. If you do, see the
+other L<Lingua::LO::Transform> modules for examples.
+
+=cut
+
 # Regular expression fragments. The cryptic names correspond to the naming
-# in PHISSAMAY at al: Syllabification of Lao Script for Line Breaking
+# in PHISSAMAY et al: Syllabification of Lao Script for Line Breaking
+# Using what looks like interpolated variables in single-quoted strings is
+# intentional; the interpolation is done manually later to be able to construct
+# expressions with and without named captures.
 my %regexp_fragments = (
     x0_1    => 'ເ',
     x0_2    => 'ແ',
@@ -97,6 +118,8 @@ my $re_num  = '[໑໒໓໔໕໖໗໘໙໐]';
 
 my $rex1012 = '$x10_12';
 
+# This is the basic regexp that matches a syllable, still with variables to be
+# substituted
 my $re_basic = <<EOF;
 (?:
   (?:
@@ -113,6 +136,7 @@ $re_basic =~ s/\n//gs;
 $re_basic =~ s/\s+/ /g; # keep it a bit more readable. could use s/\s+//g
 
 # Functional names for all the x-something groups from the original paper
+# Used for named catures.
 my %capture_names = (
     'x'             => 'consonant',
     'x0_\d'         => 'vowel0',
@@ -130,10 +154,24 @@ my %capture_names = (
     'x10_12'        => 'extra',
     'x10_3'         => 'cancel',
 );
+
 # Substitute longer fragment names first so their matches don't get swallowed
 # by the shorter ones. x9a10_3 is a convenience shotcut for '(?: $x9 $x10_3)'
 # so we have to do it first.
 my @sorted_x_names = ('x9a10_3', reverse sort { length $a <=> length $b } keys %capture_names);
+
+
+=head1 FUNCTIONS
+
+=head2 syllable_short
+
+Returns a basic regexp that can match a Lao syllable. It consists of a bunch of
+alternations and will thus return the I<first> possible match which is neither
+guaranteed to be the longest nor the appropriate one in a longer sequence of
+characters. It is useful as a building block and for verifying syllables
+though.
+
+=cut
 
 sub syllable_short {
     my $syl_re = $re_basic;
@@ -144,6 +182,29 @@ sub syllable_short {
     return qr/ $syl_re /x;
 }
 
+=head2 syllable_full
+
+In addition to the matching done by L<syllable_short>, this one makes sure
+matches are either followed by another complete syllable, a blank, the end of
+string/line or some non-Lao character. This ensures correct matching of
+ambiguous syllable boundaries where the core consonant of a following syllable
+could also be an end consonant of the current one.
+
+=cut
+
+sub syllable_full {
+    my $syl_short = syllable_short();
+    return qr/ $syl_short (?= \P{Lao} | \s | $ | $syl_short ) /x;
+}
+
+=head2 syllable_named
+
+The expression returned is the same as for L<syllable_full> but also includes
+named captures that upon a successful match allow to get the syllable's parts
+from C<%+>.
+
+=cut
+
 sub syllable_named {
     my $syl_short = syllable_short();
     my $syl_capture = $re_basic;
@@ -152,11 +213,6 @@ sub syllable_named {
     }
 
     return qr/ $syl_capture (?= \P{Lao} | \s | $ | $syl_short )/x;
-}
-
-sub syllable_full {
-    my $syl_short = syllable_short();
-    return qr/ $syl_short (?= \P{Lao} | \s | $ | $syl_short ) /x;
 }
 
 sub _named_capture {

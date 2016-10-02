@@ -11,6 +11,20 @@ use Class::Accessor::Fast 'antlers';
 use Lingua::LO::Transform::Regexp;
 use Data::Dumper;
 
+=encoding UTF-8
+
+=head1 NAME
+
+Lingua::LO::Transform::Classify - Analyze a Lao syllable and provide accessors to its constituents
+
+=head1 FUNCTION
+
+Objects of this class represent a Lao syllable with an analysis of its
+constituents. After passing a valid syllable to the constructor, the parts are
+available via accessor methods as outlined below.
+
+=cut
+
 for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length tone tone_mark h semivowel /) {
     has $attribute => (is => 'ro');
 }
@@ -143,6 +157,18 @@ my %VOWELS = (
     %VOWELS = %v;
 }
 
+=head1 METHODS
+
+=head2 new
+
+C<new( $syllable )>
+
+The constructor takes a syllable as its only argument. It does not fail but may
+produce nonsense if the argument is not valid according to Lao morphology
+rules. See L<Lingua::LO::Transform::Syllables/validate> if your input doesn't
+come from this class already.
+
+=cut
 
 sub new {
     my ($class, $syllable) = @_;
@@ -186,6 +212,76 @@ sub _classify {
    #say Dumper(\%class);
    return \%class;
 }
+
+=head2 ACCESSORS
+
+
+=head3 syllable
+
+The original syllable as passed to the constructor
+
+=head3 parse
+
+A hash of raw constituents as returned by the parsing regexp. Although the
+other accessors present constituents in a more accessible way and take care of
+morphological special cases like the treatment of ຫ, this may come in handy to
+quickly check e.g. if there was a vowel component before the core consonant.
+
+=head3 vowel
+
+The syllable's vowel or diphthong. As the majority of vowels have more than one
+code point, the consonant position is represented by the unicode sign
+designated for this function, DOTTED CIRCLE or U+25CC.
+
+=head3 consonant
+
+The syllable's core consonant
+
+=head3 end_consonant
+
+The end consonant if present, C<undef> otherwise.
+
+=head3 tone_mark
+
+The tone mark if present, C<undef> otherwise.
+
+=head3 semivowel
+
+The semivowel following the core consonant if present, C<undef> otherwise.
+
+=head3 h
+
+"ຫ" if the syllable contained a combining ຫ, i.e. one that isn't the core consonant.
+
+=head3 vowel_length
+
+The string 'long' or 'short'.
+
+=head3 tone
+
+One of the following strings, depending on core consonant class, vowel length and tone mark:
+
+=over 4
+
+=item LOW_RISING
+
+=item LOW
+
+=item HIGH
+
+=item MID_FALLING
+
+=item HIGH_FALLING
+
+=item MID_STOP
+
+=item HIGH_STOP
+
+=back
+
+The latter two occur with short vowels, the other ones with long vowels.
+
+=cut
 
 1;
 
