@@ -29,7 +29,7 @@ my @tests = (
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
-my $r = Lingua::LO::Transform::Romanize->new(variant => 'PCGN');
+my $r = Lingua::LO::Transform::Romanize->new(variant => 'PCGN', hyphenate => 1);
 isa_ok($r, 'Lingua::LO::Transform::Romanize::PCGN');
 
 while(my $word = shift @tests) {

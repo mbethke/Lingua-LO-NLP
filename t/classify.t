@@ -125,6 +125,9 @@ my %tests = (
     'ໃກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໃX', vowel_length => 'long' },
     'ໜ້າ' => { consonant => 'ໜ', tone => 'MID_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xາ', vowel_length => 'long' },
 );
+for my $analysis (values %tests) {
+    s/X/\N{DOTTED CIRCLE}/ for values %$analysis;
+}
 
 isa_ok(Lingua::LO::Transform::Classify->new('ສະ'), 'Lingua::LO::Transform::Classify');
 for my $syllable (sort keys %tests) {
