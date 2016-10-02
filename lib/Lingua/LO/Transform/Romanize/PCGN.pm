@@ -8,7 +8,6 @@ use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Lingua::LO::Transform::Classify;
-use Data::Dumper;
 use parent 'Lingua::LO::Transform::Romanize';
 
 =encoding utf-8
@@ -152,14 +151,11 @@ sub romanize_syllable {
     my $cons = $c->consonant;
     my $h = $c->h;
     my $sv = $c->semivowel;
-    #print STDERR Dumper($c);
     if($cons eq 'ຫ' and $sv) {
-        #print STDERR "h+sv\n";
         # ຫ with semivowel. Drop the ຫ and use the semivowel as consonant
         $result = _consonant($sv, 0);
     } else {
         # The regular case
-        #print STDERR "regular\n";
         $result = _consonant($cons, 0);
         $result .= _consonant($sv, 1) if $sv;
     }
@@ -177,7 +173,7 @@ sub romanize_syllable {
     }
 
     # TODO remove debug
-    warn sprintf("Missing VOWELS def for `%s' in `%s' [%s] [%s]", $vowel, $c->syllable, Dumper($vowel), Dumper($parse)) unless defined $VOWELS{ $vowel };
+    warn sprintf("Missing VOWELS def for `%s' in `%s'", $vowel, $c->syllable) unless defined $VOWELS{ $vowel };
 
     $result .= $VOWELS{ $vowel } . $endcons;
     $result .= "-$result" if defined $parse->{extra}  and $parse->{extra} eq 'ໆ';  # duplication sign
