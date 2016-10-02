@@ -9,22 +9,28 @@ use Lingua::LO::Transform::Syllables;
 
 sub new {
     my ($class, %args) = @_;
-    my $variant = delete $args{variant} or croak("`variant' arg missing");
+    my $variant = delete $args{variant} or confess("`variant' arg missing");
+    my $hyphenate = delete $args{hyphenate};
+
     my $subclass = __PACKAGE__ . "::$variant";
     (my $module = $subclass) =~ s!::!/!g;
     require "$module.pm";
-    return $subclass->new(%args);
+
+    my $self = $subclass->new(%args);
+    $self->{hyphenate} = $hyphenate;
+    return $self;
 }
 
 sub romanize {
     my ($self, $text) = @_;
     my $result = '';
+    my $sep_char = $self->{hyphenate} ? '-' : ' ';
 
     my @frags = Lingua::LO::Transform::Syllables->new( text => $text )->get_fragments;
     while(@frags) {
         my @lao;
         push @lao, shift @frags while @frags and $frags[0]->{is_lao};
-        $result .= join('-', map { $self->romanize_syllable( $_->{text} ) } @lao);
+        $result .= join($sep_char, map { $self->romanize_syllable( $_->{text} ) } @lao);
         $result .= (shift @frags)->{text} while @frags and not $frags[0]->{is_lao};
     }
     return $result;
