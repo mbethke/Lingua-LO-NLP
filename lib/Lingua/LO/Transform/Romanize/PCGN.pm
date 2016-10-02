@@ -126,9 +126,19 @@ my %VOWELS = (
     'Xຳ'   => 'am', # composed U+0EB3
     'Xໍາ'   => 'am',
 );
+{
+    # Replace "X" in %VOWELS keys with DOTTED CIRCLE. Makes code easier to edit.
+    my %v;
+    foreach my $v (keys %VOWELS) {
+        (my $w = $v) =~ s/X/\N{DOTTED CIRCLE}/;
+        $v{$w} = $VOWELS{$v};
+    }
+    %VOWELS = %v;
+}
 
 sub new {
     my $class = shift;
+    # Not calling SUPER::new on purpose!
     return bless {}, $class;
 }
 

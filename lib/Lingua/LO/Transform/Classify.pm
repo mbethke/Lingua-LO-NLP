@@ -133,14 +133,23 @@ my %VOWELS = (
     'ເXົາ'  => { long => 0 },  # /aw/
     'Xໍາ'   => { long => 0 },  # /am/
 );
+{
+    # Replace "X" in %VOWELS keys with DOTTED CIRCLE. Makes code easier to edit.
+    my %v;
+    foreach my $v (keys %VOWELS) {
+        (my $w = $v) =~ s/X/\N{DOTTED CIRCLE}/;
+        $v{$w} = $VOWELS{$v};
+    }
+    %VOWELS = %v;
+}
+
 
 sub new {
     my ($class, $syllable) = @_;
-    return bless $class->SUPER::new( _classify($syllable) ), $class;
+    return bless _classify($syllable), $class;
 }
 
 my $regexp = Lingua::LO::Transform::Regexp::syllable_named;
-say $regexp if $ENV{DEBUG};
 
 sub _classify {
    my $s = shift // croak("syllable argument missing");
@@ -150,9 +159,8 @@ sub _classify {
    @class{qw/ consonant end_consonant tone_mark semivowel /} = @+{qw/ consonant end_consonant tone_mark semivowel /};
 
    my @vowels = $+{vowel0} // ();
-   push @vowels, 'X';
+   push @vowels, "\N{DOTTED CIRCLE}";
    push @vowels, grep { defined } map { $+{"vowel$_"} } 1..3;
-   #push @vowels, 'X' if defined $+{end_consonant};
    $class{vowel} = join('', @vowels);
 
    my $v = $VOWELS{ $class{vowel} };
