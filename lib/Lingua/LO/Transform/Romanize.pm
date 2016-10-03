@@ -100,7 +100,7 @@ constructor. This is a virtual method that must be implemented by subclasses.
 sub romanize_syllable {
     my $self = shift;
     ref $self or die "romanize_syllable is not a class method";
-    die ref($self)" must implement romanize_syllable()";
+    die ref($self) . " must implement romanize_syllable()";
 }
 
 1;
