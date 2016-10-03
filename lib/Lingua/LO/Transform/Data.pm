@@ -6,6 +6,7 @@ use utf8;
 use feature 'unicode_strings';
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use charnames qw/ :full lao /;
+use parent 'Exporter';
 
 =encoding UTF-8
 
@@ -26,6 +27,8 @@ You will probably not want to use this module on its own. If you do, see the
 other L<Lingua::LO::Transform> modules for examples.
 
 =cut
+
+our @EXPORT_OK = qw/ get_sylre_basic get_sylre_full get_sylre_named is_long_vowel /;
 
 # Regular expression fragments. The cryptic names correspond to the naming
 # in PHISSAMAY et al: Syllabification of Lao Script for Line Breaking
@@ -162,6 +165,73 @@ my %capture_names = (
 # so we have to do it first.
 my @sorted_x_names = ('x9a10_3', reverse sort { length $a <=> length $b } keys %capture_names);
 
+my %VOWEL_LENGTH = (
+    ### Monophthongs
+    'Xະ'   => 0,  # /a/
+    'Xັ'    => 0,  # /a/ with end consonant
+    'Xາ'   => 1,  # /aː/
+
+    'Xິ'    => 0,  # /i/
+    'Xີ'    => 1,  # /iː/
+
+    'Xຶ'    => 0,  # /ɯ/
+    'Xື'    => 1,  # /ɯː/
+
+    'Xຸ'    => 0,  # /u/
+    'Xູ'    => 1,  # /uː/
+
+    'ເXະ'  => 0,  # /e/
+    'ເXັ'   => 0,  # /e/ with end consonant
+    'ເX'   => 1,  # /eː/
+
+    'ແXະ'  => 0,  # /ɛ/
+    'ແXັ'   => 0,  # /ɛ/ with end consonant
+    'ແX'   => 1,  # /ɛː/
+
+    'ໂXະ'  => 0,  # /o/
+    'Xົ'    => 0,  # /o/
+    'ໂX'   => 1,  # /oː/
+
+    'ເXາະ' => 0,  # /ɔ/
+    'Xັອ'   => 0,  # /ɔ/ with end consonant
+    'Xໍ'    => 1,  # /ɔː/
+    'Xອ'   => 1,  # /ɔː/ with end consonant
+
+    'ເXິ'   => 0,  # /ɤ/
+    'ເXີ'   => 1,  # /ɤː/
+
+    ###' Diphthongs
+    'ເXັຍ'  => 0,  # /iə/
+    'Xັຽ'   => 0,  # /iə/
+    'ເXຍ'  => 1,  # /iːə/
+    'Xຽ'   => 1,  # /iːə/
+
+    'ເXຶອ'  => 0,  # /ɯə/
+    'ເXືອ'  => 1,  # /ɯːə/
+
+    'Xົວະ'  => 0,  # /uə/
+    'Xັວ'   => 0,  # /uə/
+    'Xົວ'   => 1,  # /uːə/
+    'Xວ'   => 1,  # /uːə/ with end consonant
+
+    'ໄX'   => 1,  # /aj/ - Actually short but counts as long for rules
+    'ໃX'   => 1,  # /aj/ - Actually short but counts as long for rules
+    'Xາຍ'  => 1,  # /aj/ - Actually short but counts as long for rules
+    'Xັຍ'   => 0,  # /aj/
+
+    'ເXົາ'  => 0,  # /aw/
+    'Xໍາ'   => 0,  # /am/
+);
+{
+    # Replace "X" in %VOWELS keys with DOTTED CIRCLE. Makes code easier to edit.
+    my %v;
+    foreach my $v (keys %VOWEL_LENGTH) {
+        (my $w = $v) =~ s/X/\N{DOTTED CIRCLE}/;
+        $v{$w} = $VOWEL_LENGTH{$v};
+    }
+    %VOWEL_LENGTH = %v;
+}
+
 
 =head1 FUNCTIONS
 
@@ -216,6 +286,8 @@ sub get_sylre_named {
 
     return qr/ $syl_capture (?= \P{Lao} | \s | $ | $syl_short )/x;
 }
+
+sub is_long_vowel { return $VOWEL_LENGTH{+shift} }
 
 sub _named_capture {
     my ($fragments, $atom, $match) = @_;

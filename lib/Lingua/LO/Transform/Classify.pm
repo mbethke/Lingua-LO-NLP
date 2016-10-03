@@ -8,8 +8,7 @@ use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::Transform::Data;
-use Data::Dumper;
+use Lingua::LO::Transform::Data qw/ is_long_vowel /;
 
 =encoding UTF-8
 
@@ -90,73 +89,6 @@ my %CONSONANTS = (
 
 my %H_COMBINERS = map { $_ => 1 } qw/ ຍ ວ /;
 
-my %VOWELS = (
-    ### Monophthongs
-    'Xະ'   => { long => 0 },  # /a/
-    'Xັ'    => { long => 0 },  # /a/ with end consonant
-    'Xາ'   => { long => 1 },  # /aː/
-
-    'Xິ'    => { long => 0 },  # /i/
-    'Xີ'    => { long => 1 },  # /iː/
-
-    'Xຶ'    => { long => 0 },  # /ɯ/
-    'Xື'    => { long => 1 },  # /ɯː/
-
-    'Xຸ'    => { long => 0 },  # /u/
-    'Xູ'    => { long => 1 },  # /uː/
-
-    'ເXະ'  => { long => 0 },  # /e/
-    'ເXັ'   => { long => 0 },  # /e/ with end consonant
-    'ເX'   => { long => 1 },  # /eː/
-
-    'ແXະ'  => { long => 0 },  # /ɛ/
-    'ແXັ'   => { long => 0 },  # /ɛ/ with end consonant
-    'ແX'   => { long => 1 },  # /ɛː/
-
-    'ໂXະ'  => { long => 0 },  # /o/
-    'Xົ'    => { long => 0 },  # /o/
-    'ໂX'   => { long => 1 },  # /oː/
-
-    'ເXາະ' => { long => 0 },  # /ɔ/
-    'Xັອ'   => { long => 0 },  # /ɔ/ with end consonant
-    'Xໍ'    => { long => 1 },  # /ɔː/
-    'Xອ'   => { long => 1 },  # /ɔː/ with end consonant
-
-    'ເXິ'   => { long => 0 },  # /ɤ/
-    'ເXີ'   => { long => 1 },  # /ɤː/
-
-    ###' Diphthongs
-    'ເXັຍ'  => { long => 0 },  # /iə/
-    'Xັຽ'   => { long => 0 },  # /iə/
-    'ເXຍ'  => { long => 1 },  # /iːə/
-    'Xຽ'   => { long => 1 },  # /iːə/
-
-    'ເXຶອ'  => { long => 0 },  # /ɯə/
-    'ເXືອ'  => { long => 1 },  # /ɯːə/
-
-    'Xົວະ'  => { long => 0 },  # /uə/
-    'Xັວ'   => { long => 0 },  # /uə/
-    'Xົວ'   => { long => 1 },  # /uːə/
-    'Xວ'   => { long => 1 },  # /uːə/ with end consonant
-
-    'ໄX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
-    'ໃX'   => { long => 1 },  # /aj/ - Actually short but counts as long for rules
-    'Xາຍ'  => { long => 1 },  # /aj/ - Actually short but counts as long for rules
-    'Xັຍ'   => { long => 0 },  # /aj/
-
-    'ເXົາ'  => { long => 0 },  # /aw/
-    'Xໍາ'   => { long => 0 },  # /am/
-);
-{
-    # Replace "X" in %VOWELS keys with DOTTED CIRCLE. Makes code easier to edit.
-    my %v;
-    foreach my $v (keys %VOWELS) {
-        (my $w = $v) =~ s/X/\N{DOTTED CIRCLE}/;
-        $v{$w} = $VOWELS{$v};
-    }
-    %VOWELS = %v;
-}
-
 =head1 METHODS
 
 =head2 new
@@ -189,7 +121,6 @@ sub _classify {
    push @vowels, grep { defined } map { $+{"vowel$_"} } 1..3;
    $class{vowel} = join('', @vowels);
 
-   my $v = $VOWELS{ $class{vowel} };
    my $cc = $CONSONANTS{ $class{consonant} };  # consonant category
    if($+{h}) {
        $cc = 'SUNG'; # $CONSONANTS{'ຫ'}
@@ -202,7 +133,7 @@ sub _classify {
        }
        delete $class{h};
    }
-   if( $v->{long} ) {
+   if(is_long_vowel( $class{vowel} )) {
        $class{vowel_length} = 'long';
        $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
    } else {
