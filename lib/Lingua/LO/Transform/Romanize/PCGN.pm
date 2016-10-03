@@ -50,7 +50,7 @@ my %CONSONANTS = (
    ລ  => 'l',
    "\N{LAO SEMIVOWEL SIGN LO}"  => 'l',
    ວ  => [qw/ v o /],
-   ຫ  => \&ຫ,
+   ຫ  => 'h',
    ອ  => '',
    ຮ  => 'h',
    ຣ  => 'r',
@@ -64,12 +64,6 @@ my %CONSONANTS = (
    ຫລ => 'l',
    ຫວ => 'v',
 );
-
-sub ຫ {
-    my ($c, $pos) = @_;
-    return 'h' unless $pos; # initial position
-    die "unhandled ຫ";  # TODO: can't happen?
-}
 
 my %CONS_VOWELS = map { $_ => 1 } qw/ ຍ ຽ ອ ວ /;
 
@@ -194,9 +188,10 @@ sub romanize_syllable {
 sub _consonant {
     my ($cons, $position) = @_;
     my $consdata = $CONSONANTS{ $cons };
-    my $consref = ref $consdata or return $consdata;
-    return $consdata->($position) if $consref eq 'CODE';
-    return $consdata->[$position];
+    #my $consref = ref $consdata or return $consdata;
+    #return $consdata->($position) if $consref eq 'CODE';
+    #return $consdata->[$position];
+    return ref $consdata ? $consdata->[$position] : $consdata;
 }
 
 1;
