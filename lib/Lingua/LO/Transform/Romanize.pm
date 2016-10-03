@@ -62,12 +62,14 @@ sub new {
 
 =head2 romanize
 
-    romanize($text)
+    romanize( $text )
 
 Return the romanization of C<$text> according to the standard passed to the
-constructor. Lao syllables will be processed and everything else is passed
-through unchanged save for possible conversion of combining characters to a
-canonically equivalent form in L<Unicode::Normalize/NFC>.
+constructor. Text is split up by
+L<Lingua::LO::Transform::Syllables/get_fragments>; Lao syllables are processed
+and everything else is passed through unchanged save for possible conversion of
+combining characters to a canonically equivalent form in
+L<Unicode::Normalize/NFC>.
 
 =cut
 
@@ -84,6 +86,21 @@ sub romanize {
         $result .= (shift @frags)->{text} while @frags and not $frags[0]->{is_lao};
     }
     return $result;
+}
+
+=head2 romanize_syllable
+
+    romanize_syllable( $syllable )
+
+Return the romanization of a single C<$syllable> according to the standard passed to the
+constructor. This is a virtual method that must be implemented by subclasses.
+
+=cut
+
+sub romanize_syllable {
+    my $self = shift;
+    ref $self or die "romanize_syllable is not a class method";
+    die ref($self)" must implement romanize_syllable()";
 }
 
 1;
