@@ -31,61 +31,61 @@ for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length
 
 my %TONE_MARKS = (
     ""  => {
-        AKSON_SUNG => 'LOW_RISING',
-        AKSON_KANG => 'LOW',
-        AKSON_TAM  => 'HIGH',
+        SUNG => 'LOW_RISING',
+        KANG => 'LOW',
+        TAM  => 'HIGH',
     },
     "\N{LAO TONE MAI EK}" => {
-        AKSON_SUNG => 'MID',
-        AKSON_KANG => 'MID',
-        AKSON_TAM  => 'MID',
+        SUNG => 'MID',
+        KANG => 'MID',
+        TAM  => 'MID',
     },
     "\N{LAO TONE MAI THO}" => {
-        AKSON_SUNG => 'MID_FALLING',
-        AKSON_KANG => 'HIGH_FALLING',
-        AKSON_TAM  => 'HIGH_FALLING',
+        SUNG => 'MID_FALLING',
+        KANG => 'HIGH_FALLING',
+        TAM  => 'HIGH_FALLING',
     },
     "\N{LAO TONE MAI TI}" => { },  # TODO
     "\N{LAO TONE MAI CATAWA}" => { }   # TODO
 );
 
 my %CONSONANTS = (
-   ກ  => { cat => 'AKSON_KANG' },
-   ຂ  => { cat => 'AKSON_SUNG' },
-   ຄ  => { cat => 'AKSON_TAM' },
-   ງ  => { cat => 'AKSON_TAM' },
-   ຈ  => { cat => 'AKSON_KANG' },
-   ສ  => { cat => 'AKSON_SUNG' },
-   ຊ  => { cat => 'AKSON_TAM' },
-   ຍ  => { cat => 'AKSON_TAM' },
-   ດ  => { cat => 'AKSON_KANG' },
-   ຕ  => { cat => 'AKSON_KANG' },
-   ຖ  => { cat => 'AKSON_SUNG' },
-   ທ  => { cat => 'AKSON_TAM' },
-   ນ  => { cat => 'AKSON_TAM' },
-   ບ  => { cat => 'AKSON_KANG' },
-   ປ  => { cat => 'AKSON_KANG' },
-   ຜ  => { cat => 'AKSON_SUNG' },
-   ຝ  => { cat => 'AKSON_SUNG' },
-   ພ  => { cat => 'AKSON_TAM' },
-   ຟ  => { cat => 'AKSON_TAM' },
-   ມ  => { cat => 'AKSON_TAM' },
-   ຢ  => { cat => 'AKSON_KANG' },
-   ລ  => { cat => 'AKSON_TAM' },
-   ວ  => { cat => 'AKSON_TAM' },
-   ຫ  => { cat => 'AKSON_SUNG' },
-   ອ  => { cat => 'AKSON_KANG' },
-   ຮ  => { cat => 'AKSON_TAM' },
-   ຣ  => { cat => 'AKSON_TAM' },
-   ຫງ => { cat => 'AKSON_SUNG' },
-   ຫຍ => { cat => 'AKSON_SUNG' },
-   ຫນ => { cat => 'AKSON_SUNG' },
-   ໜ  => { cat => 'AKSON_SUNG' },
-   ຫມ => { cat => 'AKSON_SUNG' },
-   ໝ  => { cat => 'AKSON_SUNG' },
-   ຫລ => { cat => 'AKSON_SUNG' },
-   ຫຼ  => { cat => 'AKSON_SUNG' },
-   ຫວ => { cat => 'AKSON_SUNG' },
+   ກ  => 'KANG',
+   ຂ  => 'SUNG',
+   ຄ  => 'TAM',
+   ງ  => 'TAM',
+   ຈ  => 'KANG',
+   ສ  => 'SUNG',
+   ຊ  => 'TAM',
+   ຍ  => 'TAM',
+   ດ  => 'KANG',
+   ຕ  => 'KANG',
+   ຖ  => 'SUNG',
+   ທ  => 'TAM',
+   ນ  => 'TAM',
+   ບ  => 'KANG',
+   ປ  => 'KANG',
+   ຜ  => 'SUNG',
+   ຝ  => 'SUNG',
+   ພ  => 'TAM',
+   ຟ  => 'TAM',
+   ມ  => 'TAM',
+   ຢ  => 'KANG',
+   ລ  => 'TAM',
+   ວ  => 'TAM',
+   ຫ  => 'SUNG',
+   ອ  => 'KANG',
+   ຮ  => 'TAM',
+   ຣ  => 'TAM',
+   ຫງ => 'SUNG',
+   ຫຍ => 'SUNG',
+   ຫນ => 'SUNG',
+   ໜ  => 'SUNG',
+   ຫມ => 'SUNG',
+   ໝ  => 'SUNG',
+   ຫລ => 'SUNG',
+   ຫຼ  => 'SUNG',
+   ຫວ => 'SUNG',
 );
 
 my %H_COMBINERS = map { $_ => 1 } qw/ ຍ ວ /;
@@ -190,9 +190,9 @@ sub _classify {
    $class{vowel} = join('', @vowels);
 
    my $v = $VOWELS{ $class{vowel} };
-   my $cc = $CONSONANTS{ $class{consonant} }{cat};  # consonant category
+   my $cc = $CONSONANTS{ $class{consonant} };  # consonant category
    if($+{h}) {
-       $cc = 'AKSON_SUNG'; # $CONSONANTS{'ຫ'}{cat}
+       $cc = 'SUNG'; # $CONSONANTS{'ຫ'}
 
        # If there is a preceding vowel, it uses the ຫ as a consonant and the
        # one parsed as core consonant is actually an end consonant
@@ -207,7 +207,7 @@ sub _classify {
        $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
    } else {
        $class{vowel_length} = 'short';
-       $class{tone} = $cc eq 'AKSON_TAM' ? 'MID_STOP' : 'HIGH_STOP';
+       $class{tone} = $cc eq 'TAM' ? 'MID_STOP' : 'HIGH_STOP';
    }
    #say Dumper(\%class);
    return \%class;
