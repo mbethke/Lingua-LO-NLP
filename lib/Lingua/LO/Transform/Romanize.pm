@@ -42,6 +42,8 @@ one currently implemented.
 =item C<hyphenate>: separate runs of Lao syllables with hyphens if true.
 Otherwise, blanks are used.
 
+=back
+
 =cut
 
 sub new {

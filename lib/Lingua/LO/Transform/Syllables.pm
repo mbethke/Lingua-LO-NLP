@@ -38,7 +38,7 @@ C<new( text =E<gt> $text, ... )>
 The constructor takes hash-style named arguments. The only one defined so far
 is C<text> whose value is obviously the text to be segmented.
 
-Note that text is passed through L<"Unicode::Normalize"/NFC> first to obtain the Composed Normal Form. In pure Lao text, this affects only the decomposed form of LAO VOWEL SIGN AM that will be transformed from C<U+0EB2>,C<U+0ECD> to C<U+
+Note that text is passed through L<"Unicode::Normalize"/NFC> first to obtain the Composed Normal Form. In pure Lao text, this affects only the decomposed form of LAO VOWEL SIGN AM that will be transformed from C<U+0EB2>,C<U+0ECD> to C<U+0EB3>.
 
 =cut
 
