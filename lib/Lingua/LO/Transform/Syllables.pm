@@ -9,7 +9,7 @@ use charnames qw/ :full lao /;
 use Carp;
 use Unicode::Normalize qw/ NFC /;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::Transform::Regexp;
+use Lingua::LO::Transform::Data;
 
 =encoding UTF-8
 
@@ -26,8 +26,8 @@ on the one described in PHISSAMAY et al: I<Syllabification of Lao Script for Lin
 
 has text => (is => 'ro');
 
-my $syl_re = Lingua::LO::Transform::Regexp::syllable_short;
-my $complete_syl_re = Lingua::LO::Transform::Regexp::syllable_full;
+my $syl_re = Lingua::LO::Transform::Data::get_sylre_basic;
+my $complete_syl_re = Lingua::LO::Transform::Data::get_sylre_full;
 
 =head1 METHODS
 

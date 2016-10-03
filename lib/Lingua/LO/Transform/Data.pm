@@ -1,4 +1,4 @@
-package Lingua::LO::Transform::Regexp;
+package Lingua::LO::Transform::Data;
 use strict;
 use warnings;
 use 5.012000;
@@ -11,7 +11,7 @@ use charnames qw/ :full lao /;
 
 =head1 NAME
 
-Lingua::LO::Transform::Regexp - Helper module to construct regular expressions
+Lingua::LO::Transform::Data - Helper module to keep common read-only data
 
 =head1 FUNCTION
 
@@ -19,6 +19,8 @@ Provides a few functions that return regular expressions for matching and
 extracting parts from Lao syllables. Instead of hardcoding these expressions as
 strings, they are constructed from ragments at runtime, trading maintainability
 for a small one-time initialization cost.
+
+Also holds common read-only data such as vowel classifications.
 
 You will probably not want to use this module on its own. If you do, see the
 other L<Lingua::LO::Transform> modules for examples.
@@ -163,7 +165,7 @@ my @sorted_x_names = ('x9a10_3', reverse sort { length $a <=> length $b } keys %
 
 =head1 FUNCTIONS
 
-=head2 syllable_short
+=head2 get_sylre_basic
 
 Returns a basic regexp that can match a Lao syllable. It consists of a bunch of
 alternations and will thus return the I<first> possible match which is neither
@@ -173,7 +175,7 @@ though.
 
 =cut
 
-sub syllable_short {
+sub get_sylre_basic {
     my $syl_re = $re_basic;
     for my $atom (@sorted_x_names) {
         $syl_re =~ s/\$($atom)/$regexp_fragments{$1}/eg;
@@ -182,9 +184,9 @@ sub syllable_short {
     return qr/ $syl_re /x;
 }
 
-=head2 syllable_full
+=head2 get_sylre_full
 
-In addition to the matching done by L<syllable_short>, this one makes sure
+In addition to the matching done by L<get_sylre_basic>, this one makes sure
 matches are either followed by another complete syllable, a blank, the end of
 string/line or some non-Lao character. This ensures correct matching of
 ambiguous syllable boundaries where the core consonant of a following syllable
@@ -192,21 +194,21 @@ could also be an end consonant of the current one.
 
 =cut
 
-sub syllable_full {
-    my $syl_short = syllable_short();
+sub get_sylre_full {
+    my $syl_short = get_sylre_basic();
     return qr/ $syl_short (?= \P{Lao} | \s | $ | $syl_short ) /x;
 }
 
-=head2 syllable_named
+=head2 get_sylre_named
 
-The expression returned is the same as for L<syllable_full> but also includes
+The expression returned is the same as for L<get_sylre_full> but also includes
 named captures that upon a successful match allow to get the syllable's parts
 from C<%+>.
 
 =cut
 
-sub syllable_named {
-    my $syl_short = syllable_short();
+sub get_sylre_named {
+    my $syl_short = get_sylre_basic();
     my $syl_capture = $re_basic;
     for my $atom (@sorted_x_names) {
         $syl_capture =~ s/\$($atom)/_named_capture(\%regexp_fragments, $atom, $1)/eg;

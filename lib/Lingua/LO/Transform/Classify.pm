@@ -8,7 +8,7 @@ use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::Transform::Regexp;
+use Lingua::LO::Transform::Data;
 use Data::Dumper;
 
 =encoding UTF-8
@@ -175,7 +175,7 @@ sub new {
     return bless _classify($syllable), $class;
 }
 
-my $regexp = Lingua::LO::Transform::Regexp::syllable_named;
+my $regexp = Lingua::LO::Transform::Data::get_sylre_named;
 
 sub _classify {
    my $s = shift // croak("syllable argument missing");
