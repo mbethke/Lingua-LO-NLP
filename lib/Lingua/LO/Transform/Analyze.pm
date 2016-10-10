@@ -1,4 +1,4 @@
-package Lingua::LO::Transform::Classify;
+package Lingua::LO::Transform::Analyze;
 use strict;
 use warnings;
 use 5.012000;
@@ -14,7 +14,7 @@ use Lingua::LO::Transform::Data qw/ is_long_vowel /;
 
 =head1 NAME
 
-Lingua::LO::Transform::Classify - Analyze a Lao syllable and provide accessors to its constituents
+Lingua::LO::Transform::Analyze - Analyze a Lao syllable and provide accessors to its constituents
 
 =head1 FUNCTION
 

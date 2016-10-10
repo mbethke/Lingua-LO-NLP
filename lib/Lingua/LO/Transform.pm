@@ -4,9 +4,9 @@ use warnings;
 use 5.012000;
 use utf8;
 use feature 'unicode_strings';
-use version 0.77; our $VERSION = version->declare('v0.0.1');
+use version 0.77; our $VERSION = version->declare('v0.0_1');
 use Lingua::LO::Transform::Syllables;
-use Lingua::LO::Transform::Classify;
+use Lingua::LO::Transform::Analyze;
 
 =encoding UTF-8
 
@@ -23,7 +23,7 @@ Lingua::LO::Transform - Various Lao text processing functions
     my @syllables = $laotr->split_to_syllables("ສະບາຍດີ"); # qw( ສະ ບາຍ ດີ )
     print Dumper(\@syllables);
     for my $syl (@syllables) {
-        my $clas = $laotr->classify_syllable($syl);
+        my $clas = $laotr->analyze_syllable($syl);
         printf "%s: %s\n", $clas->syllable, $clas->tone;
         # ສະ: TONE_HIGH_STOP
         # ບາຍ: TONE_LOW
@@ -38,7 +38,7 @@ This module provides various functions for processing Lao text. Currently it can
 
 =item Split Lao text (usually written without blanks between words) into syllables
 
-=item Classify syllables 
+=item Analyze syllables 
 
 =back
 
@@ -76,17 +76,17 @@ sub split_to_syllables {
     return Lingua::LO::Transform::Syllables::split_to_syllables($text);
 }
 
-=head2 classify_syllable
+=head2 analyze_syllable
 
-C<my $classified = $object-E<gt>classify_syllable($syllable);>
+C<my $classified = $object-E<gt>analyze_syllable($syllable);>
 
-Returns a L<Lingua::LO::Transform::Classify> object that allows you to query
+Returns a L<Lingua::LO::Transform::Analyze> object that allows you to query
 various syllable properties such as core consonant, tone mark, vowel length and
 tone. See there for details.
 
 =cut
-sub classify_syllable {
+sub analyze_syllable {
     my ($self, $syllable) = @_;
-    return Lingua::LO::Transform::Classify->new($syllable);
+    return Lingua::LO::Transform::Analyze->new($syllable);
 }
 

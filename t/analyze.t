@@ -5,7 +5,7 @@ use utf8;
 use feature 'unicode_strings';
 use open qw/ :encoding(UTF-8) :std /;
 use Test::More;
-use Lingua::LO::Transform::Classify;
+use Lingua::LO::Transform::Analyze;
 
 my %tests = (
     # Generated syllables from some list or other
@@ -129,9 +129,9 @@ for my $analysis (values %tests) {
     s/X/\N{DOTTED CIRCLE}/ for values %$analysis;
 }
 
-isa_ok(Lingua::LO::Transform::Classify->new('ສະ'), 'Lingua::LO::Transform::Classify');
+isa_ok(Lingua::LO::Transform::Analyze->new('ສະ'), 'Lingua::LO::Transform::Analyze');
 for my $syllable (sort keys %tests) {
-    my %c = %{ Lingua::LO::Transform::Classify->new($syllable) };
+    my %c = %{ Lingua::LO::Transform::Analyze->new($syllable) };
     #print "'$syllable' => " . print_struct(%c) . "\n";
     #next;
     delete $c{parse};

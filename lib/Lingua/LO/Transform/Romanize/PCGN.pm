@@ -7,7 +7,7 @@ use feature qw/ unicode_strings say /;
 use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
-use Lingua::LO::Transform::Classify;
+use Lingua::LO::Transform::Analyze;
 use parent 'Lingua::LO::Transform::Romanize';
 
 =encoding UTF-8
@@ -149,7 +149,7 @@ sub new {
 sub romanize_syllable {
     my ($self, $syllable) = @_;
     my ($consonant, $endcons, $result);
-    my $c = Lingua::LO::Transform::Classify->new($syllable);
+    my $c = Lingua::LO::Transform::Analyze->new($syllable);
     my $parse = $c->parse;
     my $vowel = $c->vowel;
     
