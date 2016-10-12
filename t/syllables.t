@@ -88,5 +88,15 @@ is_deeply(
     ],
     "get_fragments() segments mixed text with newlines"
 );
+is_deeply(
+    [ Lingua::LO::Transform::Syllables->new(text => "ບ່ອນ​ຈອດ​ລົດ")->get_fragments ],
+    [
+        { text => "ບ່ອນ", is_lao => 1 },
+        { text => "ຈອດ", is_lao => 1 },
+        { text => "ລົດ", is_lao => 1 },
+    ],
+    "get_fragments() ignores embedded ZERO WIDTH SPACE"
+);
+
 done_testing;
 
