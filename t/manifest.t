@@ -13,7 +13,7 @@ eval "use Test::CheckManifest $min_tcm";
 plan skip_all => "Test::CheckManifest $min_tcm required" if $@;
 
 ok_manifest({
-        exclude => [ qw# /.git /.gitignore /Client.bs /Client.o /Client.c /client.o # ],
+        exclude => [ qw# /.git /.gitignore /local # ],
         filter => [ qr/\.sw[pqr]$/, qr/\.old$/, qr/\.tar.(?:bz2|gz|)$/ ],
     }
 );
