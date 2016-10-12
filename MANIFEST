@@ -12,6 +12,6 @@ t/001_load.t
 t/analyze.t
 t/manifest.t
 t/pod.t
-t/regexp.t
+t/data.t
 t/romanize-pcgn.t
 t/syllables.t
