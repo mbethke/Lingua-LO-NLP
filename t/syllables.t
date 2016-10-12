@@ -5,7 +5,7 @@ use utf8;
 use feature 'unicode_strings';
 use open ':encoding(UTF-8)', ':std';
 use Test::More;
-use charnames ':full';
+use charnames qw/ :full lao /;
 use Unicode::Normalize qw/ reorder NFD /;
 use Lingua::LO::Transform::Syllables;
 use Data::Dumper;

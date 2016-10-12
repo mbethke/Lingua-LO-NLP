@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use utf8;
 use feature 'unicode_strings';
+use charnames qw/ :full lao /;
 use open qw/ :encoding(UTF-8) :std /;
 use Test::More;
 use Lingua::LO::Transform::Romanize;

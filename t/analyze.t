@@ -4,6 +4,7 @@ use warnings;
 use utf8;
 use feature 'unicode_strings';
 use open qw/ :encoding(UTF-8) :std /;
+use charnames qw/ :full lao /;
 use Test::More;
 use Lingua::LO::Transform::Analyze;
 
