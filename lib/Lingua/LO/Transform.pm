@@ -4,7 +4,7 @@ use warnings;
 use 5.012000;
 use utf8;
 use feature 'unicode_strings';
-use version 0.77; our $VERSION = version->declare('v0.0_1');
+use version 0.77; our $VERSION = version->declare('v0.0.1_003');
 use Lingua::LO::Transform::Syllables;
 use Lingua::LO::Transform::Analyze;
 
@@ -43,7 +43,6 @@ This module provides various functions for processing Lao text. Currently it can
 =back
 
 =head1 METHODS
-=head2 EXPORT
 
 =head2 new
 
