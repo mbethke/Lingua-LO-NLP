@@ -119,12 +119,14 @@ my %tests = (
     'ສິດ' => { consonant => 'ສ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'Xິ', vowel_length => 'short' },
     'ຮູ້' => { consonant => 'ຮ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xູ', vowel_length => 'long' },
     'ເກີດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'ເXີ', vowel_length => 'long' },
-    #'ເສລີ' => { consonant => 'ສ', tone => 'LOW_RISING', vowel => 'ເXີ', vowel_length => 'long' },
     'ເໝີ' => { consonant => 'ໝ', tone => 'LOW_RISING', vowel => 'ເXີ', vowel_length => 'long' },
     'ແລະ' => { consonant => 'ລ', tone => 'MID_STOP', vowel => 'ແXະ', vowel_length => 'short' },
     'ໂນ' => { consonant => 'ນ', tone => 'HIGH', vowel => 'ໂX', vowel_length => 'long' },
     'ໃກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໃX', vowel_length => 'long' },
     'ໜ້າ' => { consonant => 'ໜ', tone => 'MID_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xາ', vowel_length => 'long' },
+    #'ເມື່ອ' => {}, # TODO
+    #'ເທົ່ານ້ັນ' => {}, 
+    #'ແບດເຕີລ່ີ' => {},
 );
 for my $analysis (values %tests) {
     s/X/\N{DOTTED CIRCLE}/ for values %$analysis;
