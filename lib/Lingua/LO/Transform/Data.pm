@@ -28,7 +28,33 @@ other L<Lingua::LO::Transform> modules for examples.
 
 =cut
 
-our @EXPORT_OK = qw/ get_sylre_basic get_sylre_full get_sylre_named is_long_vowel /;
+our %EXPORT_TAGS = (
+    all => [ qw/
+        get_sylre_basic get_sylre_full get_sylre_named is_long_vowel
+        get_consonants get_vowels get_tone_marks
+        /
+    ]
+);
+our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+
+# Character classes
+my $TONE_MARKS = "\N{LAO TONE MAI EK}\N{LAO TONE MAI THO}" .
+"\N{LAO TONE MAI TI}\N{LAO TONE MAI CATAWA}";
+my $CONSONANTS = "\N{LAO LETTER KO}\N{LAO LETTER KHO SUNG}\N{LAO LETTER KHO TAM}" .
+"\N{LAO LETTER NGO}\N{LAO LETTER CO}\N{LAO LETTER SO TAM}\N{LAO LETTER NYO}" .
+"\N{LAO LETTER DO}\N{LAO LETTER TO}\N{LAO LETTER THO SUNG}\N{LAO LETTER THO TAM}" .
+"\N{LAO LETTER NO}\N{LAO LETTER BO}\N{LAO LETTER PO}\N{LAO LETTER PHO SUNG}" .
+"\N{LAO LETTER FO TAM}\N{LAO LETTER PHO TAM}\N{LAO LETTER FO SUNG}" .
+"\N{LAO LETTER MO}\N{LAO LETTER YO}\N{LAO LETTER LO LING}\N{LAO LETTER LO LOOT}" .
+"\N{LAO LETTER WO}\N{LAO LETTER SO SUNG}\N{LAO LETTER HO SUNG}\N{LAO LETTER O}" .
+"\N{LAO LETTER HO TAM}";
+my $VOWELS = "\N{LAO VOWEL SIGN A}\N{LAO VOWEL SIGN MAI KAN}\N{LAO VOWEL SIGN AA}" .
+"\N{LAO VOWEL SIGN AM}\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}" .
+"\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}\N{LAO VOWEL SIGN U}" .
+"\N{LAO VOWEL SIGN UU}\N{LAO VOWEL SIGN MAI KON}\N{LAO SEMIVOWEL SIGN LO}" .
+"\N{LAO SEMIVOWEL SIGN NYO}\N{LAO VOWEL SIGN E}\N{LAO VOWEL SIGN EI}" .
+"\N{LAO VOWEL SIGN O}\N{LAO VOWEL SIGN AY}\N{LAO VOWEL SIGN AI}" .
+"\N{LAO NIGGAHITA}";
 
 # Regular expression fragments. The cryptic names correspond to the naming
 # in PHISSAMAY et al: Syllabification of Lao Script for Line Breaking
@@ -57,7 +83,7 @@ my %regexp_fragments = (
     x4_7    => "\N{LAO VOWEL SIGN MAI KAN}",
     x4_1t4  => "[\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}]",
 
-    x5      => "[\N{LAO TONE MAI EK}\N{LAO TONE MAI THO}\N{LAO TONE MAI TI}\N{LAO TONE MAI CATAWA}]",
+    x5      => "[$TONE_MARKS]",
 
     x6_1    => 'ວ',
     x6_2    => 'ອ',
@@ -286,6 +312,10 @@ sub get_sylre_named {
 
     return qr/ $syl_capture (?= \P{Lao} | \s | $ | $syl_short )/x;
 }
+
+sub get_consonants { return $CONSONANTS; }
+sub get_vowels { return $VOWELS; }
+sub get_tone_marks { return $TONE_MARKS; }
 
 sub is_long_vowel { return $VOWEL_LENGTH{+shift} }
 
