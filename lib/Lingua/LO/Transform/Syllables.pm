@@ -9,7 +9,7 @@ use charnames qw/ :full lao /;
 use Carp;
 use Unicode::Normalize qw/ NFC /;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::Transform::Data;
+use Lingua::LO::Transform::Data ':all';
 
 =encoding UTF-8
 
@@ -38,7 +38,10 @@ C<new( text =E<gt> $text, ... )>
 The constructor takes hash-style named arguments. The only one defined so far
 is C<text> whose value is obviously the text to be segmented.
 
-Note that text is passed through L<"Unicode::Normalize"/NFC> first to obtain the Composed Normal Form. In pure Lao text, this affects only the decomposed form of LAO VOWEL SIGN AM that will be transformed from C<U+0EB2>,C<U+0ECD> to C<U+0EB3>.
+Note that text is passed through L<"Unicode::Normalize"/NFC> first to obtain
+the Composed Normal Form. In pure Lao text, this affects only the decomposed
+form of LAO VOWEL SIGN AM that will be transformed from C<U+0EB2>, C<U+0ECD> to
+C<U+0EB3>.
 
 =cut
 
@@ -46,9 +49,9 @@ sub new {
     my $class = shift;
     my %opts = @_;
     croak("`text' key missing or undefined") unless defined $opts{text};
-    return bless {
-        text => NFC( $opts{text} ),
-    }, $class;
+    my $text = NFC( $opts{text} );
+    _normalize($text) if $opts{normalize};
+    return bless { text => $text }, $class
 }
 
 =head2 get_syllables
@@ -96,6 +99,14 @@ sub get_fragments {
         }
     }
     return @matches
+}
+
+{
+    my ($CON, $VOW, $TON) = map { "[$_]" } get_consonants, get_vowels, get_tone_marks;
+
+    sub _normalize {
+        $_[0] =~ s/($CON)($TON)($VOW)/$1$3$2/og;
+    }
 }
 
 1;
