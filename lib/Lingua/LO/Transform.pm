@@ -4,7 +4,7 @@ use warnings;
 use 5.012000;
 use utf8;
 use feature 'unicode_strings';
-use version 0.77; our $VERSION = version->declare('v0.0.1_003');
+use version 0.77; our $VERSION = version->declare('v0.0.1_004');
 use Lingua::LO::Transform::Syllables;
 use Lingua::LO::Transform::Analyze;
 
@@ -38,9 +38,18 @@ This module provides various functions for processing Lao text. Currently it can
 
 =item Split Lao text (usually written without blanks between words) into syllables
 
-=item Analyze syllables 
+=item Analyze syllables with regards to core and end consonants, vowels, tone and
+other properties
+
+=item Romanize Lao text according to the PCGN standard
 
 =back
+
+These functions are basically just shortcuts to the functionality of some
+specialized modules: L<Lingua::LO::Transform::Syllables>,
+L<Lingua::LO::Transform::Analyze> and L<Lingua::LO::Transform::Romanize>. If
+you need only one of them, you can shave off a little overhead by using those
+directly.
 
 =head1 METHODS
 
@@ -71,8 +80,7 @@ syllables.
 
 =cut
 sub split_to_syllables {
-    my ($self, $text) = @_;
-    return Lingua::LO::Transform::Syllables::split_to_syllables($text);
+    return Lingua::LO::Transform::Syllables::split_to_syllables($_[1]);
 }
 
 =head2 analyze_syllable
@@ -85,7 +93,14 @@ tone. See there for details.
 
 =cut
 sub analyze_syllable {
-    my ($self, $syllable) = @_;
-    return Lingua::LO::Transform::Analyze->new($syllable);
+    return Lingua::LO::Transform::Analyze->new($_[1]);
 }
 
+=head1 SEE ALSO
+
+L<Lingua::LO::Romanize> is the module that inspired this one, and if you need
+only romanization you should give it a try. It is vastly simpler and faster by
+a factor of about 10 but does have problems with ambiguous syllable boundaries
+as in "ໃນວົງ" and certain semivowel combinations as in "ດ້ວຍ", the latter of
+which would probably be fixable but the former are very difficult without going
+for a full syllable parse like this module does.
