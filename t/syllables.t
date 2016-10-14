@@ -6,11 +6,11 @@ use feature 'unicode_strings';
 use open ':encoding(UTF-8)', ':std';
 use Test::More;
 use charnames qw/ :full lao /;
-use Unicode::Normalize qw/ reorder NFD /;
+use Unicode::Normalize qw/ reorder NFC /;
 use Lingua::LO::Transform::Syllables;
 use Data::Dumper;
 
-my %tests = (
+my %TEST_SYLLABLES = (
     ""          => [],
     ສະບາຍດີ      => [ qw/ ສະ ບາຍ ດີ / ],
     ກວ່າດອກ      => [ qw/ ກວ່າ ດອກ /],
@@ -36,6 +36,44 @@ my %tests = (
     'ມະນຸດທຸກຄົນເກີດມາມີກຽດສັກສີ/ສິດທິ/ເສຣີພາບແລະຄວາມສເມີພາບເທົ່າທຽມກັນ. ທຸກໆຄົນມີເຫດຜົນແລະຄວາມຄິດຄວາມເຫັນສ່ວນຕົວຂອງໃຜຂອງມັນ/ແຕ່ວ່າມະນຸດທຸກໆຄົນຄວນປະພຶດຕໍ່ກັນຄືກັນກັບເປັນອ້າຍນ້ອງກັນ' => [ qw/ ມະ ນຸດ ທຸກ ຄົນ ເກີດ ມາ ມີ ກຽດ ສັກ ສີ ສິດ ທິ ເສຣີ ພາບ ແລະ ເມີ ພາບ ເທົ່າ ທຽມ ກັນ ທຸກໆ ຄົນ ມີ ເຫດ ຜົນ ແລະ ຄວາມ ຄິດ ຄວາມ ເຫັນ ສ່ວນ ຕົວ ຂອງ ໃຜ ຂອງ ມັນ ແຕ່ ວ່າ ມະ ນຸດ ທຸກໆ ຄົນ ຄວນ ປະ ພຶດ ຕໍ່ ກັນ ຄື ກັນ ກັບ ເປັນ ອ້າຍ ນ້ອງ ກັນ /],
 );
 
+my %TEST_FRAGMENTS = (
+    'bla ສະບາຍ ດີ foo ດີ bar baz' => {
+        result => [
+            { text => 'bla ', is_lao => '' },
+            { text => 'ສະ', is_lao => 1 },
+            { text => 'ບາຍ', is_lao => 1 },
+            { text => ' ', is_lao => '' },
+            { text => 'ດີ', is_lao => 1 },
+            { text => ' foo ', is_lao => '' },
+            { text => 'ດີ', is_lao => 1 },
+            { text => ' bar baz', is_lao => '' },
+        ],
+        message => "get_fragments() segments mixed Lao/other text",
+    },
+    "bla\nfoo ສະບາຍດີ\nbazດີ ເພື່ອນ" => {
+        result => [
+            { text => "bla\nfoo ", is_lao => '' },
+            { text => "ສະ", is_lao => 1 },
+            { text => "ບາຍ", is_lao => 1 },
+            { text => "ດີ", is_lao => 1 },
+            { text => "\nbaz", is_lao => '' },
+            { text => "ດີ", is_lao => 1 },
+            { text => " ", is_lao => '' },
+            { text => "ເພື່ອນ", is_lao => 1 },
+        ],
+        message => "get_fragments() segments mixed text with newlines",
+    },
+    "ບ່ອນ\N{ZERO WIDTH SPACE}ຈອດ\N{ZERO WIDTH SPACE}ລົດ" => {
+        result => [
+            { text => "ບ່ອນ", is_lao => 1 },
+            { text => "ຈອດ", is_lao => 1 },
+            { text => "ລົດ", is_lao => 1 },
+        ],
+        message => "get_fragments() ignores embedded ZERO WIDTH SPACE",
+    }
+);
+
+
 sub dump_unicode {
     my $s = shift;
     return sprintf(q["%s"], join(" ", map { sprintf("%03x", ord) } split //, $s));
@@ -45,58 +83,39 @@ sub dump_unicode_list {
     return sprintf('[ %s ]', join(", ", map { dump_unicode($_) } @_));
 }
 
-my $o = Lingua::LO::Transform::Syllables->new(text => 'ສະບາຍດີ');
-isa_ok($o, 'Lingua::LO::Transform::Syllables');
+sub test_method {
+    my ($tests, $method, $options) = @_;
+    $options //= [];
 
-for my $text (sort keys %tests) {
-    $o = Lingua::LO::Transform::Syllables->new(text => $text);
-    my $syl = [ $o->get_syllables ];
-    unless( is_deeply($syl, $tests{$text}, "`$text' split correctly") ) {
-        warn "Wanted: " . dump_unicode_list(@{$tests{$text}}) .
-        "\nFound : " . dump_unicode_list(@$syl) .
-        "\nText:   " . dump_unicode($text) . sprintf('(%s)', $text). 
-        "\nNormal: " . dump_unicode(reorder(NFD($text))) . sprintf('(%s)' ,reorder(NFD($text))) .
-        "\n";
+    for my $text (sort keys %$tests) {
+        my $o = Lingua::LO::Transform::Syllables->new(text => $text, @$options);
+        my ($result, $message);
+        if(ref $tests->{$text} eq 'HASH') {
+            $result = $tests->{$text}{result};
+            $message = $tests->{$text}{message};
+        } else {
+            $result = $tests->{$text};
+            $message = "`$text' split correctly by $method [@$options]";
+        }
+        my $syl = [ $o->$method ];
+        unless( is_deeply($syl, $result, $message) ) {
+            warn "Wanted: " . dump_unicode_list(@$result) .
+            "\nFound : " . dump_unicode_list(@$syl) .
+            "\nText:   " . dump_unicode($text) . sprintf('(%s)', $text). 
+            "\nNormal: " . dump_unicode(reorder(NFC($text))) . sprintf('(%s)' ,reorder(NFC($text))) .
+            "\n";
+        }
     }
 }
 
-is_deeply(
-    [ Lingua::LO::Transform::Syllables->new(text => 'bla ສະບາຍ ດີ foo ດີ bar baz')->get_fragments ],
-    [
-        { text => 'bla ', is_lao => '' },
-        { text => 'ສະ', is_lao => 1 },
-        { text => 'ບາຍ', is_lao => 1 },
-        { text => ' ', is_lao => '' },
-        { text => 'ດີ', is_lao => 1 },
-        { text => ' foo ', is_lao => '' },
-        { text => 'ດີ', is_lao => 1 },
-        { text => ' bar baz', is_lao => '' },
-    ],
-    "get_fragments() segments mixed Lao/other text"
-);
-is_deeply(
-    [ Lingua::LO::Transform::Syllables->new(text => "bla\nfoo ສະບາຍດີ\nbazດີ ເພື່ອນ")->get_fragments ],
-    [
-        { text => "bla\nfoo ", is_lao => '' },
-        { text => "ສະ", is_lao => 1 },
-        { text => "ບາຍ", is_lao => 1 },
-        { text => "ດີ", is_lao => 1 },
-        { text => "\nbaz", is_lao => '' },
-        { text => "ດີ", is_lao => 1 },
-        { text => " ", is_lao => '' },
-        { text => "ເພື່ອນ", is_lao => 1 },
-    ],
-    "get_fragments() segments mixed text with newlines"
-);
-is_deeply(
-    [ Lingua::LO::Transform::Syllables->new(text => "ບ່ອນ​ຈອດ​ລົດ")->get_fragments ],
-    [
-        { text => "ບ່ອນ", is_lao => 1 },
-        { text => "ຈອດ", is_lao => 1 },
-        { text => "ລົດ", is_lao => 1 },
-    ],
-    "get_fragments() ignores embedded ZERO WIDTH SPACE"
-);
+my $o = Lingua::LO::Transform::Syllables->new(text => 'ສະບາຍດີ');
+isa_ok($o, 'Lingua::LO::Transform::Syllables');
+
+test_method(\%TEST_SYLLABLES, "get_syllables");
+test_method(\%TEST_FRAGMENTS, "get_fragments");
+
+# TODO test tone mark reordering
+#is_deeply( [Lingua::LO::Transform::Syllables->new(text => 'ກວ່າດອກ')->get_syllables], [qw/ ກວ່າ ດອກ /]);
 
 done_testing;
 
