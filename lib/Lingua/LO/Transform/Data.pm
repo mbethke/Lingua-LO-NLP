@@ -191,7 +191,7 @@ my %capture_names = (
 # so we have to do it first.
 my @sorted_x_names = ('x9a10_3', reverse sort { length $a <=> length $b } keys %capture_names);
 
-my %VOWEL_LENGTH = (
+our %VOWEL_LENGTH = (
     ### Monophthongs
     'Xະ'   => 0,  # /a/
     'Xັ'    => 0,  # /a/ with end consonant
