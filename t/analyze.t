@@ -12,27 +12,15 @@ my %tests = (
     # Generated syllables from some list or other
     'ກວກ' => { consonant => 'ກ', end_consonant => 'ກ', tone => 'LOW', vowel => 'Xວ', vowel_length => 'long' },
     'ກວງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'LOW', vowel => 'Xວ', vowel_length => 'long' },
-    #'ກວະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xະ', vowel_length => 'short' },
-    #'ກວັດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'Xັ', vowel_length => 'short' },
-    #'ກວຽດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'Xຽ', vowel_length => 'long' },
-    #'ກວ່ວຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xວ', vowel_length => 'long' },
-    #'ກວ່ະ' => { consonant => 'ກ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xະ', vowel_length => 'short' },
-    #'ກວ້ອງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xອ', vowel_length => 'long' },
-    #'ກວ໊າ' => { consonant => 'ກ', tone_mark => "\N{LAO TONE MAI TI}", vowel => 'Xາ', vowel_length => 'long' },
-    #'ກວໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
-    #'ກວໍ້' => { consonant => 'ກ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xໍ', vowel_length => 'long' },
-    #'ກວໍ໊' => { consonant => 'ກ', tone_mark => "\N{LAO TONE MAI TI}", vowel => 'Xໍ', vowel_length => 'long' },
     'ກ່ວງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xວ', vowel_length => 'long' },
     'ກ່າ' => { consonant => 'ກ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xາ', vowel_length => 'long' },
     'ກ່າຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xາ', vowel_length => 'long' },
     'ກໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
     'ກໍ່' => { consonant => 'ກ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xໍ', vowel_length => 'long' },
     'ກໍ໋' => { consonant => 'ກ', tone_mark => "\N{LAO TONE MAI CATAWA}", vowel => 'Xໍ', vowel_length => 'long' },
-    #'ສວວມ' => { consonant => 'ສ', end_consonant => 'ມ', tone => 'LOW_RISING', vowel => 'Xວ', vowel_length => 'long' },
     'ແໜ' => { consonant => 'ໜ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
     'ແຫນ' => { consonant => 'ຫ', end_consonant => 'ນ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
     'ຫາມ' => { consonant => 'ຫ', end_consonant => 'ມ', tone => 'LOW_RISING', vowel => 'Xາ', vowel_length => 'long' },
-    #'ເກວວ' => { consonant => 'ກ', end_consonant => 'ວ', tone => 'LOW', vowel => 'ເX', vowel_length => 'long' },
     'ເກິ່ຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'ເXິ', vowel_length => 'short' },
 
     # Constructed syllables with simple vowels
@@ -90,6 +78,7 @@ my %tests = (
     'ກໍາ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xໍາ', vowel_length => 'short' },  # /am/, decomposed
     'ກຳ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xຳ', vowel_length => 'short' },  # /am/, composed
 
+    # Various cases that have looked problematic
     'ກຽດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'Xຽ', vowel_length => 'long' },
     'ຈື່ງ' => { consonant => 'ຈ', end_consonant => 'ງ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xື', vowel_length => 'long' },
     'ຊັນ' => { consonant => 'ຊ', end_consonant => 'ນ', tone => 'MID_STOP', vowel => 'Xັ', vowel_length => 'short' },
@@ -124,9 +113,20 @@ my %tests = (
     'ໂນ' => { consonant => 'ນ', tone => 'HIGH', vowel => 'ໂX', vowel_length => 'long' },
     'ໃກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໃX', vowel_length => 'long' },
     'ໜ້າ' => { consonant => 'ໜ', tone => 'MID_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xາ', vowel_length => 'long' },
-    #'ເມື່ອ' => {}, # TODO
-    #'ເທົ່ານ້ັນ' => {}, 
-    #'ແບດເຕີລ່ີ' => {},
+    'ເຫດ' => { consonant => 'ຫ', end_consonant => "ດ", 'tone' => 'LOW_RISING',  'vowel' => "ເX", vowel_length => 'long' },
+    #'ໄລນ໌' => {},
+
+    # Test tone mark order normalization
+    # Regular order consonant-vowel-tone
+    "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}" =>
+    { consonant => 'ມ', vowel => 'ເXືອ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel_length => 'long' },
+    # Wrong order consonant-tone-vowel
+    "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO TONE MAI EK}\N{LAO VOWEL SIGN YY}\N{LAO LETTER O}" =>
+    {
+        consonant => 'ມ', vowel => 'ເXືອ', tone => 'MID',
+        syllable => "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}",
+        tone_mark => "\N{LAO TONE MAI EK}", vowel_length => 'long'
+    },
 );
 for my $analysis (values %tests) {
     s/X/\N{DOTTED CIRCLE}/ for values %$analysis;
@@ -134,13 +134,15 @@ for my $analysis (values %tests) {
 
 isa_ok(Lingua::LO::Transform::Analyze->new('ສະ'), 'Lingua::LO::Transform::Analyze');
 for my $syllable (sort keys %tests) {
-    my %c = %{ Lingua::LO::Transform::Analyze->new($syllable) };
+    my %c = %{ Lingua::LO::Transform::Analyze->new($syllable, normalize => 1) };
     #print "'$syllable' => " . print_struct(%c) . "\n";
     #next;
     delete $c{parse};
     delete $c{$_} for grep { not defined $c{$_} } keys %c;
-    $tests{$syllable}{syllable} = $syllable;    # trivial, doesn't need to be mentioned above
+    # trivial, doesn't need to be mentioned above unless it was subject to normalization
+    $tests{$syllable}{syllable} //= $syllable;
     is_deeply(\%c, $tests{$syllable}, "`$syllable' analyzed correctly")
+        or print "Result for `$syllable': \n", map { "\t$_ => \"$c{$_}\"\n" } sort keys %c;
 }
 done_testing;
 
