@@ -8,7 +8,7 @@ use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::Transform::Data qw/ is_long_vowel /;
+use Lingua::LO::Transform::Data qw/ is_long_vowel normalize_tone_marks /;
 
 =encoding UTF-8
 
@@ -93,55 +93,67 @@ my %H_COMBINERS = map { $_ => 1 } qw/ ຍ ວ /;
 
 =head2 new
 
-C<new( $syllable )>
+C<new( $syllable, %options )>
 
-The constructor takes a syllable as its only argument. It does not fail but may
+The constructor takes a syllable and any number of options as hash-style
+arguments. The only option specified so far is "normalize", a boolean value
+indicating whether to run the syllable through tone mark normalization (see
+L<Lingua::LO::Transform::Data/normalize_tone_marks>). It does not fail but may
 produce nonsense if the argument is not valid according to Lao morphology
-rules. See L<Lingua::LO::Transform::Syllables/validate> if your input doesn't
-come from this class already.
+rules.
+
+If your input comes from L<Lingua::LO::Transform::Syllables>, it has already
+been validated and comes in the correct tone mark order, so you may save a few
+microseconds by not setting C<validate =E<gt> 1>, otherwise it's generally a
+good idea to set it.
 
 =cut
 
 sub new {
-    my ($class, $syllable) = @_;
+    my $class = shift;
+    my $syllable = shift;
+    my %opts = @_;
+    normalize_tone_marks($syllable) if $opts{normalize};
     return bless _classify($syllable), $class;
 }
 
-my $regexp = Lingua::LO::Transform::Data::get_sylre_named;
+{
+    my $regexp = Lingua::LO::Transform::Data::get_sylre_named;
 
-sub _classify {
-   my $s = shift // croak("syllable argument missing");
+    sub _classify {
+        my $s = shift // croak("syllable argument missing");
 
-   $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
-   my %class = ( syllable => $s, parse => { %+ } );
-   @class{qw/ consonant end_consonant tone_mark semivowel /} = @+{qw/ consonant end_consonant tone_mark semivowel /};
+        $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
+        my %class = ( syllable => $s, parse => { %+ } );
+        @class{qw/ consonant end_consonant tone_mark semivowel /} = @+{qw/ consonant end_consonant tone_mark semivowel /};
 
-   my @vowels = $+{vowel0} // ();
-   push @vowels, "\N{DOTTED CIRCLE}";
-   push @vowels, grep { defined } map { $+{"vowel$_"} } 1..3;
-   $class{vowel} = join('', @vowels);
+        my @vowels = $+{vowel0} // ();
+        push @vowels, "\N{DOTTED CIRCLE}";
+        push @vowels, grep { defined } map { $+{"vowel$_"} } 1..3;
+        $class{vowel} = join('', @vowels);
 
-   my $cc = $CONSONANTS{ $class{consonant} };  # consonant category
-   if($+{h}) {
-       $cc = 'SUNG'; # $CONSONANTS{'ຫ'}
+        my $cc = $CONSONANTS{ $class{consonant} };  # consonant category
+        if($+{h}) {
+            $cc = 'SUNG'; # $CONSONANTS{'ຫ'}
 
-       # If there is a preceding vowel, it uses the ຫ as a consonant and the
-       # one parsed as core consonant is actually an end consonant
-       unless($H_COMBINERS{ $class{consonant} }) {
-           $class{end_consonant} = $class{consonant};
-           $class{consonant} = 'ຫ';
-       }
-       delete $class{h};
-   }
-   if(is_long_vowel( $class{vowel} )) {
-       $class{vowel_length} = 'long';
-       $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
-   } else {
-       $class{vowel_length} = 'short';
-       $class{tone} = $cc eq 'TAM' ? 'MID_STOP' : 'HIGH_STOP';
-   }
-   #say Dumper(\%class);
-   return \%class;
+            # If there is a preceding vowel, it uses the ຫ as a consonant and the
+            # one parsed as core consonant is actually an end consonant
+            unless($H_COMBINERS{ $class{consonant} }) {
+                $class{end_consonant} = $class{consonant};
+                $class{consonant} = 'ຫ';
+            }
+            delete $class{h};
+        }
+        if(is_long_vowel( $class{vowel} )) {
+            $class{vowel_length} = 'long';
+            $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
+        } else {
+            $class{vowel_length} = 'short';
+            $class{tone} = $cc eq 'TAM' ? 'MID_STOP' : 'HIGH_STOP';
+        }
+        #say Dumper(\%class);
+        return \%class;
+    }
 }
 
 =head2 ACCESSORS
