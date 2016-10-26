@@ -31,7 +31,7 @@ other L<Lingua::LO::Transform> modules for examples.
 our %EXPORT_TAGS = (
     all => [ qw/
         get_sylre_basic get_sylre_full get_sylre_named is_long_vowel
-        get_consonants get_vowels get_tone_marks
+        normalize_tone_marks
         /
     ]
 );
@@ -40,6 +40,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 # Character classes
 my $TONE_MARKS = "\N{LAO TONE MAI EK}\N{LAO TONE MAI THO}" .
 "\N{LAO TONE MAI TI}\N{LAO TONE MAI CATAWA}";
+
 my $CONSONANTS = "\N{LAO LETTER KO}\N{LAO LETTER KHO SUNG}\N{LAO LETTER KHO TAM}" .
 "\N{LAO LETTER NGO}\N{LAO LETTER CO}\N{LAO LETTER SO TAM}\N{LAO LETTER NYO}" .
 "\N{LAO LETTER DO}\N{LAO LETTER TO}\N{LAO LETTER THO SUNG}\N{LAO LETTER THO TAM}" .
@@ -48,6 +49,12 @@ my $CONSONANTS = "\N{LAO LETTER KO}\N{LAO LETTER KHO SUNG}\N{LAO LETTER KHO TAM}
 "\N{LAO LETTER MO}\N{LAO LETTER YO}\N{LAO LETTER LO LING}\N{LAO LETTER LO LOOT}" .
 "\N{LAO LETTER WO}\N{LAO LETTER SO SUNG}\N{LAO LETTER HO SUNG}\N{LAO LETTER O}" .
 "\N{LAO LETTER HO TAM}";
+
+my $VOWELS_COMBINING = "\N{LAO VOWEL SIGN MAI KAN}" .
+"\N{LAO VOWEL SIGN AM}\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}" .
+"\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}\N{LAO VOWEL SIGN U}" .
+"\N{LAO VOWEL SIGN UU}\N{LAO VOWEL SIGN MAI KON}\N{LAO NIGGAHITA}";
+
 my $VOWELS = "\N{LAO VOWEL SIGN A}\N{LAO VOWEL SIGN MAI KAN}\N{LAO VOWEL SIGN AA}" .
 "\N{LAO VOWEL SIGN AM}\N{LAO VOWEL SIGN I}\N{LAO VOWEL SIGN II}" .
 "\N{LAO VOWEL SIGN Y}\N{LAO VOWEL SIGN YY}\N{LAO VOWEL SIGN U}" .
@@ -313,11 +320,29 @@ sub get_sylre_named {
     return qr/ $syl_capture (?= \P{Lao} | \s | $ | $syl_short )/x;
 }
 
-sub get_consonants { return $CONSONANTS; }
-sub get_vowels { return $VOWELS; }
-sub get_tone_marks { return $TONE_MARKS; }
-
 sub is_long_vowel { return $VOWEL_LENGTH{+shift} }
+
+=head2 normalize_tone_marks
+
+C<normalize_tone_marks( $text )>
+
+Normalize tone mark order in C<$text>. Usually when using a combining vowel
+such as ◌ິ, ◌ຸ or ◌ໍ with a tone mark, they have to be typed in the order
+I<consonant-vowel-tonemark> as renderers are supposed to stack above-consonant
+signs in the order they appear in the text, and tone marks are supposed to go
+on top. As some renderers will put them on top no matter what, these sequences
+are sometimes incorrectly entered as I<consonant-tonemark-vowel> and would thus
+not be parsed correctly.
+
+This function is usually just meant for internal use and modifies its argument
+in place for speed!
+
+=cut
+
+sub normalize_tone_marks {
+    my $t = $_[0];
+    $_[0] =~ s/([$CONSONANTS])([$TONE_MARKS])([$VOWELS_COMBINING])/$1$3$2/og;
+}
 
 sub _named_capture {
     my ($fragments, $atom, $match) = @_;

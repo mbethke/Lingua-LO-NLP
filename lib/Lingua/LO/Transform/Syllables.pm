@@ -50,7 +50,7 @@ sub new {
     my %opts = @_;
     croak("`text' key missing or undefined") unless defined $opts{text};
     my $text = NFC( $opts{text} );
-    _normalize($text) if $opts{normalize};
+    normalize_tone_marks($text) if $opts{normalize};
     return bless { text => $text }, $class
 }
 
@@ -99,14 +99,6 @@ sub get_fragments {
         }
     }
     return @matches
-}
-
-{
-    my ($CON, $VOW, $TON) = map { "[$_]" } get_consonants, get_vowels, get_tone_marks;
-
-    sub _normalize {
-        $_[0] =~ s/($CON)($TON)($VOW)/$1$3$2/og;
-    }
 }
 
 1;
