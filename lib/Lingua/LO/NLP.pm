@@ -19,12 +19,15 @@ Lingua::LO::NLP - Various Lao text processing functions
     use Lingua::LO::NLP;
     use Data::Dumper;
     use utf8;
-    my $laotr = Lingua::LO::NLP->new;
-    my @syllables = $laotr->split_to_syllables("ສະບາຍດີ"); # qw( ສະ ບາຍ ດີ )
+
+    my $lao = Lingua::LO::NLP->new;
+
+    my @syllables = $lao->split_to_syllables("ສະບາຍດີ"); # qw( ສະ ບາຍ ດີ )
     print Dumper(\@syllables);
+
     for my $syl (@syllables) {
-        my $clas = $laotr->analyze_syllable($syl);
-        printf "%s: %s\n", $clas->syllable, $clas->tone;
+        my $analysis = $lao->analyze_syllable($syl);
+        printf "%s: %s\n", $analysis->syllable, $analysis->tone;
         # ສະ: TONE_HIGH_STOP
         # ບາຍ: TONE_LOW
         # ດີ: TONE_LOW
@@ -55,7 +58,7 @@ directly.
 
 =head2 new
 
-C<new(option E<gt> value, ...)>
+C<new(option =E<gt> value, ...)>
 
 The object constructor currently does nothing; there are no options. However,
 it is likely that there will be in future versions, therefore it is highly
@@ -71,21 +74,21 @@ sub new {
 
 =head2 split_to_syllables
 
-C<my @syllables = $object-E<gt>split_to_syllables($text);>
+C<my @syllables = $object-E<gt>split_to_syllables(text =E<gt> $text, %options );>
 
-Split Lao text into its syllables. Uses a regexp modelled after Phissamay,
-Dalaloy and Durrani: "Syllabification of Lao Script for Line Breaking". Takes
+Split Lao text into its syllables. Uses a regexp modelled after PHISSAMAY,
+DALALOY and DURRANI: I<Syllabification of Lao Script for Line Breaking>. Takes
 as its only parameter a character string to split and returns a list of
 syllables.
 
 =cut
 sub split_to_syllables {
-    return Lingua::LO::NLP::Syllabify::split_to_syllables($_[1]);
+    return Lingua::LO::NLP::Syllabify->new(@_)->get_syllables;
 }
 
 =head2 analyze_syllable
 
-C<my $classified = $object-E<gt>analyze_syllable($syllable);>
+C<my $classified = $object-E<gt>analyze_syllable($syllable, %options);>
 
 Returns a L<Lingua::LO::NLP::Analyze> object that allows you to query
 various syllable properties such as core consonant, tone mark, vowel length and
@@ -93,7 +96,7 @@ tone. See there for details.
 
 =cut
 sub analyze_syllable {
-    return Lingua::LO::NLP::Analyze->new($_[1]);
+    return Lingua::LO::NLP::Analyze->new(@_);
 }
 
 =head1 SEE ALSO

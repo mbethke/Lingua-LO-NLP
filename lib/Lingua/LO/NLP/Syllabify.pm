@@ -33,7 +33,7 @@ my $complete_syl_re = Lingua::LO::NLP::Data::get_sylre_full;
 
 =head2 new
 
-C<new( text =E<gt> $text, ... )>
+C<new( text =E<gt> $text, %options )>
 
 The constructor takes hash-style named arguments. The only one defined so far
 is C<text> whose value is obviously the text to be segmented.
