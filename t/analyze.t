@@ -6,7 +6,7 @@ use feature 'unicode_strings';
 use open qw/ :encoding(UTF-8) :std /;
 use charnames qw/ :full lao /;
 use Test::More;
-use Lingua::LO::Transform::Analyze;
+use Lingua::LO::NLP::Analyze;
 
 my %tests = (
     # Generated syllables from some list or other
@@ -132,9 +132,9 @@ for my $analysis (values %tests) {
     s/X/\N{DOTTED CIRCLE}/ for values %$analysis;
 }
 
-isa_ok(Lingua::LO::Transform::Analyze->new('ສະ'), 'Lingua::LO::Transform::Analyze');
+isa_ok(Lingua::LO::NLP::Analyze->new('ສະ'), 'Lingua::LO::NLP::Analyze');
 for my $syllable (sort keys %tests) {
-    my %c = %{ Lingua::LO::Transform::Analyze->new($syllable, normalize => 1) };
+    my %c = %{ Lingua::LO::NLP::Analyze->new($syllable, normalize => 1) };
     #print "'$syllable' => " . print_struct(%c) . "\n";
     #next;
     delete $c{parse};

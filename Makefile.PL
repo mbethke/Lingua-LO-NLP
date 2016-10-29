@@ -1,8 +1,8 @@
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME         => 'Lingua::LO::Transform',
-    VERSION_FROM => 'lib/Lingua/LO/Transform.pm',
+    NAME         => 'Lingua::LO::NLP',
+    VERSION_FROM => 'lib/Lingua/LO/NLP.pm',
     AUTHOR       => 'Matthias Bethke <mbethke@cpan.org>',
     ABSTRACT     => 'Various transformations for Lao text',
     MIN_PERL_VERSION => '5.012000',

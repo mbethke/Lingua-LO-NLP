@@ -1,4 +1,4 @@
-package Lingua::LO::Transform::Analyze;
+package Lingua::LO::NLP::Analyze;
 use strict;
 use warnings;
 use 5.012000;
@@ -8,13 +8,13 @@ use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::Transform::Data qw/ is_long_vowel normalize_tone_marks /;
+use Lingua::LO::NLP::Data qw/ is_long_vowel normalize_tone_marks /;
 
 =encoding UTF-8
 
 =head1 NAME
 
-Lingua::LO::Transform::Analyze - Analyze a Lao syllable and provide accessors to its constituents
+Lingua::LO::NLP::Analyze - Analyze a Lao syllable and provide accessors to its constituents
 
 =head1 FUNCTION
 
@@ -98,11 +98,11 @@ C<new( $syllable, %options )>
 The constructor takes a syllable and any number of options as hash-style
 arguments. The only option specified so far is "normalize", a boolean value
 indicating whether to run the syllable through tone mark normalization (see
-L<Lingua::LO::Transform::Data/normalize_tone_marks>). It does not fail but may
+L<Lingua::LO::NLP::Data/normalize_tone_marks>). It does not fail but may
 produce nonsense if the argument is not valid according to Lao morphology
 rules.
 
-If your input comes from L<Lingua::LO::Transform::Syllables>, it has already
+If your input comes from L<Lingua::LO::NLP::Syllabify>, it has already
 been validated and comes in the correct tone mark order, so you may save a few
 microseconds by not setting C<validate =E<gt> 1>, otherwise it's generally a
 good idea to set it.
@@ -118,7 +118,7 @@ sub new {
 }
 
 {
-    my $regexp = Lingua::LO::Transform::Data::get_sylre_named;
+    my $regexp = Lingua::LO::NLP::Data::get_sylre_named;
 
     sub _classify {
         my $s = shift // croak("syllable argument missing");

@@ -1,4 +1,4 @@
-package Lingua::LO::Transform::Romanize::PCGN;
+package Lingua::LO::NLP::Romanize::PCGN;
 use strict;
 use warnings;
 use 5.012000;
@@ -7,21 +7,21 @@ use feature qw/ unicode_strings say /;
 use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
-use Lingua::LO::Transform::Analyze;
-use parent 'Lingua::LO::Transform::Romanize';
+use Lingua::LO::NLP::Analyze;
+use parent 'Lingua::LO::NLP::Romanize';
 
 =encoding UTF-8
 
 =head1 NAME
 
-Lingua::LO::Transform::Romanize::PCGN - Romanize Lao syllables according to the PCGN standard
+Lingua::LO::NLP::Romanize::PCGN - Romanize Lao syllables according to the PCGN standard
 
 =head1 FUNCTION
 
 This class is not supposed to be used directly. Rather use
-L<Lingua::LO::Transform::Romanize> as a factory:
+L<Lingua::LO::NLP::Romanize> as a factory:
 
-    my $o = Lingua::LO::Transform::Romanize->new(variant => 'PCGN');
+    my $o = Lingua::LO::NLP::Romanize->new(variant => 'PCGN');
 
 =cut
 
@@ -149,7 +149,7 @@ sub new {
 sub romanize_syllable {
     my ($self, $syllable) = @_;
     my ($consonant, $endcons, $result);
-    my $c = Lingua::LO::Transform::Analyze->new($syllable);
+    my $c = Lingua::LO::NLP::Analyze->new($syllable);
     my $parse = $c->parse;
     my $vowel = $c->vowel;
     

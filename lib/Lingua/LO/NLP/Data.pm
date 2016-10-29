@@ -1,4 +1,4 @@
-package Lingua::LO::Transform::Data;
+package Lingua::LO::NLP::Data;
 use strict;
 use warnings;
 use 5.012000;
@@ -12,7 +12,7 @@ use parent 'Exporter';
 
 =head1 NAME
 
-Lingua::LO::Transform::Data - Helper module to keep common read-only data
+Lingua::LO::NLP::Data - Helper module to keep common read-only data
 
 =head1 FUNCTION
 
@@ -24,7 +24,7 @@ for a small one-time initialization cost.
 Also holds common read-only data such as vowel classifications.
 
 You will probably not want to use this module on its own. If you do, see the
-other L<Lingua::LO::Transform> modules for examples.
+other L<Lingua::LO::NLP> modules for examples.
 
 =cut
 

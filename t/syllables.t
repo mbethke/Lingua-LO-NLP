@@ -7,7 +7,7 @@ use open ':encoding(UTF-8)', ':std';
 use Test::More;
 use charnames qw/ :full lao /;
 use Unicode::Normalize qw/ reorder NFC /;
-use Lingua::LO::Transform::Syllables;
+use Lingua::LO::NLP::Syllabify;
 use Data::Dumper;
 
 my %TEST_SYLLABLES = (
@@ -88,7 +88,7 @@ sub test_method {
     $options //= [];
 
     for my $text (sort keys %$tests) {
-        my $o = Lingua::LO::Transform::Syllables->new(text => $text, @$options);
+        my $o = Lingua::LO::NLP::Syllabify->new(text => $text, @$options);
         my ($result, $message);
         if(ref $tests->{$text} eq 'HASH') {
             $result = $tests->{$text}{result};
@@ -108,14 +108,14 @@ sub test_method {
     }
 }
 
-my $o = Lingua::LO::Transform::Syllables->new(text => 'ສະບາຍດີ');
-isa_ok($o, 'Lingua::LO::Transform::Syllables');
+my $o = Lingua::LO::NLP::Syllabify->new(text => 'ສະບາຍດີ');
+isa_ok($o, 'Lingua::LO::NLP::Syllabify');
 
 test_method(\%TEST_SYLLABLES, "get_syllables");
 test_method(\%TEST_FRAGMENTS, "get_fragments");
 
 # TODO test tone mark reordering
-#is_deeply( [Lingua::LO::Transform::Syllables->new(text => 'ກວ່າດອກ')->get_syllables], [qw/ ກວ່າ ດອກ /]);
+#is_deeply( [Lingua::LO::NLP::Syllabify->new(text => 'ກວ່າດອກ')->get_syllables], [qw/ ກວ່າ ດອກ /]);
 
 done_testing;
 

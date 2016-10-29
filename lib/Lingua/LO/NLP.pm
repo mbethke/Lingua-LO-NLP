@@ -1,25 +1,25 @@
-package Lingua::LO::Transform;
+package Lingua::LO::NLP;
 use strict;
 use warnings;
 use 5.012000;
 use utf8;
 use feature 'unicode_strings';
 use version 0.77; our $VERSION = version->declare('v0.0.1_004');
-use Lingua::LO::Transform::Syllables;
-use Lingua::LO::Transform::Analyze;
+use Lingua::LO::NLP::Syllabify;
+use Lingua::LO::NLP::Analyze;
 
 =encoding UTF-8
 
 =head1 NAME
 
-Lingua::LO::Transform - Various Lao text processing functions
+Lingua::LO::NLP - Various Lao text processing functions
 
 =head1 SYNOPSIS
 
-    use Lingua::LO::Transform;
+    use Lingua::LO::NLP;
     use Data::Dumper;
     use utf8;
-    my $laotr = Lingua::LO::Transform->new;
+    my $laotr = Lingua::LO::NLP->new;
     my @syllables = $laotr->split_to_syllables("ສະບາຍດີ"); # qw( ສະ ບາຍ ດີ )
     print Dumper(\@syllables);
     for my $syl (@syllables) {
@@ -46,8 +46,8 @@ other properties
 =back
 
 These functions are basically just shortcuts to the functionality of some
-specialized modules: L<Lingua::LO::Transform::Syllables>,
-L<Lingua::LO::Transform::Analyze> and L<Lingua::LO::Transform::Romanize>. If
+specialized modules: L<Lingua::LO::NLP::Syllabify>,
+L<Lingua::LO::NLP::Analyze> and L<Lingua::LO::NLP::Romanize>. If
 you need only one of them, you can shave off a little overhead by using those
 directly.
 
@@ -80,20 +80,20 @@ syllables.
 
 =cut
 sub split_to_syllables {
-    return Lingua::LO::Transform::Syllables::split_to_syllables($_[1]);
+    return Lingua::LO::NLP::Syllabify::split_to_syllables($_[1]);
 }
 
 =head2 analyze_syllable
 
 C<my $classified = $object-E<gt>analyze_syllable($syllable);>
 
-Returns a L<Lingua::LO::Transform::Analyze> object that allows you to query
+Returns a L<Lingua::LO::NLP::Analyze> object that allows you to query
 various syllable properties such as core consonant, tone mark, vowel length and
 tone. See there for details.
 
 =cut
 sub analyze_syllable {
-    return Lingua::LO::Transform::Analyze->new($_[1]);
+    return Lingua::LO::NLP::Analyze->new($_[1]);
 }
 
 =head1 SEE ALSO

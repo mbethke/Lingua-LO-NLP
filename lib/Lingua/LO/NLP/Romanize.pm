@@ -1,27 +1,27 @@
-package Lingua::LO::Transform::Romanize;
+package Lingua::LO::NLP::Romanize;
 use strict;
 use warnings;
 use 5.012000;
 use utf8;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
-use Lingua::LO::Transform::Syllables;
+use Lingua::LO::NLP::Syllabify;
 
 =encoding UTF-8
 
 =head1 NAME
 
-Lingua::LO::Transform::Romanize - Romanize Lao syllables
+Lingua::LO::NLP::Romanize - Romanize Lao syllables
 
 =head1 FUNCTION
 
-This s a factory class for Lingua::LO::Transform::Romanize::*. Currently there
-is only L<Lingua::LO::Transform::Romanize::PCGN> but other variants are
+This s a factory class for Lingua::LO::NLP::Romanize::*. Currently there
+is only L<Lingua::LO::NLP::Romanize::PCGN> but other variants are
 planned.
 
 =head1 SYNOPSIS
 
-    my $o = Lingua::LO::Transform::Romanize->new(
+    my $o = Lingua::LO::NLP::Romanize->new(
         variant => 'PCGN',
         hyphenate => 1,
     );
@@ -66,7 +66,7 @@ sub new {
 
 Return the romanization of C<$text> according to the standard passed to the
 constructor. Text is split up by
-L<Lingua::LO::Transform::Syllables/get_fragments>; Lao syllables are processed
+L<Lingua::LO::NLP::Syllabify/get_fragments>; Lao syllables are processed
 and everything else is passed through unchanged save for possible conversion of
 combining characters to a canonically equivalent form in
 L<Unicode::Normalize/NFC>.
@@ -78,7 +78,7 @@ sub romanize {
     my $result = '';
     my $sep_char = $self->{hyphenate} ? '-' : ' ';
 
-    my @frags = Lingua::LO::Transform::Syllables->new( text => $text )->get_fragments;
+    my @frags = Lingua::LO::NLP::Syllabify->new( text => $text )->get_fragments;
     while(@frags) {
         my @lao;
         push @lao, shift @frags while @frags and $frags[0]->{is_lao};

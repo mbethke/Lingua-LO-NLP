@@ -1,4 +1,4 @@
-package Lingua::LO::Transform::Syllables;
+package Lingua::LO::NLP::Syllabify;
 use strict;
 use warnings;
 use 5.012000;
@@ -9,13 +9,13 @@ use charnames qw/ :full lao /;
 use Carp;
 use Unicode::Normalize qw/ NFC /;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::Transform::Data ':all';
+use Lingua::LO::NLP::Data ':all';
 
 =encoding UTF-8
 
 =head1 NAME
 
-Lingua::LO::Transform::Syllables - Segment Lao or mixed-script text into syllables.
+Lingua::LO::NLP::Syllabify - Segment Lao or mixed-script text into syllables.
 
 =head1 FUNCTION
 
@@ -26,8 +26,8 @@ on the one described in PHISSAMAY et al: I<Syllabification of Lao Script for Lin
 
 has text => (is => 'ro');
 
-my $syl_re = Lingua::LO::Transform::Data::get_sylre_basic;
-my $complete_syl_re = Lingua::LO::Transform::Data::get_sylre_full;
+my $syl_re = Lingua::LO::NLP::Data::get_sylre_basic;
+my $complete_syl_re = Lingua::LO::NLP::Data::get_sylre_full;
 
 =head1 METHODS
 
