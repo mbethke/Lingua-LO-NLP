@@ -5,6 +5,7 @@ use utf8;
 use feature 'unicode_strings';
 use open ':encoding(UTF-8)', ':std';
 use Test::More;
+use Test::Fatal;
 use charnames qw/ :full lao /;
 use Unicode::Normalize qw/ reorder NFC /;
 use Lingua::LO::NLP::Syllabify;
@@ -111,6 +112,18 @@ sub test_method {
 my $o = Lingua::LO::NLP::Syllabify->new(text => 'ສະບາຍດີ');
 isa_ok($o, 'Lingua::LO::NLP::Syllabify');
 
+like(
+    exception { Lingua::LO::NLP::Syllabify->new },
+    qr/`text' key missing or undefined/,
+    "Constructor dies w/o `text' arg"
+);
+is_deeply(
+    [ Lingua::LO::NLP::Syllabify->new(
+        text => "ຄຳດີ\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO TONE MAI EK}\N{LAO VOWEL SIGN YY}\N{LAO LETTER O}", normalize => 1
+    )->get_syllables ],
+    ["ຄຳ", "ດີ", "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}" ],
+    "Normalization works"
+);
 test_method(\%TEST_SYLLABLES, "get_syllables");
 test_method(\%TEST_FRAGMENTS, "get_fragments");
 
