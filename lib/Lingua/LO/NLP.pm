@@ -101,9 +101,5 @@ sub analyze_syllable {
 
 =head1 SEE ALSO
 
-L<Lingua::LO::Romanize> is the module that inspired this one, and if you need
-only romanization you should give it a try. It is vastly simpler and faster by
-a factor of about 10 but does have problems with ambiguous syllable boundaries
-as in "ໃນວົງ" and certain semivowel combinations as in "ດ້ວຍ", the latter of
-which would probably be fixable but the former are very difficult without going
-for a full syllable parse like this module does.
+L<Lingua::LO::Romanize> is the module that inspired this one. It has some
+issues with ambiguous syllable boundaries as in "ໃນວົງ" though.
