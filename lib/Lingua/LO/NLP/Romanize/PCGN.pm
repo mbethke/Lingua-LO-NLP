@@ -140,12 +140,6 @@ my %VOWELS = (
     %VOWELS = %v;
 }
 
-sub new {
-    my $class = shift;
-    # Not calling SUPER::new on purpose!
-    return bless {}, $class;
-}
-
 sub romanize_syllable {
     my ($self, $syllable) = @_;
     my ($consonant, $endcons, $result);

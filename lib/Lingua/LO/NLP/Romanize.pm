@@ -5,6 +5,7 @@ use 5.012000;
 use utf8;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
+use Scalar::Util 'blessed';
 use Lingua::LO::NLP::Syllabify;
 
 =encoding UTF-8
@@ -48,6 +49,11 @@ Otherwise, blanks are used.
 
 sub new {
     my ($class, %args) = @_;
+
+    # Allow subclasses to omit a constructor
+    return bless {}, $class if $class ne __PACKAGE__;
+
+    # If we've been called on Lingua::LO::NLP::Romanize, require a variant
     my $variant = delete $args{variant} or confess("`variant' arg missing");
     my $hyphenate = delete $args{hyphenate};
 
@@ -100,7 +106,7 @@ constructor. This is a virtual method that must be implemented by subclasses.
 sub romanize_syllable {
     my $self = shift;
     ref $self or die "romanize_syllable is not a class method";
-    die ref($self) . " must implement romanize_syllable()";
+    die blessed($self) . " must implement romanize_syllable()";
 }
 
 1;
