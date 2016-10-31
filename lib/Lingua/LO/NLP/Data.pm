@@ -320,6 +320,18 @@ sub get_sylre_named {
     return qr/ $syl_capture (?= \P{Lao} | \s | $ | $syl_short )/x;
 }
 
+=head2 is_long_vowel
+
+C<is_long_vowel( $lao_vowel )>
+
+Returns a boolean indicating whether the vowel passed in is long. Consonant
+placeholders must be included in the form of DOTTED CIRCLE (U+25CC). Note that
+for speed there is no check if the vowel actually exists in the data, so
+passing many bogus values may lead to uncontrolled growth of the
+C<%VOWEL_LENGTH> hash due to autovivification!
+
+=cut
+
 sub is_long_vowel { return $VOWEL_LENGTH{+shift} }
 
 =head2 normalize_tone_marks
