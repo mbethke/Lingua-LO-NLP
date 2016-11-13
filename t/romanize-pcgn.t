@@ -29,7 +29,10 @@ my @tests = (
     'ເສລີ'       => 'sleu',
     'ຄວາມ'      => 'khoam',
     'ຫຼາຍ'       => 'lay',
+    'ຊອຍ'       => 'xoy',
     'ສະບາຍດີ foo bar ສະ' => 'sa-bay-di foo bar sa',
+    'ຫນ່າງກັນຍຸງ'  => 'nang-kan-gnoung',
+    'ພອຍໄພລິນ'   => 'phoi-phai-lin',
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
