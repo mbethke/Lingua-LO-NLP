@@ -138,7 +138,7 @@ sub new {
 
             # If there is a preceding vowel, it uses the ຫ as a consonant and the
             # one parsed as core consonant is actually an end consonant
-            unless($H_COMBINERS{ $class{consonant} }) {
+            unless(exists $H_COMBINERS{ $class{consonant} }) {
                 $class{end_consonant} = $class{consonant};
                 $class{consonant} = 'ຫ';
             }
