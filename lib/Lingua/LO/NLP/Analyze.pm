@@ -24,7 +24,7 @@ available via accessor methods as outlined below.
 
 =cut
 
-for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length tone tone_mark h semivowel /) {
+for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length tone tone_mark semivowel /) {
     has $attribute => (is => 'ro');
 }
 
@@ -142,7 +142,6 @@ sub new {
                 $class{end_consonant} = $class{consonant};
                 $class{consonant} = 'ຫ';
             }
-            delete $class{h};
         }
         if(is_long_vowel( $class{vowel} )) {
             $class{vowel_length} = 'long';
