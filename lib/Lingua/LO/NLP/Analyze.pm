@@ -129,7 +129,7 @@ sub new {
 
         my @vowels = $+{vowel0} // ();
         push @vowels, "\N{DOTTED CIRCLE}";
-        push @vowels, grep { defined } map { $+{"vowel$_"} } 1..3;
+        push @vowels, grep { defined } @+{qw/ vowel1 vowel2 vowel3 /};
         $class{vowel} = join('', @vowels);
 
         my $cc = $CONSONANTS{ $class{consonant} };  # consonant category
