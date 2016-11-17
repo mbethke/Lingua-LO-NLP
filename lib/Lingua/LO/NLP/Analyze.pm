@@ -88,6 +88,7 @@ my %CONSONANTS = (
 );
 
 my %H_COMBINERS = map { $_ => 1 } qw/ ຍ ວ /;
+my %CONS_H_MNL = ( ມ => 'ໝ', ນ => 'ໜ', ລ => "\N{LAO SEMIVOWEL SIGN LO}" );
 
 =head1 METHODS
 
@@ -125,24 +126,31 @@ sub new {
 
         $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
         my %class = ( syllable => $s, parse => { %+ } );
-        @class{qw/ consonant end_consonant tone_mark semivowel /} = @+{qw/ consonant end_consonant tone_mark semivowel /};
+        (my $consonant, @class{qw/ end_consonant h semivowel tone_mark /}) = @+{qw/ consonant end_consonant h semivowel tone_mark /};
 
         my @vowels = $+{vowel0} // ();
         push @vowels, "\N{DOTTED CIRCLE}";
         push @vowels, grep { defined } @+{qw/ vowel1 vowel2 vowel3 /};
         $class{vowel} = join('', @vowels);
 
-        my $cc = $CONSONANTS{ $class{consonant} };  # consonant category
-        if($+{h}) {
+        my $cc = $CONSONANTS{ $consonant };  # consonant category
+        if( $class{h} ) {
             $cc = 'SUNG'; # $CONSONANTS{'ຫ'}
 
-            # If there is a preceding vowel, it uses the ຫ as a consonant and the
-            # one parsed as core consonant is actually an end consonant
-            unless(exists $H_COMBINERS{ $class{consonant} }) {
-                $class{end_consonant} = $class{consonant};
-                $class{consonant} = 'ຫ';
+            # If consonant is one of ມ, ນ or ລ *and* no vowel precedes the ຫ,
+            # pretend we saw the combined form
+            if(exists $CONS_H_MNL{ $consonant } and not $+{vowel0}) {
+                $class{consonant} = $CONS_H_MNL{ $consonant };
+                delete $class{h};
+            } else {
+                # If there is a preceding vowel, it uses the ຫ as a consonant and the
+                # one parsed as core consonant is actually an end consonant
+                unless(exists $H_COMBINERS{ $consonant }) {
+                    $class{end_consonant} = $consonant;
+                    $consonant = 'ຫ';
+                    delete $class{h};
+                }
             }
-            delete $class{h};
         }
         if(is_long_vowel( $class{vowel} )) {
             $class{vowel_length} = 'long';
@@ -151,6 +159,7 @@ sub new {
             $class{vowel_length} = 'short';
             $class{tone} = $cc eq 'TAM' ? 'MID_STOP' : 'HIGH_STOP';
         }
+        $class{consonant} = $consonant;
         #say Dumper(\%class);
         return \%class;
     }
