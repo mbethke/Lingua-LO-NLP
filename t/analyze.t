@@ -132,6 +132,22 @@ for my $analysis (values %tests) {
     s/X/\N{DOTTED CIRCLE}/ for values %$analysis;
 }
 
+my @tone_tests = (
+    ກາ => 'LOW',
+    ຄາ => 'HIGH',
+    ຂາ => 'LOW_RISING',
+    ກ່າ => 'MID',
+    ຄ່າ => 'MID',
+    ຂ່າ => 'MID',
+    ກ້າ => 'HIGH_FALLING',
+    ຄ້າ => 'HIGH_FALLING',
+    ຂ້າ => 'MID_FALLING',
+    ກະ => 'HIGH_STOP',
+    ຄະ => 'MID_STOP',
+    ຂະ => 'HIGH_STOP',
+);
+@tone_tests % 2 and die 'BUG: @tone_tests must have an even number of elements!';
+
 isa_ok(Lingua::LO::NLP::Analyze->new('ສະ'), 'Lingua::LO::NLP::Analyze');
 for my $syllable (sort keys %tests) {
     my %c = %{ Lingua::LO::NLP::Analyze->new($syllable, normalize => 1) };
@@ -144,6 +160,13 @@ for my $syllable (sort keys %tests) {
     is_deeply(\%c, $tests{$syllable}, "`$syllable' analyzed correctly")
         or print "Result for `$syllable': \n", map { "\t$_ => \"$c{$_}\"\n" } sort keys %c;
 }
+
+while(@tone_tests) {
+    my $syllable = shift @tone_tests;
+    my $tone = shift @tone_tests;
+    is(Lingua::LO::NLP::Analyze->new($syllable)->tone, $tone, "$syllable has $tone tone");
+}
+
 done_testing;
 
 # Just for adding new tests
