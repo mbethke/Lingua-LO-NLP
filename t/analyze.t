@@ -6,6 +6,7 @@ use feature 'unicode_strings';
 use open qw/ :encoding(UTF-8) :std /;
 use charnames qw/ :full lao /;
 use Test::More;
+use Test::Fatal;
 use Lingua::LO::NLP::Analyze;
 
 my %tests = (
@@ -160,6 +161,11 @@ my @tone_tests = (
 @tone_tests % 2 and die 'BUG: @tone_tests must have an even number of elements!';
 
 isa_ok(Lingua::LO::NLP::Analyze->new('ສະ'), 'Lingua::LO::NLP::Analyze');
+like(
+    exception { Lingua::LO::NLP::Analyze->new },
+    qr/syllable argument missing/,
+    'Dies w/o syllable argument'
+);
 for my $syllable (sort keys %tests) {
     my %c = %{ Lingua::LO::NLP::Analyze->new($syllable, normalize => 1) };
     #print "'$syllable' => " . print_struct(%c) . "\n";

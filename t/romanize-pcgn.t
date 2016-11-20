@@ -33,6 +33,8 @@ my @tests = (
     'ສະບາຍດີ foo bar ສະ' => 'sa-bay-di foo bar sa',
     'ຫນ່າງກັນຍຸງ'  => 'nang-kan-gnoung',
     'ພອຍໄພລິນ'   => 'phoy-phai-lin',
+    'ຄ່ອຍໆ'      => 'khoy-khoy',
+    'ມາຕີອາຊ໌'    => 'ma-ti-a',   # TODO?
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
