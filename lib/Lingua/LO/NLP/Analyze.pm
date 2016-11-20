@@ -44,8 +44,18 @@ my %TONE_MARKS = (
         KANG => 'HIGH_FALLING',
         TAM  => 'HIGH_FALLING',
     },
-    "\N{LAO TONE MAI TI}" => { },  # TODO
-    "\N{LAO TONE MAI CATAWA}" => { }   # TODO
+    "\N{LAO TONE MAI TI}" => {
+        # TODO: is this HIGH or HIGH_FALLING? Opinios seem to differ
+        # and I haven't found a definitive source yet
+        SUNG => 'HIGH',
+        KANG => 'HIGH',
+        TAM  => 'HIGH',
+    },
+    "\N{LAO TONE MAI CATAWA}" => {
+        SUNG => 'LOW_RISING',
+        KANG => 'LOW_RISING',
+        TAM  => 'LOW_RISING',
+    }
 );
 
 my %CONSONANTS = (

@@ -17,7 +17,7 @@ my %tests = (
     'ກ່າຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xາ', vowel_length => 'long' },
     'ກໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
     'ກໍ່' => { consonant => 'ກ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xໍ', vowel_length => 'long' },
-    'ກໍ໋' => { consonant => 'ກ', tone_mark => "\N{LAO TONE MAI CATAWA}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ກໍ໋' => { consonant => 'ກ', tone => 'LOW_RISING', tone_mark => "\N{LAO TONE MAI CATAWA}", vowel => 'Xໍ', vowel_length => 'long' },
     'ແໜ' => { consonant => 'ໜ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
     'ແຫນ' => { consonant => 'ຫ', end_consonant => 'ນ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
     'ຫາມ' => { consonant => 'ຫ', end_consonant => 'ມ', tone => 'LOW_RISING', vowel => 'Xາ', vowel_length => 'long' },
@@ -136,12 +136,23 @@ my @tone_tests = (
     ກາ => 'LOW',
     ຄາ => 'HIGH',
     ຂາ => 'LOW_RISING',
+
     ກ່າ => 'MID',
     ຄ່າ => 'MID',
     ຂ່າ => 'MID',
+
     ກ້າ => 'HIGH_FALLING',
     ຄ້າ => 'HIGH_FALLING',
     ຂ້າ => 'MID_FALLING',
+
+    ກ໊າ => 'HIGH',
+    ຄ໊າ => 'HIGH',
+    ຂ໊າ => 'HIGH',
+
+    ກ໋າ => 'LOW_RISING',
+    ຄ໋າ => 'LOW_RISING',
+    ຂ໋າ => 'LOW_RISING',
+
     ກະ => 'HIGH_STOP',
     ຄະ => 'MID_STOP',
     ຂະ => 'HIGH_STOP',
