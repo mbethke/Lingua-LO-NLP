@@ -1,5 +1,9 @@
 use ExtUtils::MakeMaker;
-use ExtUtils::MakeMaker::Coverage;
+
+BEGIN {
+    eval { require ExtUtils::MakeMaker::Coverage; };
+    ExtUtils::MakeMaker::Coverage->import unless $@;
+}
 
 WriteMakefile(
     NAME         => 'Lingua::LO::NLP',
@@ -13,7 +17,6 @@ WriteMakefile(
         charnames => 0,
         'Unicode::Normalize' => 0,
         'Class::Accessor::Fast' => 0,
-        'ExtUtils::MakeMaker::Coverage' => 0,
     },
     TEST_REQUIRES => {
         'Test::More' => 0,
