@@ -13,5 +13,7 @@ t/analyze.t
 t/manifest.t
 t/pod.t
 t/data.t
+t/lib/Lingua/LO/NLP/Romanize/Faulty.pm
+t/nlp.t
 t/romanize-pcgn.t
-t/syllables.t
+t/syllabify.t
