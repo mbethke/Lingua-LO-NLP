@@ -121,3 +121,20 @@ sub romanize {
 
 L<Lingua::LO::Romanize> is the module that inspired this one. It has some
 issues with ambiguous syllable boundaries as in "ໃນວົງ" though.
+
+=head1 AUTHOR
+
+Matthias Bethke, E<lt>matthias@towiski.deE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2016 by Matthias Bethke
+
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself, either Perl version 5.14.2 or, at your option,
+any later version of Perl 5 you may have available. Significant portions of the
+code are (C) PostgreSQL Global Development Group and The Regents of the
+University of California. All modified versions must retain the file COPYRIGHT
+included in the distribution.
+
+=cut
