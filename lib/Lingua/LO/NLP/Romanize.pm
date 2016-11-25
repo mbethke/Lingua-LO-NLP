@@ -41,7 +41,8 @@ See L</SYNOPSIS> on how to use the constructor. Arguments supported are:
 one currently implemented.
 
 =item C<hyphenate>: separate runs of Lao syllables with hyphens if true.
-Otherwise, blanks are used.
+Otherwise, blanks are used. Syllables duplicated using "ໆ" are always joined
+with a hyphen.
 
 =back
 
