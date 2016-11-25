@@ -7,7 +7,6 @@ use feature 'unicode_strings';
 use charnames qw/ :full lao /;
 use open qw/ :encoding(UTF-8) :std /;
 use Test::More;
-use Test::Fatal;
 use Lingua::LO::NLP::Romanize;
 
 my @tests = (
@@ -38,11 +37,6 @@ my @tests = (
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
-like(
-    exception { Lingua::LO::NLP::Romanize->new(hyphenate => 1) },
-    qr/`variant' arg missing/,
-    'Dies w/o "variant" arg'
-);
 my $r = Lingua::LO::NLP::Romanize->new(variant => 'PCGN', hyphenate => 1);
 isa_ok($r, 'Lingua::LO::NLP::Romanize::PCGN');
 
@@ -55,20 +49,6 @@ while(my $word = shift @tests) {
 is(
     Lingua::LO::NLP::Romanize->new(variant => 'PCGN')->romanize('ສະບາຍດີ'), 'sa bay di',
     "ສະບາຍດີ => 'sa bay di'"
-);
-
-# Broken plugin
-like(
-    exception { Lingua::LO::NLP::Romanize->new(variant => 'Faulty')->romanize('ຟູ') },
-    qr/Lingua::LO::NLP::Romanize::Faulty must implement romanize_syllable\(\)/,
-    'romanize_syllable is virtual'
-);
-
-# romanize_syllable as class method
-like(
-    exception { Lingua::LO::NLP::Romanize->romanize_syllable('ຟູ') },
-    qr/romanize_syllable is not a class method/,
-    'romanize_syllable enforces object method call'
 );
 
 done_testing;
