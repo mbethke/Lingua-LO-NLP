@@ -8,6 +8,7 @@ lib/Lingua/LO/NLP/Analyze.pm
 lib/Lingua/LO/NLP/Data.pm
 lib/Lingua/LO/NLP/Romanize.pm
 lib/Lingua/LO/NLP/Romanize/PCGN.pm
+lib/Lingua/LO/NLP/Romanize/IPA.pm
 lib/Lingua/LO/NLP/Syllabify.pm
 t/001_load.t
 t/analyze.t
