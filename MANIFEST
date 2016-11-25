@@ -17,5 +17,7 @@ t/pod.t
 t/data.t
 t/lib/Lingua/LO/NLP/Romanize/Faulty.pm
 t/nlp.t
+t/romanize-ipa.t
 t/romanize-pcgn.t
+t/romanize.t
 t/syllabify.t

@@ -106,14 +106,14 @@ sub analyze_syllable {
 
     $object-E<gt>romanize($lao, %options);
 
-Returns a romanized version of the text passed in as C<$lao>. See L<Lingua::LO::NLP::Romanize/new> for options. If you don't pass in I<any> options, the defaults are
-C<variant =E<gt> 'PCGN'> and C<hyphenate =E<gt> 1>.
+Returns a romanized version of the text passed in as C<$lao>. See
+L<Lingua::LO::NLP::Romanize/new> for options. If you don't pass in I<any>
+options, the default is C<variant =E<gt> 'PCGN'>.
 
 =cut
 sub romanize {
     my (undef, $lao, %options) = @_;
     $options{variant} //= 'PCGN';
-    $options{hyphenate} //= 1;
     return Lingua::LO::NLP::Romanize->new(%options)->romanize( $lao );
 }
 

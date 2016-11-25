@@ -11,7 +11,7 @@ use Test::Fatal;
 use Lingua::LO::NLP::Romanize;
 
 like(
-    exception { Lingua::LO::NLP::Romanize->new(hyphenate => 1) },
+    exception { Lingua::LO::NLP::Romanize->new(hyphen => 1) },
     qr/`variant' arg missing/,
     'Dies w/o "variant" arg'
 );

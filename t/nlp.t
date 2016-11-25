@@ -17,5 +17,6 @@ is_deeply(
     'split_to_syllables() works'
 );
 is($o->analyze_syllable('ດີ')->tone, 'LOW', 'analyze_syllable() works');
-is($o->romanize('ສະບາຍດີ'), 'sa-bay-di', 'romanize() works');
+is($o->romanize('ສະບາຍດີ'), 'sa bay di', 'romanize() works');
+is($o->romanize('ສະບາຍດີ', hyphen => "\N{HYPHEN}"), "sa\N{HYPHEN}bay\N{HYPHEN}di", 'romanize() with hyphenation works');
 done_testing;

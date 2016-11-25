@@ -24,7 +24,7 @@ planned.
 
     my $o = Lingua::LO::NLP::Romanize->new(
         variant => 'PCGN',
-        hyphenate => 1,
+        hyphen => 1,
     );
 
 =cut
@@ -40,9 +40,13 @@ See L</SYNOPSIS> on how to use the constructor. Arguments supported are:
 =item C<variant>: standard according to which to romanize. "PCGN" is the only
 one currently implemented.
 
-=item C<hyphenate>: separate runs of Lao syllables with hyphens if true.
-Otherwise, blanks are used. Syllables duplicated using "ໆ" are always joined
-with a hyphen.
+=item C<hyphen>: separate runs of Lao syllables with hyphens. Set this to the
+character you would like to use as a hyphen - usually this will be the ASCII
+"hyphen minus" (U+002D) but it can be the unambiguous Unicode hyphen ("‐",
+U+2010), a slash or anything you like. As a special case, you can pass a 1 to
+use the ASCII version. If this argument is missing or C<undef>, blanks are
+used. Syllables duplicated using "ໆ" are always joined with a hyphen: either
+the one you specify or the ASCII one.
 
 =back
 
@@ -56,14 +60,17 @@ sub new {
 
     # If we've been called on Lingua::LO::NLP::Romanize, require a variant
     my $variant = delete $args{variant} or confess("`variant' arg missing");
-    my $hyphenate = delete $args{hyphenate};
+    my $hyphen = delete $args{hyphen} // ' '; # blanks are default
 
     my $subclass = __PACKAGE__ . "::$variant";
     (my $module = $subclass) =~ s!::!/!g;
     require "$module.pm";
 
     my $self = $subclass->new(%args);
-    $self->{hyphenate} = $hyphenate;
+
+    # Use an ASCII hyphen-minus if $hyphen is 1
+    $self->{hyphen} = $hyphen eq 1 ? '-' : $hyphen;
+
     return $self;
 }
 
@@ -83,13 +90,12 @@ L<Unicode::Normalize/NFC>.
 sub romanize {
     my ($self, $text) = @_;
     my $result = '';
-    my $sep_char = $self->{hyphenate} ? '-' : ' ';
 
     my @frags = Lingua::LO::NLP::Syllabify->new( text => $text )->get_fragments;
     while(@frags) {
         my @lao;
         push @lao, shift @frags while @frags and $frags[0]->{is_lao};
-        $result .= join($sep_char, map { $self->romanize_syllable( $_->{text} ) } @lao);
+        $result .= join($self->{hyphen}, map { $self->romanize_syllable( $_->{text} ) } @lao);
         $result .= (shift @frags)->{text} while @frags and not $frags[0]->{is_lao};
     }
     return $result;

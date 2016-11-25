@@ -176,7 +176,10 @@ sub romanize_syllable {
     warn sprintf("Missing VOWELS def for `%s' in `%s'", $vowel, $c->syllable) unless defined $VOWELS{ $vowel };
 
     $result .= $VOWELS{ $vowel } . $endcons;
-    $result .= "-$result" if defined $parse->{extra}  and $parse->{extra} eq 'ໆ';  # duplication sign
+    # Duplication sign
+    if(defined $parse->{extra}  and $parse->{extra} eq 'ໆ') {
+        $result .= ($self->{hyphen} eq ' ' ? '-' : $self->{hyphen}) . "$result";
+    }
     return $result;
 }
 

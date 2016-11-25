@@ -16,7 +16,7 @@ my @tests = (
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
-my $r = Lingua::LO::NLP::Romanize->new(variant => 'IPA', hyphenate => 0);
+my $r = Lingua::LO::NLP::Romanize->new(variant => 'IPA');
 isa_ok($r, 'Lingua::LO::NLP::Romanize::IPA');
 
 while(my $word = shift @tests) {
