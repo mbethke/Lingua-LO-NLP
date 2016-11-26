@@ -89,7 +89,7 @@ sub test_method {
     $options //= [];
 
     for my $text (sort keys %$tests) {
-        my $o = Lingua::LO::NLP::Syllabify->new(text => $text, @$options);
+        my $o = Lingua::LO::NLP::Syllabify->new($text, @$options);
         my ($result, $message);
         if(ref $tests->{$text} eq 'HASH') {
             $result = $tests->{$text}{result};
@@ -109,26 +109,33 @@ sub test_method {
     }
 }
 
-my $o = Lingua::LO::NLP::Syllabify->new(text => 'ສະບາຍດີ');
+my $o = Lingua::LO::NLP::Syllabify->new('ສະບາຍດີ');
 isa_ok($o, 'Lingua::LO::NLP::Syllabify');
 
 like(
     exception { Lingua::LO::NLP::Syllabify->new },
-    qr/`text' key missing or undefined/,
-    "Constructor dies w/o `text' arg"
+    qr/`text' argument missing or undefined/,
+    "Constructor dies w/o text arg"
 );
+
+# Normalization
 is_deeply(
     [ Lingua::LO::NLP::Syllabify->new(
-        text => "ຄຳດີ\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO TONE MAI EK}\N{LAO VOWEL SIGN YY}\N{LAO LETTER O}", normalize => 1
+        "ຄຳດີ".
+        "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO TONE MAI EK}" .
+        "\N{LAO VOWEL SIGN YY}\N{LAO LETTER O}",
+        normalize => 1
     )->get_syllables ],
-    ["ຄຳ", "ດີ", "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}" ],
+    [
+        "ຄຳ",
+        "ດີ",
+        "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}".
+        "\N{LAO TONE MAI EK}\N{LAO LETTER O}"
+    ],
     "Normalization works"
 );
 test_method(\%TEST_SYLLABLES, "get_syllables");
 test_method(\%TEST_FRAGMENTS, "get_fragments");
-
-# TODO test tone mark reordering
-#is_deeply( [Lingua::LO::NLP::Syllabify->new(text => 'ກວ່າດອກ')->get_syllables], [qw/ ກວ່າ ດອກ /]);
 
 done_testing;
 

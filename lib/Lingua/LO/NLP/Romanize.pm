@@ -91,7 +91,7 @@ sub romanize {
     my ($self, $text) = @_;
     my $result = '';
 
-    my @frags = Lingua::LO::NLP::Syllabify->new( text => $text )->get_fragments;
+    my @frags = Lingua::LO::NLP::Syllabify->new( $text )->get_fragments;
     while(@frags) {
         my @lao;
         push @lao, shift @frags while @frags and $frags[0]->{is_lao};

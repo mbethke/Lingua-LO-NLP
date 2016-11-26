@@ -33,23 +33,27 @@ my $complete_syl_re = Lingua::LO::NLP::Data::get_sylre_full;
 
 =head2 new
 
-C<new( text =E<gt> $text, %options )>
+C<new( $text, %options )>
 
-The constructor takes hash-style named arguments. The only one defined so far
-is C<text> whose value is obviously the text to be segmented.
+The constructor takes a mandatory argument containing the text to split, and
+any number of hash-style named options. Currently, the only such option is
+C<normalize> which takes a boolean argument and inicates whether to run the
+text though a normalization function that swaps tone marks and vowels appearing
+in the wrong order.
 
-Note that text is passed through L<"Unicode::Normalize"/NFC> first to obtain
-the Composed Normal Form. In pure Lao text, this affects only the decomposed
-form of LAO VOWEL SIGN AM that will be transformed from C<U+0EB2>, C<U+0ECD> to
-C<U+0EB3>.
+Note that in any case text is passed through L<"Unicode::Normalize"/NFC> first
+to obtain the Composed Normal Form. In pure Lao text, this affects only the
+decomposed form of LAO VOWEL SIGN AM that will be transformed from C<U+0EB2>,
+C<U+0ECD> to C<U+0EB3>.
 
 =cut
 
 sub new {
     my $class = shift;
+    my $text = shift;
+    croak("`text' argument missing or undefined") unless defined $text;
     my %opts = @_;
-    croak("`text' key missing or undefined") unless defined $opts{text};
-    my $text = NFC( $opts{text} );
+    $text = NFC( $text );
     normalize_tone_marks($text) if $opts{normalize};
     return bless { text => $text }, $class
 }

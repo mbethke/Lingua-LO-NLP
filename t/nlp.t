@@ -12,7 +12,7 @@ isa_ok(Lingua::LO::NLP->new, 'Lingua::LO::NLP');
 
 my $o = Lingua::LO::NLP->new;
 is_deeply(
-    [ $o->split_to_syllables(text => 'ສະບາຍດີ') ],
+    [ $o->split_to_syllables('ສະບາຍດີ') ],
     [ qw/ ສະ ບາຍ ດີ / ],
     'split_to_syllables() works'
 );
