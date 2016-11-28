@@ -69,7 +69,7 @@ sub new {
     my $self = $subclass->new(%args);
 
     # Use an ASCII hyphen-minus if $hyphen is 1
-    $self->{hyphen} = $hyphen eq 1 ? '-' : $hyphen;
+    $self->hyphen($hyphen eq 1 ? '-' : $hyphen);
 
     return $self;
 }
@@ -114,6 +114,20 @@ sub romanize_syllable {
     my $self = shift;
     ref $self or die "romanize_syllable is not a class method";
     die blessed($self) . " must implement romanize_syllable()";
+}
+
+=head2 hyphen
+  my $hypen = $o->hyphen;
+  $o->hyphen('-');
+
+Accessor for the C<hyphen> attribute, see L</new>.
+=cut
+sub hyphen {
+    my ($self, $hyphen) = @_;
+    if(defined $hyphen) {
+        $self->{hyphen} = $hyphen eq 1 ? '-' : $hyphen;
+    }
+    return $self->{hyphen};
 }
 
 1;
