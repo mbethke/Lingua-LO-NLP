@@ -40,7 +40,7 @@ my %TONE_MARKS = (
         TAM  => 'MID',
     },
     "\N{LAO TONE MAI THO}" => {
-        SUNG => 'MID_FALLING',
+        SUNG => 'MID_FALLING',      # TODO: should this be LOW_FALLING?
         KANG => 'HIGH_FALLING',
         TAM  => 'HIGH_FALLING',
     },

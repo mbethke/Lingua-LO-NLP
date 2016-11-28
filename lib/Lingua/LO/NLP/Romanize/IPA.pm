@@ -146,6 +146,15 @@ my %VOWELS = (
     %VOWELS = %v;
 }
 
+my %TONE_DIACRITICS = (
+    LOW => "\N{COMBINING GRAVE ACCENT}",
+    MID => "\N{COMBINING MACRON}",                          MID_STOP => "\N{COMBINING MACRON}",
+    HIGH => "\N{COMBINING ACUTE ACCENT}",                   HIGH_STOP => "\N{COMBINING ACUTE ACCENT}",
+    LOW_RISING => "\N{COMBINING CARON}",
+    HIGH_FALLING => "\N{COMBINING CIRCUMFLEX ACCENT}",
+    MID_FALLING => "\N{COMBINING CIRCUMFLEX ACCENT BELOW}",
+);
+
 sub romanize_syllable {
     my ($self, $syllable) = @_;
     my ($consonant, $endcons, $result);
@@ -180,12 +189,20 @@ sub romanize_syllable {
     # TODO remove debug
     warn sprintf("Missing VOWELS def for `%s' in `%s'", $vowel, $c->syllable) unless defined $VOWELS{ $vowel };
 
-    $result .= $VOWELS{ $vowel } . $endcons;
+    $result .= _vowel($vowel, $c->tone) . $endcons;
     # Duplication sign
     if(defined $parse->{extra}  and $parse->{extra} eq 'ໆ') {
         $result .= ($self->{hyphen} eq ' ' ? '-' : $self->{hyphen}) . "$result";
     }
     return $result;
+}
+
+sub _vowel {
+    my ($lao_vowel, $tone) = @_;
+    my $vowel = $VOWELS{ $lao_vowel };
+    # Insert tone diacritic after first character
+    substr($vowel, 1, 0) = $TONE_DIACRITICS{ $tone };
+    return $vowel;
 }
 
 sub _consonant {

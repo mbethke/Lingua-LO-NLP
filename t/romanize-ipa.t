@@ -10,9 +10,9 @@ use Test::More;
 use Lingua::LO::NLP::Romanize;
 
 my @tests = (
-    'ເຄື່ອງກໍາເນີດໄຟຟ້າ' => 'kʰɯːəŋ kam nɤːt faj faː',
-    'ສະບາຍດີ'    => 'sa baːj diː',
-    'ດີໆ'        => 'diː-diː',
+    'ເຄື່ອງກໍາເນີດໄຟຟ້າ' => 'kʰɯ̄ːəŋ kám nɤ́ːt fáj fâː',
+    'ສະບາຍດີ'    => 'sá bàːj dìː',
+    'ດີໆ'        => 'dìː-dìː',
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
