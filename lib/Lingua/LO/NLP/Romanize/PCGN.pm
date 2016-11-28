@@ -141,6 +141,14 @@ my %VOWELS = (
     %VOWELS = %v;
 }
 
+=head2 romanize_syllable
+
+    romanize_syllable( $syllable )
+
+Return the romanization of a single C<$syllable>. See L<Lingua::LO::NLP::Romanize/romanize_syllable>
+
+=cut
+
 sub romanize_syllable {
     my ($self, $syllable) = @_;
     my ($consonant, $endcons, $result);
