@@ -155,6 +155,34 @@ my %TONE_DIACRITICS = (
     MID_FALLING => "\N{COMBINING CIRCUMFLEX ACCENT BELOW}",
 );
 
+=head2 new
+
+You don't call this constructor directly bu via L<Lingua::LO::NLP::Romanize>.
+It adds the following attribute:
+
+=over 4
+
+=item C<tone>: boolean indicating whether to add dicacritics for tone
+
+=back
+
+=cut
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->{romanize_vowel} = $args{tone} ? \&_vowel_with_tone : \&_vowel_without_tone;
+    return $self;
+}
+
+=head2 romanize_syllable
+
+    romanize_syllable( $syllable )
+
+Return the romanization of a single C<$syllable>. See L<Lingua::LO::NLP::Romanize/romanize_syllable>
+
+=cut
+
 sub romanize_syllable {
     my ($self, $syllable) = @_;
     my ($consonant, $endcons, $result);
@@ -189,7 +217,7 @@ sub romanize_syllable {
     # TODO remove debug
     warn sprintf("Missing VOWELS def for `%s' in `%s'", $vowel, $c->syllable) unless defined $VOWELS{ $vowel };
 
-    $result .= _vowel($vowel, $c->tone) . $endcons;
+    $result .= $self->{romanize_vowel}->($vowel, $c->tone) . $endcons;
     # Duplication sign
     if(defined $parse->{extra}  and $parse->{extra} eq 'ໆ') {
         $result .= ($self->{hyphen} eq ' ' ? '-' : $self->{hyphen}) . "$result";
@@ -197,13 +225,15 @@ sub romanize_syllable {
     return $result;
 }
 
-sub _vowel {
+sub _vowel_with_tone {
     my ($lao_vowel, $tone) = @_;
     my $vowel = $VOWELS{ $lao_vowel };
     # Insert tone diacritic after first character
     substr($vowel, 1, 0) = $TONE_DIACRITICS{ $tone };
     return $vowel;
 }
+
+sub _vowel_without_tone { return $VOWELS{ $_[0] } }
 
 sub _consonant {
     my ($cons, $position) = @_;
