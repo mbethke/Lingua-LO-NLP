@@ -174,7 +174,7 @@ sub romanize_syllable {
 
     $endcons = $c->end_consonant;
     if(defined $endcons) {
-        if(exists $CONS_VOWELS{ $endcons }) {
+        if(exists $CONS_VOWELS{ $endcons } and none { defined } @$parse{qw/ vowel1 vowel2 vowel3 /}) {
             $vowel .= $endcons;   # consonant can be used as a vowel
             $endcons = '';
         } else {
