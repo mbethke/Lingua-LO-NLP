@@ -51,7 +51,7 @@ my %tests = (
     'ກັນ' => { consonant => 'ກ', end_consonant => 'ນ', tone => 'HIGH_STOP', vowel => 'Xັ', vowel_length => 'short' },
     'ກົດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'Xົ', vowel_length => 'short' },
 
-    'ເກາະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ເXາ', vowel_length => 'short' },
+    'ເກາະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'ເXາະ', vowel_length => 'short' },
     'ກໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
     'ກອດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'Xອ', vowel_length => 'long' },
 
