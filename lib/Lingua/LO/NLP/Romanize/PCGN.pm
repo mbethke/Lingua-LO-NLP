@@ -76,6 +76,8 @@ my %VOWELS = (
 
     'Xິ'    => 'i',
     'Xີ'    => 'i',
+    'Xິວ'   => 'iou', # TODO correct?
+    'Xີວ'   => 'iou', # TODO correct?
 
     'Xຶ'    => 'u',
     'Xື'    => 'u',
