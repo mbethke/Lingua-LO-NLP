@@ -6,6 +6,7 @@ use utf8;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Scalar::Util 'blessed';
+use Class::Accessor::Fast 'antlers';
 use Lingua::LO::NLP::Syllabify;
 
 =encoding UTF-8
@@ -37,16 +38,20 @@ See L</SYNOPSIS> on how to use the constructor. Arguments supported are:
 
 =over 4
 
-=item C<variant>: standard according to which to romanize. "PCGN" is the only
+=item C<variant>: Standard according to which to romanize. "PCGN" is the only
 one currently implemented.
 
-=item C<hyphen>: separate runs of Lao syllables with hyphens. Set this to the
+=item C<hyphen>: Separate runs of Lao syllables with hyphens. Set this to the
 character you would like to use as a hyphen - usually this will be the ASCII
 "hyphen minus" (U+002D) but it can be the unambiguous Unicode hyphen ("‐",
 U+2010), a slash or anything you like. As a special case, you can pass a 1 to
 use the ASCII version. If this argument is missing or C<undef>, blanks are
 used. Syllables duplicated using "ໆ" are always joined with a hyphen: either
 the one you specify or the ASCII one.
+
+=item C<normalize>: Run text through tone mark order normalization; see
+L<Lingua::LO::NLP::Data/normalize_tone_marks>. If your text looks fine but
+syllables are not recognized, you may need this.
 
 =back
 
@@ -61,6 +66,7 @@ sub new {
     # If we've been called on Lingua::LO::NLP::Romanize, require a variant
     my $variant = delete $args{variant} or confess("`variant' arg missing");
     my $hyphen = delete $args{hyphen} // ' '; # blanks are default
+    my $normalize = delete $args{normalize};
 
     my $subclass = __PACKAGE__ . "::$variant";
     (my $module = $subclass) =~ s!::!/!g;
@@ -70,7 +76,7 @@ sub new {
 
     # Use an ASCII hyphen-minus if $hyphen is 1
     $self->hyphen($hyphen eq 1 ? '-' : $hyphen);
-
+    $self->normalize($normalize);
     return $self;
 }
 
@@ -91,7 +97,7 @@ sub romanize {
     my ($self, $text) = @_;
     my $result = '';
 
-    my @frags = Lingua::LO::NLP::Syllabify->new( $text )->get_fragments;
+    my @frags = Lingua::LO::NLP::Syllabify->new( $text, normalize => $self->normalize )->get_fragments;
     while(@frags) {
         my @lao;
         push @lao, shift @frags while @frags and $frags[0]->{is_lao};
@@ -129,6 +135,14 @@ sub hyphen {
     }
     return $self->{hyphen};
 }
+
+=head2 normalize
+  my $normalization = $o->normalize;
+  $o->normalize( $bool );
+
+Accessor for the C<normalize> attribute, see L</new>.
+=cut
+has normalize => (is => 'rw');
 
 1;
 

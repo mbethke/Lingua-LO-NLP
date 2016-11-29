@@ -115,6 +115,7 @@ my %tests = (
     'ໃກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໃX', vowel_length => 'long' },
     'ໜ້າ' => { consonant => 'ໜ', tone => 'MID_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xາ', vowel_length => 'long' },
     'ເຫດ' => { consonant => 'ຫ', end_consonant => "ດ", 'tone' => 'LOW_RISING',  'vowel' => "ເX", vowel_length => 'long' },
+    'ເອື້ອຢ' => { consonant => "ອ", end_consonant => "ຢ", tone => "HIGH_FALLING", tone_mark => "\N{LAO TONE MAI THO}", vowel => "ເ◌ືອ", vowel_length => "long" },
     #'ໄລນ໌' => {},
 
     # Test tone mark order normalization
