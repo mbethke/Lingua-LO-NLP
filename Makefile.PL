@@ -17,6 +17,7 @@ WriteMakefile(
         charnames => 0,
         'Unicode::Normalize' => 0,
         'Class::Accessor::Fast' => 0,
+        'List::Util' => 1.33,
     },
     TEST_REQUIRES => {
         'Test::More' => 0,

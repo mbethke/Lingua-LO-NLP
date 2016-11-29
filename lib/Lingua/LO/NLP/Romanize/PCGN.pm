@@ -7,6 +7,7 @@ use feature qw/ unicode_strings say /;
 use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
+use List::Util 1.33 'none';
 use Lingua::LO::NLP::Analyze;
 use parent 'Lingua::LO::NLP::Romanize';
 
@@ -164,10 +165,11 @@ sub romanize_syllable {
     if($cons eq 'ຫ' and $sv) {
         # ຫ with semivowel. Drop the ຫ and use the semivowel as consonant
         $result = _consonant($sv, 0);
+        undef $sv;
     } else {
         # The regular case
         $result = _consonant($cons, 0);
-        $result .= _consonant($sv, 1) if $sv;
+        $sv = _consonant($sv, 1) if $sv;
     }
 
     $endcons = $c->end_consonant;
@@ -185,7 +187,12 @@ sub romanize_syllable {
     # TODO remove debug
     warn sprintf("Missing VOWELS def for `%s' in `%s'", $vowel, $c->syllable) unless defined $VOWELS{ $vowel };
 
-    $result .= $VOWELS{ $vowel } . $endcons;
+    $sv //= '';
+    if($parse->{vowel0} and none { defined } @$parse{qw/ vowel1 vowel2 vowel3 /}) {
+        $result .= $VOWELS{ $vowel } . $sv . $endcons;
+    } else {
+        $result .= $sv . $VOWELS{ $vowel } . $endcons;
+    }
     # Duplication sign
     if(defined $parse->{extra}  and $parse->{extra} eq 'ໆ') {
         $result .= ($self->{hyphen} eq ' ' ? '-' : $self->{hyphen}) . "$result";
