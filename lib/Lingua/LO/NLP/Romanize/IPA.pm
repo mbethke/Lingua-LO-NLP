@@ -8,7 +8,7 @@ use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Lingua::LO::NLP::Analyze;
-use parent 'Lingua::LO::NLP::Romanize';
+use parent 'Lingua::LO::NLP::Romanize::PCGN';
 
 =encoding UTF-8
 
@@ -70,8 +70,6 @@ my %CONSONANTS = (
    ຫວ => 'w', # TODO ʋ?
 );
 
-my %CONS_VOWELS = map { $_ => 1 } qw/ ຍ ຽ ອ ວ /;
-
 my %VOWELS = (
     ### Monophthongs
     'Xະ'   => 'a',
@@ -118,10 +116,11 @@ my %VOWELS = (
     'Xັຽ'   => 'iə',
     'ເXຍ'  => 'iːə',
     'Xຽ'   => 'iːə',
-    'Xຽວ'  => 'TODO:ຽວ',
+    'Xຽວ'  => 'iːəo', # TODO correct?
 
     'ເXຶອ'  => 'ɯə',
     'ເXືອ'  => 'ɯːə',
+    'ເXືອຍ' => 'ɯːəi',
 
     'Xົວະ'  => 'uə',
     'Xັວ '  => 'uə',
@@ -177,56 +176,6 @@ sub new {
     return $self;
 }
 
-=head2 romanize_syllable
-
-    romanize_syllable( $syllable )
-
-Return the romanization of a single C<$syllable>. See L<Lingua::LO::NLP::Romanize/romanize_syllable>
-
-=cut
-
-sub romanize_syllable {
-    my ($self, $syllable) = @_;
-    my ($consonant, $endcons, $result);
-    my $c = Lingua::LO::NLP::Analyze->new($syllable);
-    my $parse = $c->parse;
-    my $vowel = $c->vowel;
-    
-    my $cons = $c->consonant;
-    my $h = $c->h;
-    my $sv = $c->semivowel;
-    if($cons eq 'ຫ' and $sv) {
-        # ຫ with semivowel. Drop the ຫ and use the semivowel as consonant
-        $result = _consonant($sv, 0);
-    } else {
-        # The regular case
-        $result = _consonant($cons, 0);
-        $result .= _consonant($sv, 1) if $sv;
-    }
-
-    $endcons = $c->end_consonant;
-    if(defined $endcons) {
-        if(exists $CONS_VOWELS{ $endcons }) {
-            $vowel .= $endcons;   # consonant can be used as a vowel
-            $endcons = '';
-        } else {
-            $endcons = _consonant($endcons, 1);
-        }
-    } else {
-        $endcons = '';  # avoid special-casing later
-    }
-
-    # TODO remove debug
-    warn sprintf("Missing VOWELS def for `%s' in `%s'", $vowel, $c->syllable) unless defined $VOWELS{ $vowel };
-
-    $result .= $self->{romanize_vowel}->($vowel, $c->tone) . $endcons;
-    # Duplication sign
-    if(defined $parse->{extra}  and $parse->{extra} eq 'ໆ') {
-        $result .= ($self->{hyphen} eq ' ' ? '-' : $self->{hyphen}) . "$result";
-    }
-    return $result;
-}
-
 sub _vowel_with_tone {
     my ($lao_vowel, $tone) = @_;
     my $vowel = $VOWELS{ $lao_vowel };
@@ -238,11 +187,8 @@ sub _vowel_with_tone {
 sub _vowel_without_tone { return $VOWELS{ $_[0] } }
 
 sub _consonant {
-    my ($cons, $position) = @_;
+    my (undef, $cons, $position) = @_;
     my $consdata = $CONSONANTS{ $cons };
-    #my $consref = ref $consdata or return $consdata;
-    #return $consdata->($position) if $consref eq 'CODE';
-    #return $consdata->[$position];
     return ref $consdata ? $consdata->[$position] : $consdata;
 }
 

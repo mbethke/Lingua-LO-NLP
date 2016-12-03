@@ -118,6 +118,7 @@ my %VOWELS = (
 
     'ເXຶອ'  => 'ua',
     'ເXືອ'  => 'ua',
+    'ເXືອຍ' => 'uai',
 
     'Xົວະ'  => 'oua',
     'Xັວ '  => 'oua',
@@ -127,7 +128,7 @@ my %VOWELS = (
 
     'ໄX'   => 'ai',
     'ໃX'   => 'ai',
-    'Xາຍ'  => 'ay',  # /aj/ - Actually short but counts as long for rules
+    'Xາຍ'  => 'ay',
     'Xັຍ'   => 'ay',  # /aj/
 
     'ເXົາ'  => 'ao',
@@ -142,6 +143,19 @@ my %VOWELS = (
         $v{$w} = $VOWELS{$v};
     }
     %VOWELS = %v;
+}
+
+=head2 new
+
+You don't call this constructor directly bu via L<Lingua::LO::NLP::Romanize>.
+
+=cut
+
+sub new {
+    my ($class, %args) = @_;
+    return bless {
+        romanize_vowel =>  sub { $VOWELS{ $_[0] } },
+    }, $class;
 }
 
 =head2 romanize_syllable
@@ -164,21 +178,21 @@ sub romanize_syllable {
     my $sv = $c->semivowel;
     if($cons eq 'ຫ' and $sv) {
         # ຫ with semivowel. Drop the ຫ and use the semivowel as consonant
-        $result = _consonant($sv, 0);
+        $result = $self->_consonant($sv, 0);
         undef $sv;
     } else {
         # The regular case
-        $result = _consonant($cons, 0);
-        $sv = _consonant($sv, 1) if $sv;
+        $result = $self->_consonant($cons, 0);
+        $sv = $self->_consonant($sv, 1) if $sv;
     }
 
     $endcons = $c->end_consonant;
     if(defined $endcons) {
-        if(exists $CONS_VOWELS{ $endcons } and none { defined } @$parse{qw/ vowel1 vowel2 vowel3 /}) {
+        if(exists $CONS_VOWELS{ $endcons } and not defined $parse->{vowel3}) {
             $vowel .= $endcons;   # consonant can be used as a vowel
             $endcons = '';
         } else {
-            $endcons = _consonant($endcons, 1);
+            $endcons = $self->_consonant($endcons, 1);
         }
     } else {
         $endcons = '';  # avoid special-casing later
@@ -188,10 +202,11 @@ sub romanize_syllable {
     warn sprintf("Missing VOWELS def for `%s' in `%s'", $vowel, $c->syllable) unless defined $VOWELS{ $vowel };
 
     $sv //= '';
+    my $rom_vowel = $self->{romanize_vowel}->($vowel, $c->tone);
     if($parse->{vowel0} and none { defined } @$parse{qw/ vowel1 vowel2 vowel3 /}) {
-        $result .= $VOWELS{ $vowel } . $sv . $endcons;
+        $result .= $rom_vowel . $sv . $endcons;
     } else {
-        $result .= $sv . $VOWELS{ $vowel } . $endcons;
+        $result .= $sv . $rom_vowel . $endcons;
     }
     # Duplication sign
     if(defined $parse->{extra}  and $parse->{extra} eq 'ໆ') {
@@ -201,11 +216,8 @@ sub romanize_syllable {
 }
 
 sub _consonant {
-    my ($cons, $position) = @_;
+    my (undef, $cons, $position) = @_;
     my $consdata = $CONSONANTS{ $cons };
-    #my $consref = ref $consdata or return $consdata;
-    #return $consdata->($position) if $consref eq 'CODE';
-    #return $consdata->[$position];
     return ref $consdata ? $consdata->[$position] : $consdata;
 }
 
