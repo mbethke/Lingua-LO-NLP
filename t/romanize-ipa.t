@@ -13,6 +13,7 @@ my @tests = (
     'ເຄື່ອງກໍາເນີດໄຟຟ້າ' => ['kʰɯ̄ːəŋ kám nɤ́ːt fáj fâː', 'kʰɯːəŋ kam nɤːt faj faː'],
     'ສະບາຍດີ'    => ['sá bàːj dìː', 'sa baːj diː'],
     'ດີໆ'        => ['dìː-dìː', 'diː-diː'],
+    'ເລື້ອຍໆ'     => ['lɯ̂ːəi-lɯ̂ːəi', 'lɯːəi-lɯːəi' ],
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 

@@ -4,7 +4,7 @@ use warnings;
 use 5.012000;
 use utf8;
 use feature 'unicode_strings';
-use version 0.77; our $VERSION = version->declare('v0.0.1_011');
+use version 0.77; our $VERSION = version->declare('v0.1.0');
 use Lingua::LO::NLP::Syllabify;
 use Lingua::LO::NLP::Analyze;
 use Lingua::LO::NLP::Romanize;
@@ -17,9 +17,11 @@ Lingua::LO::NLP - Various Lao text processing functions
 
 =head1 SYNOPSIS
 
+    use utf8;
+    use 5.10.1;
+    use open qw/ :std :encoding(UTF-8) /;
     use Lingua::LO::NLP;
     use Data::Dumper;
-    use utf8;
 
     my $lao = Lingua::LO::NLP->new;
 
@@ -34,18 +36,21 @@ Lingua::LO::NLP - Various Lao text processing functions
         # ດີ: TONE_LOW
     }
 
+    say $lao->romanize("ສະບາຍດີ", variant => 'PCGN', hyphen => "\N{HYPHEN}");  # sa‐bay‐di
+    say $lao->romanize("ສະບາຍດີ", variant => 'IPA');                           # sa baːj diː
+
 =head1 DESCRIPTION
 
 This module provides various functions for processing Lao text. Currently it can
 
 =over 4
 
-=item Split Lao text (usually written without blanks between words) into syllables
+=item split Lao text (usually written without blanks between words) into syllables
 
-=item Analyze syllables with regards to core and end consonants, vowels, tone and
+=item analyze syllables with regards to core and end consonants, vowels, tone and
 other properties
 
-=item Romanize Lao text according to the PCGN standard
+=item romanize Lao text according to the PCGN standard or to IPA (experimental)
 
 =back
 
@@ -75,12 +80,13 @@ sub new {
 
 =head2 split_to_syllables
 
-    my @syllables = $object-E<gt>split_to_syllables(text =E<gt> $text, %options );
+    my @syllables = $object-E<gt>split_to_syllables($text, %options );
 
-Split Lao text into its syllables. Uses a regexp modelled after PHISSAMAY,
+Split Lao text into its syllables using a regexp modelled after PHISSAMAY,
 DALALOY and DURRANI: I<Syllabification of Lao Script for Line Breaking>. Takes
-as its only parameter a character string to split and returns a list of
-syllables.
+as its only mandatory parameter a character string to split and optionally a
+number of named options; see L<Lingua::LO::NLP::Syllabify/new> for those.
+Returns a list of syllables.
 
 =cut
 sub split_to_syllables {
