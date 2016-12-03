@@ -14,6 +14,7 @@ t/001_load.t
 t/analyze.t
 t/manifest.t
 t/pod.t
+t/pod-coverage.t
 t/data.t
 t/lib/Lingua/LO/NLP/Romanize/Faulty.pm
 t/nlp.t
