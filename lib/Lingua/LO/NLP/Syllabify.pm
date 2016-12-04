@@ -19,8 +19,9 @@ Lingua::LO::NLP::Syllabify - Segment Lao or mixed-script text into syllables.
 
 =head1 FUNCTION
 
-This implements a purely regular expression based algorithm to segment Lao text into syllables, based 
-on the one described in PHISSAMAY et al: I<Syllabification of Lao Script for Line Breaking>.
+This implements a purely regular expression based algorithm to segment Lao text
+into syllables, based on the one described in PHISSAMAY et al:
+I<Syllabification of Lao Script for Line Breaking>.
 
 =cut
 
@@ -37,11 +38,11 @@ C<new( $text, %options )>
 
 The constructor takes a mandatory argument containing the text to split, and
 any number of hash-style named options. Currently, the only such option is
-C<normalize> which takes a boolean argument and inicates whether to run the
+C<normalize> which takes a boolean argument and indicates whether to run the
 text though a normalization function that swaps tone marks and vowels appearing
 in the wrong order.
 
-Note that in any case text is passed through L<"Unicode::Normalize"/NFC> first
+Note that in any case text is passed through L<Unicode::Normalize/NFC> first
 to obtain the Composed Normal Form. In pure Lao text, this affects only the
 decomposed form of LAO VOWEL SIGN AM that will be transformed from C<U+0EB2>,
 C<U+0ECD> to C<U+0EB3>.

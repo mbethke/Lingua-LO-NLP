@@ -4,7 +4,7 @@ use warnings;
 use 5.012000;
 use utf8;
 use feature 'unicode_strings';
-use version 0.77; our $VERSION = version->declare('v0.1.0');
+use version 0.77; our $VERSION = version->declare('v0.1.1');
 use Lingua::LO::NLP::Syllabify;
 use Lingua::LO::NLP::Analyze;
 use Lingua::LO::NLP::Romanize;
@@ -64,7 +64,7 @@ directly.
 
 =head2 new
 
-    new(option =E<gt> value, ...)
+    new(option => value, ...)
 
 The object constructor currently does nothing; there are no options. However,
 it is likely that there will be in future versions, therefore it is highly
@@ -80,7 +80,7 @@ sub new {
 
 =head2 split_to_syllables
 
-    my @syllables = $object-E<gt>split_to_syllables($text, %options );
+    my @syllables = $object->split_to_syllables($text, %options );
 
 Split Lao text into its syllables using a regexp modelled after PHISSAMAY,
 DALALOY and DURRANI: I<Syllabification of Lao Script for Line Breaking>. Takes
@@ -96,7 +96,7 @@ sub split_to_syllables {
 
 =head2 analyze_syllable
 
-    my $classified = $object-E<gt>analyze_syllable($syllable, %options);
+    my $classified = $object->analyze_syllable($syllable, %options);
 
 Returns a L<Lingua::LO::NLP::Analyze> object that allows you to query
 various syllable properties such as core consonant, tone mark, vowel length and
@@ -110,7 +110,7 @@ sub analyze_syllable {
 
 =head2 romanize
 
-    $object-E<gt>romanize($lao, %options);
+    $object->romanize($lao, %options);
 
 Returns a romanized version of the text passed in as C<$lao>. See
 L<Lingua::LO::NLP::Romanize/new> for options. If you don't pass in I<any>

@@ -107,16 +107,11 @@ my %CONS_H_MNL = ( ມ => 'ໝ', ນ => 'ໜ', ລ => "\N{LAO SEMIVOWEL SIGN LO}
 C<new( $syllable, %options )>
 
 The constructor takes a syllable and any number of options as hash-style
-arguments. The only option specified so far is "normalize", a boolean value
+arguments. The only option specified so far is C<normalize>, a boolean value
 indicating whether to run the syllable through tone mark normalization (see
 L<Lingua::LO::NLP::Data/normalize_tone_marks>). It does not fail but may
 produce nonsense if the argument is not valid according to Lao morphology
 rules.
-
-If your input comes from L<Lingua::LO::NLP::Syllabify>, it has already
-been validated and comes in the correct tone mark order, so you may save a few
-microseconds by not setting C<validate =E<gt> 1>, otherwise it's generally a
-good idea to set it.
 
 =cut
 
@@ -180,7 +175,25 @@ sub new {
 
 =head3 syllable
 
-The original syllable as passed to the constructor
+The original syllable as used by the parser. This may be subtly different from
+the one passed to the constructor:
+
+=over 4
+
+=item
+
+If the C<normalize> option was set, tone marks and vowels may have been reordered
+
+=item
+
+If the decomposed form of LAO VOWEL SIGN AM (◌າ) is used, it will have been
+converted to the composed form
+
+=item
+
+Combinations of ຫ with ລ, ມ or ນ will have been converted to the combined characters.
+
+=back
 
 =head3 parse
 
@@ -192,7 +205,7 @@ quickly check e.g. if there was a vowel component before the core consonant.
 =head3 vowel
 
 The syllable's vowel or diphthong. As the majority of vowels have more than one
-code point, the consonant position is represented by the unicode sign
+code point, the consonant position is represented by the Unicode character
 designated for this function, DOTTED CIRCLE or U+25CC.
 
 =head3 consonant

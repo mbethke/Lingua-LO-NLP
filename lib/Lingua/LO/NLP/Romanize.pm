@@ -17,9 +17,17 @@ Lingua::LO::NLP::Romanize - Romanize Lao syllables
 
 =head1 FUNCTION
 
-This s a factory class for Lingua::LO::NLP::Romanize::*. Currently there
-is only L<Lingua::LO::NLP::Romanize::PCGN> but other variants are
-planned.
+This is a factory class for C<Lingua::LO::NLP::Romanize::*>. Currently there
+are the following romanization modules:
+
+=over 4
+
+=item L<Lingua::LO::NLP::Romanize::PCGN> for the standard set by the
+L<Permanent Committee on Geographical Names for British Official Use|https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/533781/ROMANIZATION_SYSTEM_FOR_LAO.pdf>
+
+=item L<Lingua::LO::NLP::Romanize::IPA> for the International Phonetic Alphabet
+
+=back
 
 =head1 SYNOPSIS
 
@@ -34,26 +42,37 @@ planned.
 
 =head2 new
 
-See L</SYNOPSIS> on how to use the constructor. Arguments supported are:
+The constructor takes any number of hash-style named arguments. The following
+ones are always recognized:
 
 =over 4
 
-=item C<variant>: Standard according to which to romanize. "PCGN" is the only
-one currently implemented.
+=item C<variant>
 
-=item C<hyphen>: Separate runs of Lao syllables with hyphens. Set this to the
-character you would like to use as a hyphen - usually this will be the ASCII
-"hyphen minus" (U+002D) but it can be the unambiguous Unicode hyphen ("‐",
-U+2010), a slash or anything you like. As a special case, you can pass a 1 to
-use the ASCII version. If this argument is missing or C<undef>, blanks are
-used. Syllables duplicated using "ໆ" are always joined with a hyphen: either
-the one you specify or the ASCII one.
+Standard according to which to romanize; this determines the
+L<Lingua::LO::NLP::Romanize> subclass to actually instantiate.
 
-=item C<normalize>: Run text through tone mark order normalization; see
+=item C<hyphen>
+
+Separate runs of Lao syllables with hyphens. Set this to the character you
+would like to use as a hyphen - usually this will be the ASCII "hyphen minus"
+(U+002D) but it can be the unambiguous Unicode hyphen ("‐", U+2010), a slash or
+anything you like. As a special case, you can pass a 1 to use the ASCII
+version. If this argument is missing or C<undef>, blanks are used. Syllables
+duplicated using "ໆ" are always joined with a hyphen: either the one you
+specify or the ASCII one.
+
+=item C<normalize>
+
+Run text through tone mark order normalization; see
 L<Lingua::LO::NLP::Data/normalize_tone_marks>. If your text looks fine but
 syllables are not recognized, you may need this.
 
 =back
+
+Subclasses may specify additional arguments, such as
+L<IPA|Lingua::LO::NLP::Romanize::IPA>'s C<tone> that controls the rendering of
+IPA diacritics for tonal languages.
 
 =cut
 
@@ -88,7 +107,7 @@ Return the romanization of C<$text> according to the standard passed to the
 constructor. Text is split up by
 L<Lingua::LO::NLP::Syllabify/get_fragments>; Lao syllables are processed
 and everything else is passed through unchanged save for possible conversion of
-combining characters to a canonically equivalent form in
+combining characters to a canonically equivalent form by
 L<Unicode::Normalize/NFC>.
 
 =cut
@@ -123,11 +142,14 @@ sub romanize_syllable {
 }
 
 =head2 hyphen
+
   my $hypen = $o->hyphen;
   $o->hyphen('-');
 
 Accessor for the C<hyphen> attribute, see L</new>.
+
 =cut
+
 sub hyphen {
     my ($self, $hyphen) = @_;
     if(defined $hyphen) {
@@ -137,11 +159,14 @@ sub hyphen {
 }
 
 =head2 normalize
+
   my $normalization = $o->normalize;
   $o->normalize( $bool );
 
 Accessor for the C<normalize> attribute, see L</new>.
+
 =cut
+
 has normalize => (is => 'rw');
 
 1;
