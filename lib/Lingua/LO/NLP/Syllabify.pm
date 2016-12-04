@@ -82,9 +82,13 @@ array of hashes. Each hash has two keys:
 
 =over 4
 
-=item C<text>: the text of the respective fragment
+=item C<text>
 
-=item C<is_lao>: if true, the fragment is a single valid Lao syllable. If
+The text of the respective fragment
+
+=item C<is_lao>
+
+If true, the fragment is a single valid Lao syllable. If
 false, it may be whitespace, non-Lao script, Lao characters that don't
 constitute valid syllables - basically anything at all that's I<not> a valid
 syllable.

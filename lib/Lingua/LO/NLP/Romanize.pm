@@ -22,10 +22,14 @@ are the following romanization modules:
 
 =over 4
 
-=item L<Lingua::LO::NLP::Romanize::PCGN> for the standard set by the
+=item L<Lingua::LO::NLP::Romanize::PCGN>
+
+for the standard set by the
 L<Permanent Committee on Geographical Names for British Official Use|https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/533781/ROMANIZATION_SYSTEM_FOR_LAO.pdf>
 
-=item L<Lingua::LO::NLP::Romanize::IPA> for the International Phonetic Alphabet
+=item L<Lingua::LO::NLP::Romanize::IPA>
+
+for the International Phonetic Alphabet
 
 =back
 
