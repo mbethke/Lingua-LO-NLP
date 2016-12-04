@@ -45,12 +45,18 @@ This module provides various functions for processing Lao text. Currently it can
 
 =over 4
 
-=item split Lao text (usually written without blanks between words) into syllables
+=item
 
-=item analyze syllables with regards to core and end consonants, vowels, tone and
+split Lao text (usually written without blanks between words) into syllables
+
+=item
+
+analyze syllables with regards to core and end consonants, vowels, tone and
 other properties
 
-=item romanize Lao text according to the PCGN standard or to IPA (experimental)
+=item
+
+romanize Lao text according to the PCGN standard or to IPA (experimental)
 
 =back
 
