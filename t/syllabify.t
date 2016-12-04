@@ -9,7 +9,6 @@ use Test::Fatal;
 use charnames qw/ :full lao /;
 use Unicode::Normalize qw/ reorder NFC /;
 use Lingua::LO::NLP::Syllabify;
-use Data::Dumper;
 
 my %TEST_SYLLABLES = (
     ""          => [],
