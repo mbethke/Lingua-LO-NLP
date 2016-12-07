@@ -164,7 +164,7 @@ my @tone_tests = (
 isa_ok(Lingua::LO::NLP::Analyze->new('ສະ'), 'Lingua::LO::NLP::Analyze');
 like(
     exception { Lingua::LO::NLP::Analyze->new },
-    qr/syllable argument missing/,
+    qr/`syllable' argument missing or undefined/,
     'Dies w/o syllable argument'
 );
 for my $syllable (sort keys %tests) {

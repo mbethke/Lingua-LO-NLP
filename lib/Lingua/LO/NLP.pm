@@ -9,7 +9,7 @@ use Lingua::LO::NLP::Syllabify;
 use Lingua::LO::NLP::Analyze;
 use Lingua::LO::NLP::Romanize;
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
@@ -150,3 +150,5 @@ University of California. All modified versions must retain the file COPYRIGHT
 included in the distribution.
 
 =cut
+
+1;

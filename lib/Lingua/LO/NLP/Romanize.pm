@@ -9,7 +9,7 @@ use Scalar::Util 'blessed';
 use Class::Accessor::Fast 'antlers';
 use Lingua::LO::NLP::Syllabify;
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
@@ -87,18 +87,18 @@ sub new {
     return bless {}, $class if $class ne __PACKAGE__;
 
     # If we've been called on Lingua::LO::NLP::Romanize, require a variant
-    my $variant = delete $args{variant} or confess("`variant' arg missing");
+    my $variant = delete $args{variant} or croak("`variant' argument missing or undefined");
     my $hyphen = delete $args{hyphen} // ' '; # blanks are default
     my $normalize = delete $args{normalize};
 
     my $subclass = __PACKAGE__ . "::$variant";
     (my $module = $subclass) =~ s!::!/!g;
-    require "$module.pm";
+    require "$module.pm";   ## no critic (BarewordIncludes)
 
     my $self = $subclass->new(%args);
 
     # Use an ASCII hyphen-minus if $hyphen is 1
-    $self->hyphen($hyphen eq 1 ? '-' : $hyphen);
+    $self->hyphen($hyphen eq '1' ? '-' : $hyphen);
     $self->normalize($normalize);
     return $self;
 }
@@ -157,7 +157,7 @@ Accessor for the C<hyphen> attribute, see L</new>.
 sub hyphen {
     my ($self, $hyphen) = @_;
     if(defined $hyphen) {
-        $self->{hyphen} = $hyphen eq 1 ? '-' : $hyphen;
+        $self->{hyphen} = $hyphen eq '1' ? '-' : $hyphen;
     }
     return $self->{hyphen};
 }

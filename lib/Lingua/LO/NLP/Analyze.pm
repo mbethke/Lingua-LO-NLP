@@ -8,9 +8,9 @@ use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.0.1');
 use Carp;
 use Class::Accessor::Fast 'antlers';
-use Lingua::LO::NLP::Data qw/ is_long_vowel normalize_tone_marks /;
+use Lingua::LO::NLP::Data ':all';
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
@@ -59,46 +59,46 @@ my %TONE_MARKS = (
 );
 
 my %CONSONANTS = (
-   ກ  => 'KANG',
-   ຂ  => 'SUNG',
-   ຄ  => 'TAM',
-   ງ  => 'TAM',
-   ຈ  => 'KANG',
-   ສ  => 'SUNG',
-   ຊ  => 'TAM',
-   ຍ  => 'TAM',
-   ດ  => 'KANG',
-   ຕ  => 'KANG',
-   ຖ  => 'SUNG',
-   ທ  => 'TAM',
-   ນ  => 'TAM',
-   ບ  => 'KANG',
-   ປ  => 'KANG',
-   ຜ  => 'SUNG',
-   ຝ  => 'SUNG',
-   ພ  => 'TAM',
-   ຟ  => 'TAM',
-   ມ  => 'TAM',
-   ຢ  => 'KANG',
-   ລ  => 'TAM',
-   ວ  => 'TAM',
-   ຫ  => 'SUNG',
-   ອ  => 'KANG',
-   ຮ  => 'TAM',
-   ຣ  => 'TAM',
-   ຫງ => 'SUNG',
-   ຫຍ => 'SUNG',
-   ຫນ => 'SUNG',
-   ໜ  => 'SUNG',
-   ຫມ => 'SUNG',
-   ໝ  => 'SUNG',
-   ຫລ => 'SUNG',
-   ຫຼ  => 'SUNG',
-   ຫວ => 'SUNG',
+   'ກ'  => 'KANG',
+   'ຂ'  => 'SUNG',
+   'ຄ'  => 'TAM',
+   'ງ'  => 'TAM',
+   'ຈ'  => 'KANG',
+   'ສ'  => 'SUNG',
+   'ຊ'  => 'TAM',
+   'ຍ'  => 'TAM',
+   'ດ'  => 'KANG',
+   'ຕ'  => 'KANG',
+   'ຖ'  => 'SUNG',
+   'ທ'  => 'TAM',
+   'ນ'  => 'TAM',
+   'ບ'  => 'KANG',
+   'ປ'  => 'KANG',
+   'ຜ'  => 'SUNG',
+   'ຝ'  => 'SUNG',
+   'ພ'  => 'TAM',
+   'ຟ'  => 'TAM',
+   'ມ'  => 'TAM',
+   'ຢ'  => 'KANG',
+   'ລ'  => 'TAM',
+   'ວ'  => 'TAM',
+   'ຫ'  => 'SUNG',
+   'ອ'  => 'KANG',
+   'ຮ'  => 'TAM',
+   'ຣ'  => 'TAM',
+   'ຫງ' => 'SUNG',
+   'ຫຍ' => 'SUNG',
+   'ຫນ' => 'SUNG',
+   'ໜ'  => 'SUNG',
+   'ຫມ' => 'SUNG',
+   'ໝ'  => 'SUNG',
+   'ຫລ' => 'SUNG',
+   'ຫຼ'  => 'SUNG',
+   'ຫວ' => 'SUNG',
 );
 
 my %H_COMBINERS = map { $_ => 1 } qw/ ຍ ວ /;
-my %CONS_H_MNL = ( ມ => 'ໝ', ນ => 'ໜ', ລ => "\N{LAO SEMIVOWEL SIGN LO}" );
+my %CONS_H_MNL = ( 'ມ' => 'ໝ', 'ນ' => 'ໜ', 'ລ' => "\N{LAO SEMIVOWEL SIGN LO}" );
 
 =head1 METHODS
 
@@ -124,10 +124,10 @@ sub new {
 }
 
 {
-    my $regexp = Lingua::LO::NLP::Data::get_sylre_named;
+    my $regexp = get_sylre_named();
 
     sub _classify {
-        my $s = shift // croak("syllable argument missing");
+        my $s = shift // croak("`syllable' argument missing or undefined");
 
         $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
         my %class = ( syllable => $s, parse => { %+ } );

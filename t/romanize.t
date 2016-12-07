@@ -12,7 +12,7 @@ use Lingua::LO::NLP::Romanize;
 
 like(
     exception { Lingua::LO::NLP::Romanize->new(hyphen => 1) },
-    qr/`variant' arg missing/,
+    qr/`variant' argument missing or undefined/,
     'Dies w/o "variant" arg'
 );
 

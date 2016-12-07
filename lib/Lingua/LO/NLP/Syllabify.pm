@@ -11,7 +11,7 @@ use Unicode::Normalize qw/ NFC /;
 use Class::Accessor::Fast 'antlers';
 use Lingua::LO::NLP::Data ':all';
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 

@@ -10,7 +10,7 @@ use Carp;
 use Lingua::LO::NLP::Analyze;
 use parent 'Lingua::LO::NLP::Romanize::PCGN';
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
@@ -31,43 +31,43 @@ it will stay that way so for now this is not going to be refactored.
 =cut
 
 my %CONSONANTS = (
-   ກ  => 'k',
-   ຂ  => [qw/ kʰ k /],
-   ຄ  => [qw/ kʰ k /],
-   ງ  => 'ŋ',
-   ຈ  => [qw/ tɕ t /],
-   ສ  => [qw/ s t /],
-   ຊ  => [qw/ s t /],
-   ຍ  => 'ɲ',
-   ດ  => [qw/ d t /],
-   ຕ  => 't',
-   ຖ  => [qw/ tʰ t /],
-   ທ  => [qw/ tʰ t /],
-   ນ  => 'n',
-   ບ  => [qw/ b p /],
-   ປ  => 'p',
-   ຜ  => 'pʰ',
-   ຝ  => [qw/ f p /],
-   ພ  => [qw/ pʰ p /],
-   ຟ  => [qw/ f p /],
-   ມ  => 'm',
-   ຢ  => 'j',
-   ລ  => [qw/ l n /],
+   'ກ'  => 'k',
+   'ຂ'  => [qw/ kʰ k /],
+   'ຄ'  => [qw/ kʰ k /],
+   'ງ'  => 'ŋ',
+   'ຈ'  => [qw/ tɕ t /],
+   'ສ'  => [qw/ s t /],
+   'ຊ'  => [qw/ s t /],
+   'ຍ'  => 'ɲ',
+   'ດ'  => [qw/ d t /],
+   'ຕ'  => 't',
+   'ຖ'  => [qw/ tʰ t /],
+   'ທ'  => [qw/ tʰ t /],
+   'ນ'  => 'n',
+   'ບ'  => [qw/ b p /],
+   'ປ'  => 'p',
+   'ຜ'  => 'pʰ',
+   'ຝ'  => [qw/ f p /],
+   'ພ'  => [qw/ pʰ p /],
+   'ຟ'  => [qw/ f p /],
+   'ມ'  => 'm',
+   'ຢ'  => 'j',
+   'ລ'  => [qw/ l n /],
    "\N{LAO SEMIVOWEL SIGN LO}"  => 'l',
-   ວ  => 'w',   # TODO ʋ?
-   ຫ  => 'h',
-   ອ  => 'ʔ',
-   ຮ  => 'h',
-   ຣ  => [qw/ r n /],   # TODO l?
-   ໜ  => 'n',
-   ໝ  => 'm',
-   ຫຼ  => 'l',
-   ຫຍ => 'ɲ',
-   ຫນ => 'n',
-   ຫມ => 'm',
-   ຫຣ => 'r',   # TODO l?
-   ຫລ => 'l',
-   ຫວ => 'w', # TODO ʋ?
+   'ວ'  => 'w',   # TODO ʋ?
+   'ຫ'  => 'h',
+   'ອ'  => 'ʔ',
+   'ຮ'  => 'h',
+   'ຣ'  => [qw/ r n /],   # TODO l?
+   'ໜ'  => 'n',
+   'ໝ'  => 'm',
+   'ຫຼ'  => 'l',
+   'ຫຍ' => 'ɲ',
+   'ຫນ' => 'n',
+   'ຫມ' => 'm',
+   'ຫຣ' => 'r',   # TODO l?
+   'ຫລ' => 'l',
+   'ຫວ' => 'w', # TODO ʋ?
 );
 
 my %VOWELS = (
@@ -186,7 +186,14 @@ sub _vowel_with_tone {
 
 sub _vowel_without_tone { return $VOWELS{ $_[0] } }
 
-sub _consonant {
+=head2 romanize_consonant
+
+Overrides L<Lingua::LO::NLP::Romanize::PCGN::romanize_consonant> to access
+module-local data.
+
+=cut
+
+sub romanize_consonant {
     my (undef, $cons, $position) = @_;
     my $consdata = $CONSONANTS{ $cons };
     return ref $consdata ? $consdata->[$position] : $consdata;

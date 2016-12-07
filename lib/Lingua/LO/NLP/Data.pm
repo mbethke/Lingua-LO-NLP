@@ -8,7 +8,7 @@ use version 0.77; our $VERSION = version->declare('v0.0.1');
 use charnames qw/ :full lao /;
 use parent 'Exporter';
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
@@ -18,7 +18,7 @@ Lingua::LO::NLP::Data - Helper module to keep common read-only data
 
 Provides a few functions that return regular expressions for matching and
 extracting parts from Lao syllables. Instead of hardcoding these expressions as
-strings, they are constructed from ragments at runtime, trading maintainability
+strings, they are constructed from fragments at runtime, trading maintainability
 for a small one-time initialization cost.
 
 Also holds common read-only data such as vowel classifications.
@@ -35,7 +35,7 @@ our %EXPORT_TAGS = (
         /
     ]
 );
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+our @EXPORT_OK = @{ $EXPORT_TAGS{all} };
 
 # Character classes
 my $TONE_MARKS = "\N{LAO TONE MAI EK}\N{LAO TONE MAI THO}" .
@@ -158,7 +158,7 @@ my $rex1012 = '$x10_12';
 
 # This is the basic regexp that matches a syllable, still with variables to be
 # substituted
-my $re_basic = <<EOF;
+my $re_basic = <<"EOF";
 (?:
   (?:
     (?: $re1_all (?: $re1_1 | $re1_2 | $re1_3 | $re1_4 | $re1_5 | $re1_6 | $re1_8 ) ) |
@@ -175,7 +175,7 @@ $re_basic =~ s/\s+/ /g; # keep it a bit more readable. could use s/\s+//g
 
 # Functional names for all the x-something groups from the original paper
 # Used for named catures.
-my %capture_names = (
+my %CAPTURE_NAMES = (
     'x'             => 'consonant',
     'x0_\d'         => 'vowel0',
     'x1'            => 'h',
@@ -197,7 +197,7 @@ my %capture_names = (
 # Substitute longer fragment names first so their matches don't get swallowed
 # by the shorter ones. x9a10_3 is a convenience shotcut for '(?: $x9 $x10_3)'
 # so we have to do it first.
-my @sorted_x_names = ('x9a10_3', reverse sort { length $a <=> length $b } keys %capture_names);
+my @SORTED_X_NAMES = ('x9a10_3', reverse sort { length $a <=> length $b } keys %CAPTURE_NAMES);
 
 our %VOWEL_LENGTH = (
     ### Monophthongs
@@ -281,7 +281,7 @@ though.
 
 sub get_sylre_basic {
     my $syl_re = $re_basic;
-    for my $atom (@sorted_x_names) {
+    for my $atom (@SORTED_X_NAMES) {
         $syl_re =~ s/\$($atom)/$regexp_fragments{$1}/eg;
     }
 
@@ -314,7 +314,7 @@ from C<%+>.
 sub get_sylre_named {
     my $syl_short = get_sylre_basic();
     my $syl_capture = $re_basic;
-    for my $atom (@sorted_x_names) {
+    for my $atom (@SORTED_X_NAMES) {
         $syl_capture =~ s/\$($atom)/_named_capture(\%regexp_fragments, $atom, $1)/eg;
     }
 
@@ -347,8 +347,8 @@ on top. As some renderers will put them on top no matter what, these sequences
 are sometimes incorrectly entered as I<consonant-tonemark-vowel> and would thus
 not be parsed correctly.
 
-This function is usually just meant for internal use and modifies its argument
-in place for speed!
+This function is just meant for internal use and modifies its argument in place
+for speed!
 
 =cut
 
@@ -362,8 +362,8 @@ sub _named_capture {
 
     return sprintf(
         '(?<%s> %s)',
-        $capture_names{$atom}, $fragments->{$match}
-    ) if defined $capture_names{$atom};
+        $CAPTURE_NAMES{$atom}, $fragments->{$match}
+    ) if defined $CAPTURE_NAMES{$atom};
 
     return $fragments->{$match};
 }
