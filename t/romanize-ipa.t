@@ -14,6 +14,7 @@ my @tests = (
     'ສະບາຍດີ'    => ['sá bàːj dìː', 'sa baːj diː'],
     'ດີໆ'        => ['dìː-dìː', 'diː-diː'],
     'ເລື້ອຍໆ'     => ['lɯ̂ːəi-lɯ̂ːəi', 'lɯːəi-lɯːəi' ],
+    'ແນວໃດ'     => ['nɛ́ːw dàj', 'nɛːw daj'],    # TODO: nɛ́ːw or nɛ́ːo?
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
