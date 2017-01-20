@@ -37,6 +37,8 @@ my @tests = (
     'ຫິວ'        => 'hiou',
     'ເພາະ'      => 'pho',
     'ແນວໃດ'     => 'nèo-dai',
+    'ຂີ້ເຫຍື່ອ'     => 'khi-gnua',
+    'ເຄີຍ'       => 'kheuy',
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 

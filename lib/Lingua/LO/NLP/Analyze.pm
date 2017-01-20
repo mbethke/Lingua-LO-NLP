@@ -129,7 +129,7 @@ sub new {
     sub _classify {
         my $s = shift // croak("`syllable' argument missing or undefined");
 
-        $s =~ /^$regexp/ or croak "`$s' does not start with a valid syllable";
+        $s =~ /^$regexp/ or croak("`$s' does not start with a valid syllable");
         my %class = ( syllable => $s, parse => { %+ } );
         (my $consonant, @class{qw/ end_consonant h semivowel tone_mark /}) = @+{qw/ consonant end_consonant h semivowel tone_mark /};
 
