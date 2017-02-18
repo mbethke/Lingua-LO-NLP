@@ -30,4 +30,14 @@ like(
     'romanize_syllable enforces object method call'
 );
 
+
+my $r = Lingua::LO::NLP::Romanize->new(variant => 'PCGN');
+isa_ok($r, 'Lingua::LO::NLP::Romanize::PCGN', 'PCGN subclass created');
+is($r->romanize('ຫົກສິບ'), 'hôk sip', 'OK without hyphenation');
+$r->hyphen(1);
+is($r->romanize('ຫົກສິບ'), 'hôk-sip', 'OK with ASCII hyphen');
+$r->hyphen('‐');
+is($r->romanize('ຫົກສິບ'), 'hôk‐sip', 'OK with Unicode hyphen');
+$r->hyphen(0);
+is($r->romanize('ຫົກສິບ'), 'hôk sip', 'Hyphenation off again');
 done_testing;
