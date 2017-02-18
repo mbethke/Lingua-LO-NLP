@@ -23,11 +23,6 @@ L<Lingua::LO::NLP::Romanize> as a factory:
 
     my $o = Lingua::LO::NLP::Romanize->new(variant => 'IPA');
 
-Note that this is experimental and probably buggy. The code is the same as
-L<Lingua::LO::NLP::Romanize::PCGN> so this should actually be a subclass,
-pending a proper way of accessing the class constants. However, I'm not sure
-it will stay that way so for now this is not going to be refactored.
-
 =cut
 
 my %CONSONANTS = (
