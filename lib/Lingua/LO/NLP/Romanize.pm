@@ -54,7 +54,7 @@ ones are always recognized:
 =item C<variant>
 
 Standard according to which to romanize; this determines the
-L<Lingua::LO::NLP::Romanize> subclass to actually instantiate.
+L<Lingua::LO::NLP::Romanize> subclass to actually instantiate. This argument is mandatory.
 
 =item C<hyphen>
 
@@ -62,9 +62,9 @@ Separate runs of Lao syllables with hyphens. Set this to the character you
 would like to use as a hyphen - usually this will be the ASCII "hyphen minus"
 (U+002D) but it can be the unambiguous Unicode hyphen ("‐", U+2010), a slash or
 anything you like. As a special case, you can pass a 1 to use the ASCII
-version. If this argument is missing or C<undef>, blanks are used. Syllables
-duplicated using "ໆ" are always joined with a hyphen: either the one you
-specify or the ASCII one.
+version. If this argument is missing, C<undef> or C<0>, blanks are used.
+Syllables duplicated using "ໆ" are always joined with a hyphen: either the one
+you specify or the ASCII one.
 
 =item C<normalize>
 
@@ -88,7 +88,7 @@ sub new {
 
     # If we've been called on Lingua::LO::NLP::Romanize, require a variant
     my $variant = delete $args{variant} or croak("`variant' argument missing or undefined");
-    my $hyphen = delete $args{hyphen} // ' '; # blanks are default
+    my $hyphen = delete $args{hyphen};
     my $normalize = delete $args{normalize};
 
     my $subclass = __PACKAGE__ . "::$variant";
@@ -97,8 +97,8 @@ sub new {
 
     my $self = $subclass->new(%args);
 
-    # Use an ASCII hyphen-minus if $hyphen is 1
-    $self->hyphen($hyphen eq '1' ? '-' : $hyphen);
+    # Pass an explicit false if hyphen arg was unset
+    $self->hyphen($hyphen // 0);
     $self->normalize($normalize);
     return $self;
 }
@@ -147,8 +147,11 @@ sub romanize_syllable {
 
 =head2 hyphen
 
-  my $hypen = $o->hyphen;
-  $o->hyphen('-');
+  my $hyphen = $o->hyphen;
+  $o->hyphen( '-' );    # Use ASCII hyphen
+  $o->hyphen( 1 );      # Dito
+  $o->hyphen( 0 );      # No hyphenation, separate syllables with spaces
+  $o->hyphen( '‐' );    # Unicode hyphen U+2010
 
 Accessor for the C<hyphen> attribute, see L</new>.
 
@@ -157,7 +160,13 @@ Accessor for the C<hyphen> attribute, see L</new>.
 sub hyphen {
     my ($self, $hyphen) = @_;
     if(defined $hyphen) {
-        $self->{hyphen} = $hyphen eq '1' ? '-' : $hyphen;
+        if($hyphen eq '1') {
+            $self->{hyphen} = '-';
+        } elsif($hyphen eq '0') {
+            $self->{hyphen} = ' ';
+        } else {
+            $self->{hyphen} = $hyphen;
+        }
     }
     return $self->{hyphen};
 }
