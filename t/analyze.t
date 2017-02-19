@@ -9,20 +9,24 @@ use Test::More;
 use Test::Fatal;
 use Lingua::LO::NLP::Analyze;
 
+use constant MAI_EK     => "\N{LAO TONE MAI EK}";
+use constant MAI_THO    => "\N{LAO TONE MAI THO}";
+use constant MAI_CATAWA => "\N{LAO TONE MAI CATAWA}";
+
 my %tests = (
     # Generated syllables from some list or other
     'ກວກ' => { consonant => 'ກ', end_consonant => 'ກ', tone => 'LOW', vowel => 'Xວ', vowel_length => 'long' },
     'ກວງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'LOW', vowel => 'Xວ', vowel_length => 'long' },
-    'ກ່ວງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xວ', vowel_length => 'long' },
-    'ກ່າ' => { consonant => 'ກ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xາ', vowel_length => 'long' },
-    'ກ່າຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xາ', vowel_length => 'long' },
+    'ກ່ວງ' => { consonant => 'ກ', end_consonant => 'ງ', tone => 'MID', tone_mark => MAI_EK, vowel => 'Xວ', vowel_length => 'long' },
+    'ກ່າ' => { consonant => 'ກ', tone => 'MID', tone_mark => MAI_EK, vowel => 'Xາ', vowel_length => 'long' },
+    'ກ່າຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'MID', tone_mark => MAI_EK, vowel => 'Xາ', vowel_length => 'long' },
     'ກໍ' => { consonant => 'ກ', tone => 'LOW', vowel => 'Xໍ', vowel_length => 'long' },
-    'ກໍ່' => { consonant => 'ກ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xໍ', vowel_length => 'long' },
-    'ກໍ໋' => { consonant => 'ກ', tone => 'LOW_RISING', tone_mark => "\N{LAO TONE MAI CATAWA}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ກໍ່' => { consonant => 'ກ', tone => 'MID', tone_mark => MAI_EK, vowel => 'Xໍ', vowel_length => 'long' },
+    'ກໍ໋' => { consonant => 'ກ', tone => 'LOW_RISING', tone_mark => MAI_CATAWA, vowel => 'Xໍ', vowel_length => 'long' },
     'ແໜ' => { consonant => 'ໜ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
     'ແຫນ' => { consonant => 'ຫ', end_consonant => 'ນ', tone => 'LOW_RISING', vowel => 'ແX', vowel_length => 'long' },
     'ຫາມ' => { consonant => 'ຫ', end_consonant => 'ມ', tone => 'LOW_RISING', vowel => 'Xາ', vowel_length => 'long' },
-    'ເກິ່ຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'ເXິ', vowel_length => 'short' },
+    'ເກິ່ຍ' => { consonant => 'ກ', end_consonant => 'ຍ', tone => 'HIGH_STOP', tone_mark => MAI_EK, vowel => 'ເXິ', vowel_length => 'short' },
 
     # Constructed syllables with simple vowels
     'ກະ' => { consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xະ', vowel_length => 'short' },
@@ -81,24 +85,24 @@ my %tests = (
 
     # Various cases that have looked problematic
     'ກຽດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'Xຽ', vowel_length => 'long' },
-    'ຈື່ງ' => { consonant => 'ຈ', end_consonant => 'ງ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xື', vowel_length => 'long' },
+    'ຈື່ງ' => { consonant => 'ຈ', end_consonant => 'ງ', tone => 'MID', tone_mark => MAI_EK, vowel => 'Xື', vowel_length => 'long' },
     'ຊັນ' => { consonant => 'ຊ', end_consonant => 'ນ', tone => 'MID_STOP', vowel => 'Xັ', vowel_length => 'short' },
-    'ຊົ່ວ' => { consonant => 'ຊ', end_consonant => 'ວ', tone => 'MID_STOP', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xົ', vowel_length => 'short' },
+    'ຊົ່ວ' => { consonant => 'ຊ', end_consonant => 'ວ', tone => 'MID_STOP', tone_mark => MAI_EK, vowel => 'Xົ', vowel_length => 'short' },
     'ຍະ' => { consonant => 'ຍ', tone => 'MID_STOP', vowel => 'Xະ', vowel_length => 'short' },
     'ດີ' => { consonant => 'ດ', tone => 'LOW', vowel => 'Xີ', vowel_length => 'long' },
-    'ດ້ວຍ' => { consonant => 'ດ', end_consonant => 'ຍ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xວ', vowel_length => 'long' },
+    'ດ້ວຍ' => { consonant => 'ດ', end_consonant => 'ຍ', tone => 'HIGH_FALLING', tone_mark => MAI_THO, vowel => 'Xວ', vowel_length => 'long' },
     'ຕິ' => { consonant => 'ຕ', tone => 'HIGH_STOP', vowel => 'Xິ', vowel_length => 'short' },
     'ຕົນ' => { consonant => 'ຕ', end_consonant => 'ນ', tone => 'HIGH_STOP', vowel => 'Xົ', vowel_length => 'short' },
-    'ຕ້ອງ' => { consonant => 'ຕ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xອ', vowel_length => 'long' },
-    'ຕໍ່' => { consonant => 'ຕ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xໍ', vowel_length => 'long' },
+    'ຕ້ອງ' => { consonant => 'ຕ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => MAI_THO, vowel => 'Xອ', vowel_length => 'long' },
+    'ຕໍ່' => { consonant => 'ຕ', tone => 'MID', tone_mark => MAI_EK, vowel => 'Xໍ', vowel_length => 'long' },
     'ທາງ' => { consonant => 'ທ', end_consonant => 'ງ', tone => 'HIGH', vowel => 'Xາ', vowel_length => 'long' },
     'ທຳ' => { consonant => 'ທ', tone => 'MID_STOP', vowel => 'Xຳ', vowel_length => 'short' },
     'ນຸດ' => { consonant => 'ນ', end_consonant => 'ດ', tone => 'MID_STOP', vowel => 'Xຸ', vowel_length => 'short' },
-    'ນ້ອງ' => { consonant => 'ນ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xອ', vowel_length => 'long' },
+    'ນ້ອງ' => { consonant => 'ນ', end_consonant => 'ງ', tone => 'HIGH_FALLING', tone_mark => MAI_THO, vowel => 'Xອ', vowel_length => 'long' },
     'ປະ' => { consonant => 'ປ', tone => 'HIGH_STOP', vowel => 'Xະ', vowel_length => 'short' },
     'ປັດ' => { consonant => 'ປ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'Xັ', vowel_length => 'short' },
     'ພາບ' => { consonant => 'ພ', end_consonant => 'ບ', tone => 'HIGH', vowel => 'Xາ', vowel_length => 'long' },
-    'ພີ່' => { consonant => 'ພ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel => 'Xີ', vowel_length => 'long' },
+    'ພີ່' => { consonant => 'ພ', tone => 'MID', tone_mark => MAI_EK, vowel => 'Xີ', vowel_length => 'long' },
     'ພຶດ' => { consonant => 'ພ', end_consonant => 'ດ', tone => 'MID_STOP', vowel => 'Xຶ', vowel_length => 'short' },
     'ມະ' => { consonant => 'ມ', tone => 'MID_STOP', vowel => 'Xະ', vowel_length => 'short' },
     'ມາ' => { consonant => 'ມ', tone => 'HIGH', vowel => 'Xາ', vowel_length => 'long' },
@@ -107,27 +111,27 @@ my %tests = (
     'ສັກ' => { consonant => 'ສ', end_consonant => 'ກ', tone => 'HIGH_STOP', vowel => 'Xັ', vowel_length => 'short' },
     'ສຳ' => { consonant => 'ສ', tone => 'HIGH_STOP', vowel => 'Xຳ', vowel_length => 'short' },
     'ສິດ' => { consonant => 'ສ', end_consonant => 'ດ', tone => 'HIGH_STOP', vowel => 'Xິ', vowel_length => 'short' },
-    'ຮູ້' => { consonant => 'ຮ', tone => 'HIGH_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xູ', vowel_length => 'long' },
+    'ຮູ້' => { consonant => 'ຮ', tone => 'HIGH_FALLING', tone_mark => MAI_THO, vowel => 'Xູ', vowel_length => 'long' },
     'ເກີດ' => { consonant => 'ກ', end_consonant => 'ດ', tone => 'LOW', vowel => 'ເXີ', vowel_length => 'long' },
     'ເໝີ' => { consonant => 'ໝ', tone => 'LOW_RISING', vowel => 'ເXີ', vowel_length => 'long' },
     'ແລະ' => { consonant => 'ລ', tone => 'MID_STOP', vowel => 'ແXະ', vowel_length => 'short' },
     'ໂນ' => { consonant => 'ນ', tone => 'HIGH', vowel => 'ໂX', vowel_length => 'long' },
     'ໃກ' => { consonant => 'ກ', tone => 'LOW', vowel => 'ໃX', vowel_length => 'long' },
-    'ໜ້າ' => { consonant => 'ໜ', tone => 'MID_FALLING', tone_mark => "\N{LAO TONE MAI THO}", vowel => 'Xາ', vowel_length => 'long' },
+    'ໜ້າ' => { consonant => 'ໜ', tone => 'MID_FALLING', tone_mark => MAI_THO, vowel => 'Xາ', vowel_length => 'long' },
     'ເຫດ' => { consonant => 'ຫ', end_consonant => "ດ", 'tone' => 'LOW_RISING',  'vowel' => "ເX", vowel_length => 'long' },
-    'ເອື້ອຢ' => { consonant => "ອ", end_consonant => "ຢ", tone => "HIGH_FALLING", tone_mark => "\N{LAO TONE MAI THO}", vowel => "ເ◌ືອ", vowel_length => "long" },
+    'ເອື້ອຢ' => { consonant => "ອ", end_consonant => "ຢ", tone => "HIGH_FALLING", tone_mark => MAI_THO, vowel => "ເ◌ືອ", vowel_length => "long" },
     #'ໄລນ໌' => {},
 
     # Test tone mark order normalization
     # Regular order consonant-vowel-tone
     "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}" =>
-    { consonant => 'ມ', vowel => 'ເXືອ', tone => 'MID', tone_mark => "\N{LAO TONE MAI EK}", vowel_length => 'long' },
+    { consonant => 'ມ', vowel => 'ເXືອ', tone => 'MID', tone_mark => MAI_EK, vowel_length => 'long' },
     # Wrong order consonant-tone-vowel
     "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO TONE MAI EK}\N{LAO VOWEL SIGN YY}\N{LAO LETTER O}" =>
     {
         consonant => 'ມ', vowel => 'ເXືອ', tone => 'MID',
         syllable => "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}",
-        tone_mark => "\N{LAO TONE MAI EK}", vowel_length => 'long'
+        tone_mark => MAI_EK, vowel_length => 'long'
     },
 );
 for my $analysis (values %tests) {
