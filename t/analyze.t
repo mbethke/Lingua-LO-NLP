@@ -180,7 +180,7 @@ for my $syllable (sort keys %tests) {
     # trivial, doesn't need to be mentioned above unless it was subject to normalization
     $tests{$syllable}{syllable} //= $syllable;
     is_deeply(\%c, $tests{$syllable}, "`$syllable' analyzed correctly")
-        or print "Result for `$syllable': \n", map { "\t$_ => \"$c{$_}\"\n" } sort keys %c;
+        or print "Result for `$syllable': ", (map { "$_ => \"$c{$_}\", " } sort keys %c) , "\n";
 }
 
 while(@tone_tests) {
