@@ -97,7 +97,6 @@ my %CONSONANTS = (
    'ຫວ' => 'SUNG',
 );
 
-my %H_COMBINERS = map { $_ => 1 } qw/ ຍ ວ /;
 my %CONS_H_MNL = ( 'ມ' => 'ໝ', 'ນ' => 'ໜ', 'ລ' => "\N{LAO SEMIVOWEL SIGN LO}" );
 
 =head1 METHODS
@@ -150,7 +149,7 @@ sub new {
             } else {
                 # If there is a preceding vowel, it uses the ຫ as a consonant and the
                 # one parsed as core consonant is actually an end consonant
-                unless(exists $H_COMBINERS{ $consonant }) {
+                unless($consonant eq 'ວ' or $consonant eq 'ຍ') {
                     $class{end_consonant} = $consonant;
                     $consonant = 'ຫ';
                     delete $class{h};
