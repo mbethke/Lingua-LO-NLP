@@ -5,7 +5,7 @@ use 5.012000;
 use utf8;
 use feature qw/ unicode_strings say /;
 use charnames qw/ :full lao /;
-use version 0.77; our $VERSION = version->declare('v0.0.1');
+use version 0.77; our $VERSION = version->declare('v0.2.0');
 use Carp;
 use Class::Accessor::Fast 'antlers';
 use Lingua::LO::NLP::Data ':all';
