@@ -37,7 +37,7 @@ for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length
 # The second level seems redundant but is there to allow for some refinement as
 # some grammars specify differences between vowel classes even with tone marks
 my %TONE_MARKS = (
-    "\N{LAO TONE MAI EK}"     => [ qw/ MID MID MID / ],
+    "\n{lao tone mai ek}"     => [ qw/ mid mid mid / ],
     "\N{LAO TONE MAI THO}"    => [ qw/ FALLING FALLING FALLING / ],
     # TODO: is this HIGH or HIGH_FALLING? Opinios seem to differ
     # and I haven't found a definitive source yet
@@ -49,9 +49,9 @@ my %TONE_MARKS = (
 # (SUNG/KANG/TAM, see constant definitions), the second is $tone index as
 # calculated in classify()
 my @TONE_NOMARK = (
-    [qw/ HIGH MID FALLING /],
-    [qw/ LOW RISING LOW /],
-    [qw/ RISING RISING LOW /],
+    [qw/ RISING RISING LOW /],  # SUNG/high
+    [qw/ LOW RISING LOW /],     # KANG/mid
+    [qw/ HIGH MID FALLING /],   # TAM/low
 );
 
 my %CONSONANTS = (
