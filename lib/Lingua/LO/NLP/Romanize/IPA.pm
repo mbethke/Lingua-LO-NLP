@@ -26,7 +26,7 @@ L<Lingua::LO::NLP::Romanize> as a factory:
 =cut
 
 my %CONSONANTS = (
-   'ກ'  => 'k',
+   'ກ'  => 'k', # TODO: split /g/+/k/ here?
    'ຂ'  => [qw/ kʰ k /],
    'ຄ'  => [qw/ kʰ k /],
    'ງ'  => 'ŋ',

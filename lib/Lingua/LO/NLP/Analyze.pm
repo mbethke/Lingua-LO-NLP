@@ -10,6 +10,10 @@ use Carp;
 use Class::Accessor::Fast 'antlers';
 use Lingua::LO::NLP::Data ':all';
 
+use constant SUNG => 0; # "high class"
+use constant KANG => 1; # "middle class"
+use constant TAM  => 2; # "low class"
+
 =encoding utf8
 
 =head1 NAME
@@ -24,80 +28,73 @@ available via accessor methods as outlined below.
 
 =cut
 
-for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length tone tone_mark h semivowel /) {
+for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length tone tone_mark h semivowel live /) {
     has $attribute => (is => 'ro');
 }
 
+# This is a 2-level lookup table. The first level is the tone mark, the second
+# is the consonant class (SUNG/KANG/TAM, see constant definitions)
+# The second level seems redundant but is there to allow for some refinement as
+# some grammars specify differences between vowel classes even with tone marks
 my %TONE_MARKS = (
-    ""  => {
-        SUNG => 'LOW_RISING',
-        KANG => 'LOW',
-        TAM  => 'HIGH',
-    },
-    "\N{LAO TONE MAI EK}" => {
-        SUNG => 'MID',
-        KANG => 'MID',
-        TAM  => 'MID',
-    },
-    "\N{LAO TONE MAI THO}" => {
-        SUNG => 'MID_FALLING',      # TODO: should this be LOW_FALLING?
-        KANG => 'HIGH_FALLING',
-        TAM  => 'HIGH_FALLING',
-    },
-    "\N{LAO TONE MAI TI}" => {
-        # TODO: is this HIGH or HIGH_FALLING? Opinios seem to differ
-        # and I haven't found a definitive source yet
-        SUNG => 'HIGH',
-        KANG => 'HIGH',
-        TAM  => 'HIGH',
-    },
-    "\N{LAO TONE MAI CATAWA}" => {
-        SUNG => 'LOW_RISING',
-        KANG => 'LOW_RISING',
-        TAM  => 'LOW_RISING',
-    }
+    "\N{LAO TONE MAI EK}"     => [ qw/ MID MID MID / ],
+    "\N{LAO TONE MAI THO}"    => [ qw/ FALLING FALLING FALLING / ],
+    # TODO: is this HIGH or HIGH_FALLING? Opinios seem to differ
+    # and I haven't found a definitive source yet
+    "\N{LAO TONE MAI TI}"     => [ qw/ HIGH HIGH HIGH / ],
+    "\N{LAO TONE MAI CATAWA}" => [ qw/ RISING RISING RISING /],
+);
+
+# This is a 2-level lookup table. The first level is the consonant class
+# (SUNG/KANG/TAM, see constant definitions), the second is $tone index as
+# calculated in classify()
+my @TONE_NOMARK = (
+    [qw/ HIGH MID FALLING /],
+    [qw/ LOW RISING LOW /],
+    [qw/ RISING RISING LOW /],
 );
 
 my %CONSONANTS = (
-   'ກ'  => 'KANG',
-   'ຂ'  => 'SUNG',
-   'ຄ'  => 'TAM',
-   'ງ'  => 'TAM',
-   'ຈ'  => 'KANG',
-   'ສ'  => 'SUNG',
-   'ຊ'  => 'TAM',
-   'ຍ'  => 'TAM',
-   'ດ'  => 'KANG',
-   'ຕ'  => 'KANG',
-   'ຖ'  => 'SUNG',
-   'ທ'  => 'TAM',
-   'ນ'  => 'TAM',
-   'ບ'  => 'KANG',
-   'ປ'  => 'KANG',
-   'ຜ'  => 'SUNG',
-   'ຝ'  => 'SUNG',
-   'ພ'  => 'TAM',
-   'ຟ'  => 'TAM',
-   'ມ'  => 'TAM',
-   'ຢ'  => 'KANG',
-   'ລ'  => 'TAM',
-   'ວ'  => 'TAM',
-   'ຫ'  => 'SUNG',
-   'ອ'  => 'KANG',
-   'ຮ'  => 'TAM',
-   'ຣ'  => 'TAM',
-   'ຫງ' => 'SUNG',
-   'ຫຍ' => 'SUNG',
-   'ຫນ' => 'SUNG',
-   'ໜ'  => 'SUNG',
-   'ຫມ' => 'SUNG',
-   'ໝ'  => 'SUNG',
-   'ຫລ' => 'SUNG',
-   'ຫຼ'  => 'SUNG',
-   'ຫວ' => 'SUNG',
+   'ກ'  => KANG,
+   'ຂ'  => SUNG,
+   'ຄ'  => TAM,
+   'ງ'  => TAM,
+   'ຈ'  => KANG,
+   'ສ'  => SUNG,
+   'ຊ'  => TAM,
+   'ຍ'  => TAM,
+   'ດ'  => KANG,
+   'ຕ'  => KANG,
+   'ຖ'  => SUNG,
+   'ທ'  => TAM,
+   'ນ'  => TAM,
+   'ບ'  => KANG,
+   'ປ'  => KANG,
+   'ຜ'  => SUNG,
+   'ຝ'  => SUNG,
+   'ພ'  => TAM,
+   'ຟ'  => TAM,
+   'ມ'  => TAM,
+   'ຢ'  => KANG,
+   'ລ'  => TAM,
+   'ວ'  => TAM,
+   'ຫ'  => SUNG,
+   'ອ'  => KANG,
+   'ຮ'  => TAM,
+   'ຣ'  => TAM,
+   'ຫງ' => SUNG,
+   'ຫຍ' => SUNG,
+   'ຫນ' => SUNG,
+   'ໜ'  => SUNG,
+   'ຫມ' => SUNG,
+   'ໝ'  => SUNG,
+   'ຫລ' => SUNG,
+   'ຫຼ'  => SUNG,
+   'ຫວ' => SUNG,
 );
 
 my %CONS_H_MNL = ( 'ມ' => 'ໝ', 'ນ' => 'ໜ', 'ລ' => "\N{LAO SEMIVOWEL SIGN LO}" );
+my %ENDCONS_STOP = ( 'ກ' => 1, 'ດ' => 1, 'ບ' => 1 );
 
 =head1 METHODS
 
@@ -130,7 +127,7 @@ sub new {
 
         $s =~ /^$regexp/ or croak("`$s' does not start with a valid syllable");
         my %class = ( syllable => $s, parse => { %+ } );
-        (my $consonant, @class{qw/ end_consonant h semivowel tone_mark /}) = @+{qw/ consonant end_consonant h semivowel tone_mark /};
+        (my $consonant, my $end_consonant, @class{qw/ h semivowel tone_mark /}) = @+{qw/ consonant end_consonant h semivowel tone_mark /};
 
         my @vowels = $+{vowel0} // ();
         push @vowels, "\N{DOTTED CIRCLE}";
@@ -139,7 +136,7 @@ sub new {
 
         my $cc = $CONSONANTS{ $consonant };  # consonant category
         if( $class{h} ) {
-            $cc = 'SUNG'; # $CONSONANTS{'ຫ'}
+            $cc = SUNG; # $CONSONANTS{'ຫ'}
 
             # If consonant is one of ມ, ນ or ລ *and* no vowel precedes the ຫ,
             # pretend we saw the combined form
@@ -150,20 +147,35 @@ sub new {
                 # If there is a preceding vowel, it uses the ຫ as a consonant and the
                 # one parsed as core consonant is actually an end consonant
                 unless($consonant eq 'ວ' or $consonant eq 'ຍ') {
-                    $class{end_consonant} = $consonant;
+                    $end_consonant = $consonant;
                     $consonant = 'ຫ';
                     delete $class{h};
                 }
             }
         }
+
+        # Set both $class{vowel_length} and a quick flag that we'll need later
+        my $long_vowel = 1;
         if(is_long_vowel( $class{vowel} )) {
             $class{vowel_length} = 'long';
-            $class{tone} = $TONE_MARKS{ $class{tone_mark} // '' }{ $cc };
         } else {
             $class{vowel_length} = 'short';
-            $class{tone} = $cc eq 'TAM' ? 'MID_STOP' : 'HIGH_STOP';
+            $long_vowel = 0;
+        }
+
+        # Determine syllable liveness.
+        my $live = $class{live} = defined $end_consonant ? not exists $ENDCONS_STOP{$end_consonant} : $long_vowel;
+
+        if(defined $class{tone_mark}) {
+            # If a tone mark exists, it and the consonant's class
+            # determine the tone
+            $class{tone} = $TONE_MARKS{ $class{tone_mark} }[$cc];
+        } else {
+            # No tone mark, so calculate the index
+            $class{tone} = $TONE_NOMARK[$cc][ $live ? 0 : $long_vowel + 1 ];
         }
         $class{consonant} = $consonant;
+        $class{end_consonant} = $end_consonant if defined $end_consonant;
         #say Dumper(\%class);
         return \%class;
     }
@@ -230,6 +242,14 @@ The semivowel following the core consonant if present, C<undef> otherwise.
 =head3 vowel_length
 
 The string 'long' or 'short'.
+
+=head3 live
+
+Boolean indicating whether this is a "live" or a "dead" syllable. Dead
+syllables end in a short vowel or stopped consonant (ກ, ດ or ບ), lives ones end
+in a long vowel, diphthong, semivowel or nasal consonant. This is used for tone
+determination but also available as an attribute, just in case it might be
+useful. C<true> indicates a live syllable.
 
 =head3 tone
 
