@@ -45,7 +45,7 @@ my %TONE_MARKS = (
         TAM  => 'HIGH_FALLING',
     },
     "\N{LAO TONE MAI TI}" => {
-        # TODO: is this HIGH or HIGH_FALLING? Opinios seem to differ
+        # TODO: is this HIGH or HIGH_FALLING? Opinions seem to differ
         # and I haven't found a definitive source yet
         SUNG => 'HIGH',
         KANG => 'HIGH',
