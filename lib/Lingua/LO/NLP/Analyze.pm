@@ -34,24 +34,22 @@ for my $attribute (qw/ syllable parse vowel consonant end_consonant vowel_length
 
 # This is a 2-level lookup table. The first level is the tone mark, the second
 # is the consonant class (SUNG/KANG/TAM, see constant definitions)
-# The second level seems redundant but is there to allow for some refinement as
-# some grammars specify differences between vowel classes even with tone marks
 my %TONE_MARKS = (
-    "\n{lao tone mai ek}"     => [ qw/ mid mid mid / ],
-    "\N{LAO TONE MAI THO}"    => [ qw/ FALLING FALLING FALLING / ],
-    # TODO: is this HIGH or HIGH_FALLING? Opinios seem to differ
+    "\N{LAO TONE MAI EK}"     => [ qw/ MID MID MID / ],
+    "\N{LAO TONE MAI THO}"    => [ qw/ MID_FALLING HIGH_FALLING HIGH_FALLING / ],
+    # TODO: is this HIGH or HIGH_FALLING? Opinions seem to differ
     # and I haven't found a definitive source yet
     "\N{LAO TONE MAI TI}"     => [ qw/ HIGH HIGH HIGH / ],
     "\N{LAO TONE MAI CATAWA}" => [ qw/ RISING RISING RISING /],
 );
 
 # This is a 2-level lookup table. The first level is the consonant class
-# (SUNG/KANG/TAM, see constant definitions), the second is $tone index as
-# calculated in classify()
+# (SUNG/KANG/TAM, see constant definitions), the second is an index as
+# calculated in classify(): 0 for live, 1 for dead+short, 2 for dead+long
 my @TONE_NOMARK = (
-    [qw/ RISING RISING LOW /],  # SUNG/high
-    [qw/ LOW RISING LOW /],     # KANG/mid
-    [qw/ HIGH MID FALLING /],   # TAM/low
+    [qw/ RISING HIGH MID_FALLING /],  # SUNG/high
+    [qw/ LOW HIGH MID_FALLING /],         # KANG/mid
+    [qw/ HIGH MID HIGH_FALLING /],        # TAM/low
 );
 
 my %CONSONANTS = (
@@ -126,8 +124,14 @@ sub new {
         my $s = shift // croak("`syllable' argument missing or undefined");
 
         $s =~ /^$regexp/ or croak("`$s' does not start with a valid syllable");
-        my %class = ( syllable => $s, parse => { %+ } );
-        (my $consonant, my $end_consonant, @class{qw/ h semivowel tone_mark /}) = @+{qw/ consonant end_consonant h semivowel tone_mark /};
+
+        my %class = (
+            syllable => $s,
+            parse => { %+ }
+        );
+
+        (my $consonant, my $end_consonant, @class{qw/ h semivowel tone_mark /}) =
+        @+{qw/ consonant end_consonant h semivowel tone_mark /};
 
         my @vowels = $+{vowel0} // ();
         push @vowels, "\N{DOTTED CIRCLE}";
@@ -164,7 +168,16 @@ sub new {
         }
 
         # Determine syllable liveness.
-        my $live = $class{live} = defined $end_consonant ? not exists $ENDCONS_STOP{$end_consonant} : $long_vowel;
+        my $live;
+        if( defined $end_consonant ) {
+            # If we have an end consonant, a syllable is considered live if the
+            # former is not a stopped consonant
+            $live = exists $ENDCONS_STOP{ $end_consonant } ? 0 : 1;
+        } else {
+            # Syllables without an end consonant are live iff the vowel is long
+            $live = $long_vowel;
+        }
+        $class{live} = $live;
 
         if(defined $class{tone_mark}) {
             # If a tone mark exists, it and the consonant's class
@@ -221,7 +234,7 @@ designated for this function, DOTTED CIRCLE or U+25CC.
 
 =head3 consonant
 
-The syllable's core consonant
+The syllable's core consonant.
 
 =head3 end_consonant
 
@@ -261,15 +274,13 @@ One of the following strings, depending on core consonant class, vowel length an
 
 =item LOW
 
+=item MID
+
 =item HIGH
 
 =item MID_FALLING
 
 =item HIGH_FALLING
-
-=item MID_STOP
-
-=item HIGH_STOP
 
 =back
 
