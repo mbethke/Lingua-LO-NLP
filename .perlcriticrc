@@ -15,4 +15,4 @@ allow = if unless
 [-Subroutines::ProhibitCallsToUndeclaredSubs]
 [-Subroutines::RequireArgUnpacking]
 [-ValuesAndExpressions::ProhibitConstantPragma]
-
+[-ValuesAndExpressions::ProhibitAccessOfPrivateData]
