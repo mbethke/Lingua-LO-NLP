@@ -7,6 +7,7 @@ use open qw/ :encoding(UTF-8) :std /;
 use charnames qw/ :full lao /;
 use Test::More;
 use Test::Fatal;
+use Try::Tiny;
 use Lingua::LO::NLP::Analyze;
 
 use constant MAI_EK     => "\N{LAO TONE MAI EK}";
@@ -135,7 +136,9 @@ my %tests = (
     #'ເອ້ືອຢ' => { consonant => "ອ", end_consonant => "ຢ", syllable => "ເອື້ອຢ", tone => "HIGH_FALLING", tone_mark => MAI_THO, vowel => "ເ◌ືອ", vowel_length => "long" },
 
     #'ໄລນ໌' => {},
+);
 
+my %tests_normalize = (
     # Test tone mark order normalization
     # Regular order consonant-vowel-tone
     "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}" =>
@@ -147,9 +150,11 @@ my %tests = (
         syllable => "\N{LAO VOWEL SIGN E}\N{LAO LETTER MO}\N{LAO VOWEL SIGN YY}\N{LAO TONE MAI EK}\N{LAO LETTER O}",
         tone_mark => MAI_EK, vowel_length => 'long'
     },
+    "\N{LAO LETTER NO}\N{LAO TONE MAI THO}\N{LAO VOWEL SIGN AM}" =>
+    { consonant => 'ນ', vowel => 'Xຳ', live => 0, tone => 'HIGH_FALLING', tone_mark => MAI_THO, vowel_length => 'short' },
 );
 
-for my $analysis (values %tests) {
+for my $analysis (values %tests, values %tests_normalize) {
     s/X/\N{DOTTED CIRCLE}/ for values %$analysis;
 }
 
@@ -186,16 +191,26 @@ like(
     qr/`syllable' argument missing or undefined/,
     'Dies w/o syllable argument'
 );
+
+test_syllable($_, $tests{$_}) for sort keys %tests;
+test_syllable($_, $tests_normalize{$_}, normalize => 1) for sort keys %tests_normalize;
+
 for my $syllable (sort keys %tests) {
-    my %c = %{ Lingua::LO::NLP::Analyze->new($syllable, normalize => 1) };
+    my $c = undef;
+    try {
+        $c = Lingua::LO::NLP::Analyze->new($syllable, normalize => 1);
+    } catch {
+        fail("`$syllable' caused exception: $_ ".Dumper($tests{$syllable}));
+    };
+    next unless defined $c;
     #print "'$syllable' => " . print_struct(%c) . "\n";
     #next;
-    delete $c{parse};
-    delete $c{$_} for grep { not defined $c{$_} } keys %c;
+    delete $c->{parse};
+    delete $c->{$_} for grep { not defined $c->{$_} } keys %$c;
     # trivial, doesn't need to be mentioned above unless it was subject to normalization
     $tests{$syllable}{syllable} //= $syllable;
-    is_deeply(\%c, $tests{$syllable}, "`$syllable' analyzed correctly")
-        or print "Result for '$syllable': ", (map { "$_ => \"$c{$_}\", " } sort keys %c) , "\n";
+    is_deeply($c, $tests{$syllable}, "`$syllable' analyzed correctly")
+        or print "Result for '$syllable': ", (map { "$_ => \"$c->{$_}\", " } sort keys %$c) , "\n";
 }
 
 while(@tone_tests) {
@@ -205,6 +220,28 @@ while(@tone_tests) {
 }
 
 done_testing;
+
+sub test_syllable {
+    my $syllable = shift;
+    my %wanted = %{+shift};
+    my @options = @_;
+
+    my $c = undef;
+    try {
+        $c = Lingua::LO::NLP::Analyze->new( $syllable, @options );
+    } catch {
+        fail("`$syllable' caused exception: $_ ");
+    };
+    return unless defined $c;
+    #print "'$syllable' => " . print_struct(%c) . "\n";
+    #next;
+    delete $c->{parse};
+    delete $c->{$_} for grep { not defined $c->{$_} } keys %$c;
+    # trivial, doesn't need to be mentioned above unless it was subject to normalization
+    $wanted{syllable} //= $syllable;
+    is_deeply($c, \%wanted, "`$syllable' analyzed correctly")
+        or print "Result for '$syllable': ", (map { "$_ => \"$c->{$_}\", " } sort keys %$c) , "\n";
+}
 
 # Just for adding new tests
 sub print_struct {
