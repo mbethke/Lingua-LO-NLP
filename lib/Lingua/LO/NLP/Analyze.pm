@@ -6,6 +6,7 @@ use utf8;
 use feature qw/ unicode_strings say /;
 use charnames qw/ :full lao /;
 use version 0.77; our $VERSION = version->declare('v0.2.0');
+use Unicode::Normalize 'NFC';
 use Carp;
 use Class::Accessor::Fast 'antlers';
 use Lingua::LO::NLP::Data ':all';
@@ -102,10 +103,10 @@ C<new( $syllable, %options )>
 
 The constructor takes a syllable and any number of options as hash-style
 arguments. The only option specified so far is C<normalize>, a boolean value
-indicating whether to run the syllable through tone mark normalization (see
-L<Lingua::LO::NLP::Data/normalize_tone_marks>). It does not fail but may
-produce nonsense if the argument is not valid according to Lao morphology
-rules.
+indicating whether to run the syllable through
+L<Unicode::Normalize::NFC|Unicode::Normalize/NFC> and tone mark normalization
+(see L<Lingua::LO::NLP::Data/normalize_tone_marks>). Set this if you are unsure
+that your text is well-formed according to Unicode rules.
 
 =cut
 
@@ -113,7 +114,10 @@ sub new {
     my $class = shift;
     my $syllable = shift;
     my %opts = @_;
-    normalize_tone_marks($syllable) if $opts{normalize};
+    if($opts{normalize}) {
+        $syllable = NFC($syllable);
+        normalize_tone_marks($syllable);
+    }
     return bless _classify($syllable), $class;
 }
 
