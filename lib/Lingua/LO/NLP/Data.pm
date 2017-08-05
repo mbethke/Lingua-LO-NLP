@@ -379,21 +379,23 @@ sub _named_capture {
     return $fragments->{$match};
 }
 
-sub _subst_regexp_fragments {
-    my $re = shift;
-    for my $atom (@SORTED_X_NAMES) {
-        $re =~ s/\$($atom)/$regexp_fragments{$1}/eg;
-    }
-    return $re;
-}
-
 sub _subst_regexp_fragments_named {
     my $re = shift;
 
     for my $atom (@SORTED_X_NAMES) {
         $re =~ s/\$($atom)/_named_capture(\%regexp_fragments, $atom, $1)/eg;
     }
- 
+
+    return $re;
+}
+
+sub _subst_regexp_fragments {
+    my $re = shift;
+
+    for my $atom (@SORTED_X_NAMES) {
+        $re =~ s/\$($atom)/$regexp_fragments{$1}/eg;
+    }
+
     return $re;
 }
 
