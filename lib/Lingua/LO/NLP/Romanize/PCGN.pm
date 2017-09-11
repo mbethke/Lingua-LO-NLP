@@ -182,7 +182,7 @@ sub romanize_syllable {
     } else {
         # The regular case
         $result = $self->romanize_consonant($cons, 0);
-        $sv = $self->romanize_consonant($sv, 0) if $sv;
+        $sv = $self->romanize_consonant($sv, 1) if $sv;
     }
 
     $endcons = $c->end_consonant;
