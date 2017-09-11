@@ -54,17 +54,19 @@ ones are always recognized:
 =item C<variant>
 
 Standard according to which to romanize; this determines the
-L<Lingua::LO::NLP::Romanize> subclass to actually instantiate. This argument is mandatory.
+L<Lingua::LO::NLP::Romanize> subclass to actually instantiate. This argument is
+mandatory.
 
 =item C<hyphen>
 
-Separate runs of Lao syllables with hyphens. Set this to the character you
+Separate runs of Lao syllables with "hyphens". Set this to the character you
 would like to use as a hyphen - usually this will be the ASCII "hyphen minus"
 (U+002D) but it can be the unambiguous Unicode hyphen ("‐", U+2010), a slash or
-anything you like. As a special case, you can pass a 1 to use the ASCII
-version. If this argument is missing, C<undef> or C<0>, blanks are used.
-Syllables duplicated using "ໆ" are always joined with a hyphen: either the one
-you specify or the ASCII one.
+anything you like (except for the special-cased '0' and '1' - but you wouldn't
+want those between your syllables anyway!). As a special case, you can pass a 1
+to use the ASCII version. If this argument is missing, C<undef> or C<0>, blanks
+are used. Syllables duplicated using "ໆ" are always joined with a hyphen:
+either the one you specify or the ASCII one.
 
 =item C<normalize>
 
