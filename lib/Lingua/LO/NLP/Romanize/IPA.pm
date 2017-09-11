@@ -156,7 +156,7 @@ my %TONE_DIACRITICS = (
 
 =head2 new
 
-You don't call this constructor directly bu via L<Lingua::LO::NLP::Romanize>.
+You don't call this constructor directly but via L<Lingua::LO::NLP::Romanize>.
 It adds the following attribute:
 
 =over 4
