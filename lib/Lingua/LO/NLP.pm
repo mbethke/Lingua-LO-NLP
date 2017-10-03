@@ -37,7 +37,7 @@ Lingua::LO::NLP - Various Lao text processing functions
     }
 
     say $lao->romanize("ສະບາຍດີ", variant => 'PCGN', hyphen => "\N{HYPHEN}");  # sa‐bay‐di
-    say $lao->romanize("ສະບາຍດີ", variant => 'IPA');                           # sa baːj diː
+    say $lao->romanize("ສະບາຍດີ", variant => 'IPA');                           # saʔ baːj diː
 
 =head1 DESCRIPTION
 
