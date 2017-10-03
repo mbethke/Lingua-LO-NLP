@@ -185,7 +185,7 @@ EOF
 for( $re_basic, $re_lookahead ) {
     s/\n//gs;      # Remove newlines
     s/\(/(?:/gs;   # Make all groups non-capturing
-    s/\s+/ /g;     # Keep it a bit more readable, otherwise we could use s/\s+//g
+    s/\s+//g;
 }
 
 # Functional names for all the x-something groups from the original paper
