@@ -134,17 +134,38 @@ sub romanize {
 
 =head2 romanize_syllable
 
-    romanize_syllable( $syllable )
+    romanize_syllable( $syllable | $analysis )
 
-Return the romanization of a single C<$syllable> according to the standard passed to the
-constructor. This is a virtual method that must be implemented by subclasses.
+Return the romanization of a single C<$syllable> according to the standard
+passed to the constructor. This method accepts either a plain string or an
+analysis result from L<Lingua::LO::NLP::Analyze>. The latter helps avoid
+redundant parsing if you need both an analysis and a romanization.
 
 =cut
 
 sub romanize_syllable {
+    my ($self, $thing) = @_;
+    unless( blessed($thing) ) {
+        # Analyze syllable first unless we got an analysis result already
+        # (we just assume it is one if we have an object)
+        $thing = Lingua::LO::NLP::Analyze->new($thing);
+    }
+    return $self->_romanize_syllable( $thing );
+}
+
+=head2 _romanize_syllable
+
+    _romanize_syllable( $analysis )
+
+Return the romanization of a syllable passed in as a 'Lingua::LO::NLP::Analyze'
+result, according to the standard passed to the constructor. This is a virtual
+method that must be implemented by subclasses.
+
+=cut
+
+sub _romanize_syllable {
     my $self = shift;
-    ref $self or die "romanize_syllable is not a class method";
-    die blessed($self) . " must implement romanize_syllable()";
+    die blessed($self) . " must implement _romanize_syllable()";
 }
 
 =head2 hyphen

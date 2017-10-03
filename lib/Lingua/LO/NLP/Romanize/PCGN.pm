@@ -157,18 +157,9 @@ sub new {
     }, $class;
 }
 
-=head2 romanize_syllable
-
-    romanize_syllable( $syllable )
-
-Return the romanization of a single C<$syllable>. See L<Lingua::LO::NLP::Romanize/romanize_syllable>
-
-=cut
-
-sub romanize_syllable {
-    my ($self, $syllable) = @_;
+sub _romanize_syllable {
+    my ($self, $c) = @_;
     my ($endcons, $result);
-    my $c = Lingua::LO::NLP::Analyze->new($syllable);
     my $parse = $c->parse;
     my $vowel = $c->vowel;
     
