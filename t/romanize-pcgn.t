@@ -15,6 +15,7 @@ my @tests = (
     'ດີໆ'        => 'di-di',
     'ແຫນ'       => 'hèn',
     'ແໜ'        => 'nè',
+    'ເຫັນ'       => 'hén',
     'ຫົກສິບ'      => 'hôk-sip',
     'ມື້ນີ້'        => 'mu-ni',
     'ມື້ວານນີ້'     => 'mu-van-ni',
@@ -39,6 +40,7 @@ my @tests = (
     'ແນວໃດ'     => 'nèo-dai',
     'ຂີ້ເຫຍື່ອ'     => 'khi-gnua',
     'ເຄີຍ'       => 'kheuy',
+    #    'ເຫນືອ'      => 'neua',     # probably a misspelling?
 );
 @tests % 2 and BAIL_OUT('BUG: set up \@tests correctly!');
 
@@ -50,13 +52,13 @@ while(my $word = shift @tests) {
     is($r->romanize($word), $romanized, "$word romanized to `$romanized'");
 }
 
-# No hyphentaion
+# No hyphenation
 is(
     Lingua::LO::NLP::Romanize->new(variant => 'PCGN')->romanize('ສະບາຍດີ'), 'sa bay di',
     "ສະບາຍດີ => 'sa bay di'"
 );
 
-# Unicode hyphentaion
+# Unicode hyphenation
 is(
     Lingua::LO::NLP::Romanize->new(variant => 'PCGN', hyphen => "\N{HYPHEN}")->romanize('ສະບາຍດີ'),
     "sa\N{HYPHEN}bay\N{HYPHEN}di",
