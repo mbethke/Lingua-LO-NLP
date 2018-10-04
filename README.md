@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mbethke/Lingua-LO-NLP.svg?branch=travis)](https://travis-ci.org/mbethke/Lingua-LO-NLP)
+
 # NAME
 
 Lingua::LO::NLP - Various Lao text processing functions
