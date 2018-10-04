@@ -142,6 +142,42 @@ sub romanize {
     return Lingua::LO::NLP::Romanize->new(%options)->romanize( $lao );
 }
 
+=head2 analyze_text
+
+    my @syllables = $object->analyze_text( $text, %options );
+
+Split Lao text into its syllables and analyze them, returning an array of
+hashes. Each hash has at least a key 'analysis' with a
+L<Lingua::LO::NLP::Analyze> object as a value. If the C<romanize>option is set
+to a true value, it also has a "romanization" key. In this case, the C<variant>
+option (see L<Lingua::LO::NLP::Romanize/new>) is also required.
+
+=cut
+sub analyze_text {
+    my $self = shift;
+    my $text = shift;
+    my %opts = @_;
+    my $romanizer;
+    $romanizer = Lingua::LO::NLP::Romanize->new( %opts ) if delete $opts{romanize};
+
+    my @result = Lingua::LO::NLP::Syllabify->new(
+        $text,
+        normalize => $self->{normalize},
+        %opts
+    )->get_syllables;
+
+    if($romanizer) {
+        return map {
+            {
+                analysis => $_,
+                romanization => $romanizer->romanize_syllable($_)
+            }
+        } @result;
+    } else {
+        return map { { analysis => $_ } } @result;
+    }
+}
+
 =head1 SEE ALSO
 
 L<Lingua::LO::Romanize> is the module that inspired this one. It has some
